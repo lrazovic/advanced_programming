@@ -5,7 +5,8 @@ description = "The fetcher module"
 authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
+feedparser = "^6.0.8"
 
 [tool.poetry.dev-dependencies]
 
