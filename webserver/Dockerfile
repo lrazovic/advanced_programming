@@ -1,7 +1,7 @@
 # From: https://stackoverflow.com/a/64642121
 # Extra info: https://fastapi.tiangolo.com/deployment/docker/#build-a-docker-image-for-fastapi
 
-FROM python:3.9-slim as base
+FROM python:3.8-slim as base
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \

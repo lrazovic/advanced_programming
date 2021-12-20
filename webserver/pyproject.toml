@@ -6,7 +6,7 @@ authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 fastapi = {extras = ["all"], version = "^0.70.0"}
 
 [tool.poetry.dev-dependencies]
