@@ -2,10 +2,12 @@
 # Extra info: https://fastapi.tiangolo.com/deployment/docker/#build-a-docker-image-for-fastapi
 
 FROM python:3.8-slim as base
+EXPOSE 5000
 
 ENV PYTHONFAULTHANDLER=1 \
     PYTHONHASHSEED=random \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /code
 
@@ -25,5 +27,3 @@ RUN poetry install --no-dev
 # RUN poetry build
 
 COPY ./app /code/app
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

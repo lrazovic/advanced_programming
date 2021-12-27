@@ -1,0 +1,56 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "admin"
+      MONGO_INITDB_ROOT_PASSWORD: "password"
+      MONGO_INITDB_DATABASE: webapp
+      MONGODB_DATA_DIR: /data/db
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - backend
+  webserver:
+    depends_on:
+      - mongodb
+    build:
+      context: webserver/
+    command: uvicorn app.main:app --host 0.0.0.0 --port 5000
+    expose:
+      - 5000
+    environment:
+      MONGODB_HOST: mongodb
+      MONGODB_USERNAME: "apiuser"
+      MONGODB_PASSWORD: "apipassword"
+    volumes:
+      - appdata:/var/www/
+    networks:
+      - frontend
+      - backend
+  view:
+    depends_on:
+      - webserver
+    build:
+      context: view/
+    ports:
+      - "3000:80"
+    volumes:
+      - ./view:/app
+      - /app/node_modules
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+volumes:
+  mongodbdata:
+    driver: local
+  appdata:
+    driver: local
