@@ -28,6 +28,6 @@ jobs:
           file: ./view/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/view:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/view:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/view:buildcache,mode=max
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ap-view:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-view:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-view:buildcache,mode=max
