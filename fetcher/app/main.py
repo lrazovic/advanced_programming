@@ -1,5 +1,6 @@
 import feedparser
 import json
+from fastapi import FastAPI
 
 
 def get_posts_details(rss=None):
@@ -31,12 +32,14 @@ def get_posts_details(rss=None):
     else:
         return None 
 
-if __name__ == "__main__":
-  feed_url = "http://www.repubblica.it/rss/homepage/rss2.0.xml"
-  data = get_posts_details(rss = feed_url)
-  if data:
-    # printing as a json string
-    print(json.dumps(data, indent=2)) 
-  else:
-    print("None")
+app = FastAPI()
 
+@app.get("/")
+def retrive_information():
+    feed_url = "http://www.repubblica.it/rss/homepage/rss2.0.xml"
+    data = get_posts_details(rss = feed_url)
+    if data:
+        # printing as a json string
+        return(json.dumps(data, indent=2)) 
+    else:
+        return("None")
