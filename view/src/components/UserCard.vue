@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { mdiCheckDecagram } from '@mdi/js'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import CheckRadioPicker from '@/components/CheckRadioPicker.vue'

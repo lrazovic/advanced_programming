@@ -1,18 +1,22 @@
 <script setup>
-import MainSection from '@/components/MainSection.vue'
-import NewsCard from '@/components/NewsCard'
+// import MainSection from '@/components/MainSection.vue'
+// import NewsCard from '@/components/NewsCard'
 </script>
 
 <template>
   <main-section>
-    <div v-for="i in 10" :key="i" class="flex justify-center pt-8">
+    <div
+      v-for="i in 10"
+      :key="i"
+      class="flex justify-center pt-8"
+    >
       <news-card
         :img="newsContent.img"
         :content="newsContent.content"
         :hashtags="newsContent.hashtags"
         :title="newsContent.title"
         :img-alt="newsContent.alt"
-      ></news-card>
+      />
     </div>
   </main-section>
 </template>

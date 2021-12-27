@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { mdiCashMinus, mdiCashPlus, mdiReceipt, mdiCreditCardOutline } from '@mdi/js'
 import CardComponent from '@/components/CardComponent.vue'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import Pill from '@/components/Pill.vue'
 import IconRounded from '@/components/IconRounded.vue'
 

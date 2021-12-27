@@ -3,7 +3,7 @@ import { ref, computed, useSlots } from 'vue'
 import { useStore } from 'vuex'
 import { mdiClose } from '@mdi/js'
 import { colorsBg, colorsBorders, colorsOutline } from '@/colors.js'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import Icon from '@/components/Icon.vue'
 import JbButton from '@/components/JbButton.vue'
 

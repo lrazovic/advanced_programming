@@ -5,7 +5,7 @@ import { useStore } from 'vuex'
 import CardComponent from '@/components/CardComponent.vue'
 import GrowingNumber from '@/components/GrowingNumber.vue'
 import Icon from '@/components/Icon.vue'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import TrendPill from '@/components/TrendPill.vue'
 import JbButton from '@/components/JbButton.vue'
 

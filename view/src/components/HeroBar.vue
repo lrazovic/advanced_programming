@@ -2,7 +2,7 @@
 import { mdiThemeLightDark } from '@mdi/js'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import JbButton from '@/components/JbButton.vue'
 
 const store = useStore()

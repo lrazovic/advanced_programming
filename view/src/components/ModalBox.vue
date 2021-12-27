@@ -4,7 +4,7 @@ import { mdiClose } from '@mdi/js'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import CardComponent from '@/components/CardComponent.vue'
-import Divider from '@/components/Divider.vue'
+import Divider from '@/components/DividerBar.vue'
 import Overlay from '@/components/Overlay.vue'
 
 const props = defineProps({

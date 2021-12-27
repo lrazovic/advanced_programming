@@ -5,7 +5,7 @@ import { mdiAccount, mdiAccountCircle, mdiLock, mdiMail, mdiAsterisk, mdiFormTex
 import MainSection from '@/components/MainSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import TitleBar from '@/components/TitleBar.vue'
-import Divider from '@/components/Divider.vue'
+import Divider from '@/components/DividerBar.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import FilePicker from '@/components/FilePicker.vue'

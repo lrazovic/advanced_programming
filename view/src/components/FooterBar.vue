@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 
 const store = useStore()
 

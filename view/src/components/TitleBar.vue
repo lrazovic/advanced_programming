@@ -1,6 +1,6 @@
 <script setup>
 import { mdiGithub } from '@mdi/js'
-import Level from '@/components/Level.vue'
+import Level from '@/components/LevelDiv.vue'
 import JbButton from '@/components/JbButton.vue'
 
 defineProps({
