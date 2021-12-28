@@ -10,41 +10,30 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     volumes:
-      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - appdata:/data/db
+      # - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongodbdata:/data/db
     networks:
       - backend
+    ports:
+      - "27017:27017"
   webserver:
-    # image: razzocv/ap-webserver:latest
+    image: razzocv/ap-webserver:latest
     depends_on:
       - mongodb
     build:
       context: webserver/
-    command: /app/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 5000
-    expose:
-      - 5000
+    command: /app/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 80
+    ports:
+        - "80:80"
     environment:
       MONGODB_HOST: mongodb
       MONGODB_USERNAME: "apiuser"
       MONGODB_PASSWORD: "apipassword"
     volumes:
-      - appdatashare:/var/www/
+      - appdata:/var/www/
     networks:
       - frontend
       - backend
-  view:
-    # image: razzocv/ap-webserver:latest
-    depends_on:
-      - webserver
-    build:
-      context: view/
-    ports:
-      - "3000:80"
-    volumes:
-      - ./view:/app
-      - /app/node_modules
-    networks:
-      - frontend
 
 networks:
   frontend:
@@ -55,7 +44,7 @@ volumes:
   mongodbdata:
     driver: azure_file
     driver_opts:
-      share_name: appdata
+      share_name: mongodbdatashare
       storage_account_name: mongodbdataaccount
   appdata:
     driver: azure_file
