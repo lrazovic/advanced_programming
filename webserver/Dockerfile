@@ -24,4 +24,4 @@ RUN poetry install --no-dev
 
 # RUN poetry build
 
-COPY ./app /code/app
+# COPY ./app /code/app
