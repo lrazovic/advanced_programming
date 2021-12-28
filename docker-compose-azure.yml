@@ -18,6 +18,7 @@ services:
       - "27017:27017"
   webserver:
     image: razzocv/ap-webserver:latest
+    domainname: "advanceprogramming"
     depends_on:
       - mongodb
     build:
