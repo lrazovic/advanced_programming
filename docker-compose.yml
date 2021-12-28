@@ -1,8 +1,8 @@
+# https://medium.com/swlh/how-to-set-up-a-react-app-with-a-flask-and-mongodb-backend-using-docker-19b356180199
 version: "3"
 services:
   mongodb:
-    image: mongo
-    container_name: mongo
+    image: mongo:latest
     restart: unless-stopped
     command: mongod --auth
     environment:
@@ -11,10 +11,12 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     volumes:
+      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodbdata:/data/db
     networks:
       - backend
   webserver:
+    # image: razzocv/ap-webserver:latest
     depends_on:
       - mongodb
     build:
@@ -32,6 +34,7 @@ services:
       - frontend
       - backend
   view:
+    # image: razzocv/ap-webserver:latest
     depends_on:
       - webserver
     build:
