@@ -8,8 +8,7 @@ module.exports = {
     defineEmits: 'readonly'
   },
   extends: [
-    'plugin:vue/vue3-recommended',
-    '@vue/standard'
+    'plugin:vue/vue3-recommended'
   ],
   parser: 'vue-eslint-parser',
   parserOptions: {
