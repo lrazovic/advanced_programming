@@ -1,15 +1,15 @@
-name: Docker Image CI for View
+name: Build Docker Image for View
 
 on:
   push:
     branches:
-      - "ci-test"
+      - "main"
     paths:
       - "view/**"
       - ".github/workflows/view-docker-image.yml"
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
