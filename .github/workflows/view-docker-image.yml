@@ -3,7 +3,7 @@ name: Docker Image CI for View
 on:
   push:
     branches:
-      - 'ci-test'
+      - "ci-test"
     paths:
       - "view/**"
       - ".github/workflows/view-docker-image.yml"
@@ -24,7 +24,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./view
           file: ./view/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true

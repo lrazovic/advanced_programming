@@ -21,7 +21,7 @@ services:
       - mongodb
     build:
       context: webserver/
-    command: uvicorn app.main:app --host 0.0.0.0 --port 5000
+    command: /app/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 5000
     expose:
       - 5000
     environment:
