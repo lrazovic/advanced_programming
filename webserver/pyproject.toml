@@ -8,8 +8,9 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
 fastapi = {extras = ["all"], version = "^0.70.0"}
-motor = "^2.5.1"
 schematics = "^2.1.1"
+feedparser = "^6.0.8"
+pymongo = "^4.0.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"

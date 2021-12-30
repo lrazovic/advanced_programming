@@ -11,6 +11,5 @@ RUN poetry install --no-ansi
 
 FROM python:3.8-slim
 WORKDIR /app
-
 COPY --from=builder /app /app
 ADD . /app

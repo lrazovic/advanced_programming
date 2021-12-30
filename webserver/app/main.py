@@ -6,6 +6,7 @@ from schematics.types import StringType, EmailType
 
 # -----------------------------------------MODEL DEFINITION
 
+
 class User(Model):
     user_id = ObjectId()
     email = EmailType(required=True)
@@ -24,14 +25,16 @@ def create_user(email, username, password):
     newuser.password = password
     return dict(newuser)
 
+
 # -----------------------------------------WEB SERVER
 
 app = FastAPI()
 
 # Our root endpoint
-@app.get("/")
+@app.get("/api")
 def index():
     return {"message": "Hello World!"}
+
 
 # Signup endpoint with the POST method
 @app.post("/api/{email}/{username}/{password}")
@@ -57,14 +60,17 @@ def signup(email, username: str, password: str):
             "pass": data["password"],
         }
 
+
 # -----------------------------------------TEST
-@app.get("/items/{item_id}")
-def read_item(item_id, q = None):
+@app.get("/api/items/{item_id}")
+def read_item(item_id, q=None):
     return {"item_id": item_id, "q": q}
+
 
 # -----------------------------------------FETCHER MODULE
 import fetcher.main as fetcher
 
-@app.get("/getNews")
+
+@app.get("/api/getnews")
 def call_fetcher():
     return fetcher.retrive_information()
