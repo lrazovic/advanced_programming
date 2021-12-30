@@ -11,12 +11,14 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     volumes:
-      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      # - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodbdata:/data/db
     networks:
       - backend
+    ports:
+      - "27017:27017"
+
   webserver:
-    # image: razzocv/ap-webserver:latest
     depends_on:
       - mongodb
     build:
@@ -33,8 +35,8 @@ services:
     networks:
       - frontend
       - backend
+
   view:
-    # image: razzocv/ap-webserver:latest
     depends_on:
       - webserver
     build:
