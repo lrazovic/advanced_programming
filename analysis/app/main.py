@@ -1,9 +1,10 @@
-from jsonrpcserver import method, Result, Success, serve
+from jsonrpcserver import method, Success, serve
 import nltk
 import heapq
 
+
 @method
-def summarize(article_text) -> Result:
+def summarize(article_text):
     sentence_list = nltk.sent_tokenize(article_text)
     stopwords = nltk.corpus.stopwords.words("english")
     word_frequencies = {}
@@ -27,11 +28,6 @@ def summarize(article_text) -> Result:
                         sentence_scores[sent] += word_frequencies[word]
     summary_sentences = heapq.nlargest(7, sentence_scores, key=sentence_scores.get)
     return Success(" ".join(summary_sentences))
-
-
-@method
-def ping() -> Result:
-    return Success("pong")
 
 
 if __name__ == "__main__":
