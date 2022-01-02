@@ -13,3 +13,4 @@ FROM python:3.8-slim
 WORKDIR /app
 COPY --from=builder /app /app
 ADD . /app
+CMD /app/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 5000
