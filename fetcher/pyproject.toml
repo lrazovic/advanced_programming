@@ -7,9 +7,10 @@ authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 feedparser = "^6.0.8"
-fastapi = "^0.70.1"
+jsonrpcserver = "^5.0.5"
 
 [tool.poetry.dev-dependencies]
+black = "^21.12b0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

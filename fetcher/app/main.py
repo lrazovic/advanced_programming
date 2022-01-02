@@ -1,8 +1,8 @@
 import feedparser
+from jsonrpcserver import method, Success, serve, Error
 
 
 def get_posts_details(rss=None, last=10):
-
     if rss is not None:
         blog_feed = feedparser.parse(rss)
         # getting lists of blog entries
@@ -33,10 +33,16 @@ def get_posts_details(rss=None, last=10):
         return None
 
 
-def retrive_information():
-    feed_url = "http://www.repubblica.it/rss/homepage/rss2.0.xml"
+@method
+def retrive_information(
+    feed_url: str = "http://www.repubblica.it/rss/homepage/rss2.0.xml",
+):
     data = get_posts_details(rss=feed_url)
     if data:
-        return data
+        return Success(data)
     else:
-        return dict()
+        return Error()
+
+
+if __name__ == "__main__":
+    serve(port=5002)
