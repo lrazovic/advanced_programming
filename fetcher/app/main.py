@@ -1,20 +1,20 @@
 import feedparser
-import json
-from fastapi import FastAPI
 
 
-def get_posts_details(rss=None):
-    
+def get_posts_details(rss=None, last=10):
+
     if rss is not None:
-        blog_feed = feedparser.parse(rss)  
+        blog_feed = feedparser.parse(rss)
         # getting lists of blog entries
-        posts = blog_feed.entries  
+        posts = blog_feed.entries[:last]
         # dictionary for holding posts details
-        posts_details = {"Blog title" : blog_feed.feed.title,
-                        "Blog link" : blog_feed.feed.link}  
-        post_list = []  
+        posts_details = {
+            "Blog title": blog_feed.feed.title,
+            "Blog link": blog_feed.feed.link,
+        }
+        post_list = []
         for post in posts:
-            temp = dict()   
+            temp = dict()
             # if any post doesn't have information then throw error
             try:
                 temp["title"] = post.title
@@ -25,21 +25,18 @@ def get_posts_details(rss=None):
                 temp["authors"] = [author.name for author in post.authors]
                 temp["summary"] = post.summary
             except:
-                pass  
-            post_list.append(temp)  
-        posts_details["posts"] = post_list   
-        return posts_details # returning the details
+                pass
+            post_list.append(temp)
+        posts_details["posts"] = post_list
+        return posts_details  # returning the details
     else:
-        return None 
+        return None
 
-app = FastAPI()
 
-@app.get("/")
 def retrive_information():
     feed_url = "http://www.repubblica.it/rss/homepage/rss2.0.xml"
-    data = get_posts_details(rss = feed_url)
+    data = get_posts_details(rss=feed_url)
     if data:
-        # printing as a json string
-        return(json.dumps(data, indent=2)) 
+        return data
     else:
-        return("None")
+        return dict()
