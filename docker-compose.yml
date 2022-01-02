@@ -23,6 +23,7 @@ services:
       - mongodb
     build:
       context: webserver/
+    restart: on-failure
     ports:
       - "5000:5000"
     environment:
@@ -61,7 +62,7 @@ services:
       backend:
         aliases:
           - analysis.dev
-  
+
   fetcher:
     depends_on:
       - webserver
@@ -79,7 +80,7 @@ networks:
     driver: bridge
   backend:
     driver: bridge
-    
+
 volumes:
   mongodbdata:
     driver: local

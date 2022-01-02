@@ -1,6 +1,9 @@
 from jsonrpcserver import method, Success, serve
+import logging
 import nltk
 import heapq
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 @method
@@ -26,9 +29,11 @@ def summarize(article_text):
                         sentence_scores[sent] = word_frequencies[word]
                     else:
                         sentence_scores[sent] += word_frequencies[word]
-    summary_sentences = heapq.nlargest(7, sentence_scores, key=sentence_scores.get)
+    summary_sentences = heapq.nlargest(8, sentence_scores, key=sentence_scores.get)
+    logging.info(f" * Summary lengyh: {len(summary_sentences)}")
     return Success(" ".join(summary_sentences))
 
 
 if __name__ == "__main__":
-    serve(port=5001)
+    PORT = 5001
+    serve(port=PORT)

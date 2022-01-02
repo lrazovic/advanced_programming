@@ -1,5 +1,8 @@
 import feedparser
 from jsonrpcserver import method, Success, serve, Error
+import logging
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 def get_posts_details(rss=None, last=10):
@@ -37,6 +40,7 @@ def get_posts_details(rss=None, last=10):
 def retrive_information(
     feed_url: str = "http://www.repubblica.it/rss/homepage/rss2.0.xml",
 ):
+    logging.info(f" * RSS requests for: {feed_url}")
     data = get_posts_details(rss=feed_url)
     if data:
         return Success(data)
@@ -45,4 +49,5 @@ def retrive_information(
 
 
 if __name__ == "__main__":
-    serve(port=5002)
+    PORT = 5002
+    serve(port=PORT)
