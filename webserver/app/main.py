@@ -85,6 +85,11 @@ async def read_item(item_id, q=None):
 
 # -----------------------------------------FETCHER MODULE
 
+
 @app.get("/api/getnews")
 async def call_fetcher():
-    return fetcher.retrive_information()
+    response = httpx.post(
+        "http://fetcher.dev:5002/",
+        json=request_uuid("retrive_information"),
+    )
+    return {"message": response.json()}
