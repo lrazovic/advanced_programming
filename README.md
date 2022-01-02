@@ -23,3 +23,6 @@ The services are:
 * `view`
 * `webserver`
 * `mongodb`
+* `analysis`
+* `fether`
+* `ONLY_ONE_IS_MISSING`

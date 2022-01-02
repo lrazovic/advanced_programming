@@ -92,4 +92,4 @@ async def call_fetcher():
         "http://fetcher.dev:5002/",
         json=request_uuid("retrive_information"),
     )
-    return {"message": response.json()}
+    return response.json()
