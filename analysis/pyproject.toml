@@ -7,7 +7,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-spacy = "^3.2.1"
+jsonrpcserver = "^5.0.5"
+nltk = "^3.6.7"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
