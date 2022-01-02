@@ -61,6 +61,18 @@ services:
       backend:
         aliases:
           - analysis.dev
+  
+  fetcher:
+    depends_on:
+      - webserver
+    build:
+      context: fetcher/
+    ports:
+      - "5002:5002"
+    networks:
+      backend:
+        aliases:
+          - fetcher.dev
 
 networks:
   frontend:
