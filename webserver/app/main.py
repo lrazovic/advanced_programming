@@ -3,6 +3,8 @@ from . import connection
 from bson import ObjectId
 from schematics.models import Model
 from schematics.types import StringType, EmailType
+import httpx
+from jsonrpcclient.requests import request_uuid
 
 # -----------------------------------------MODEL DEFINITION
 
@@ -32,13 +34,13 @@ app = FastAPI()
 
 # Our root endpoint
 @app.get("/api")
-def index():
+async def index():
     return {"message": "Hello World!"}
 
 
 # Signup endpoint with the POST method
 @app.post("/api/{email}/{username}/{password}")
-def signup(email, username: str, password: str):
+async def signup(email, username: str, password: str):
     user_exists = False
     data = create_user(email, username, password)
 
@@ -61,16 +63,28 @@ def signup(email, username: str, password: str):
         }
 
 
+@app.get("/api/summary")
+async def summary():
+    response = httpx.post(
+        "http://analysis.dev:5001/",
+        json=request_uuid(
+            "summarize",
+            params=[
+                "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling."
+            ],
+        ),
+    )
+    return {"message": response.json()}
+
+
 # -----------------------------------------TEST
 @app.get("/api/items/{item_id}")
-def read_item(item_id, q=None):
+async def read_item(item_id, q=None):
     return {"item_id": item_id, "q": q}
 
 
 # -----------------------------------------FETCHER MODULE
-import fetcher.main as fetcher
-
 
 @app.get("/api/getnews")
-def call_fetcher():
+async def call_fetcher():
     return fetcher.retrive_information()
