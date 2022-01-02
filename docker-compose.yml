@@ -23,7 +23,6 @@ services:
       - mongodb
     build:
       context: webserver/
-    command: /app/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 5000
     ports:
       - "5000:5000"
     environment:
@@ -49,13 +48,30 @@ services:
     networks:
       - frontend
 
+  analysis:
+    depends_on:
+      - webserver
+    build:
+      context: analysis/
+    ports:
+      - "5001:5001"
+    volumes:
+      - nltkdata:/root/nltk_data
+    networks:
+      backend:
+        aliases:
+          - analysis.dev
+
 networks:
   frontend:
     driver: bridge
   backend:
     driver: bridge
+    
 volumes:
   mongodbdata:
     driver: local
   appdata:
+    driver: local
+  nltkdata:
     driver: local
