@@ -5,6 +5,7 @@ from schematics.models import Model
 from schematics.types import StringType, EmailType
 import httpx
 from jsonrpcclient.requests import request_uuid
+from fastapi.middleware.cors import CORSMiddleware
 
 # -----------------------------------------MODEL DEFINITION
 
@@ -31,6 +32,17 @@ def create_user(email, username, password):
 # -----------------------------------------WEB SERVER
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Our root endpoint
 @app.get("/api")
