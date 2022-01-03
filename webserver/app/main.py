@@ -1,19 +1,28 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from jsonrpcclient.requests import request_uuid
+
 import httpx
+import os
+
 from . import connection
 from . import user
 
 # Webserver definition
 
+if "DOCKER" in os.environ:
+    enpoint_fetcher = "http://localhost:5001"
+    endpoint_analysis = "http://localhost:5002"
+else:
+    enpoint_fetcher = "http://fetcher.dev:5001"
+    endpoint_analysis = "http://analysis.dev:5002"
+
 app = FastAPI()
 
-origins = ["*"]
-
+# Allow CORS for all origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,7 +30,7 @@ app.add_middleware(
 
 # Analysis
 @app.get("/api/summary")
-async def summary():
+def summary():
     response = httpx.post(
         "http://analysis.dev:5001/",
         json=request_uuid(
@@ -36,7 +45,7 @@ async def summary():
 
 # Fetcher
 @app.get("/api/getnews")
-async def call_fetcher():
+def call_fetcher():
     response = httpx.post(
         "http://fetcher.dev:5002/",
         json=request_uuid("retrive_information"),
