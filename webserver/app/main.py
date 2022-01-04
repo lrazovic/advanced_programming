@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from jsonrpcclient import Error
 from jsonrpcclient.requests import request_uuid
 
 import httpx
@@ -30,27 +31,45 @@ app.add_middleware(
 
 # Analysis
 @app.get("/api/summary")
-def summary():
-    response = httpx.post(
-        "http://analysis.dev:5001/",
-        json=request_uuid(
-            "summarize",
-            params=[
-                "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling."
-            ],
-        ),
-    )
-    return response.json()
+async def summary():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = client.post(
+                "http://analysis:5001/",
+                json=request_uuid(
+                    "summarize",
+                    params=[
+                        "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling."
+                    ],
+                ),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
 
 
 # Fetcher
 @app.get("/api/getnews")
-def call_fetcher():
-    response = httpx.post(
-        "http://fetcher.dev:5002/",
-        json=request_uuid("retrive_information"),
-    )
-    return response.json()
+async def call_fetcher():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = client.post(
+                "http://fetcher:5002/",
+                json=request_uuid("retrive_information"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
 
 
 #
