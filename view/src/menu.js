@@ -1,4 +1,5 @@
 import {
+  mdiAccountCircle,
   // mdiAccountCircle,
   // mdiLock,
   // mdiAlertCircle,
@@ -17,6 +18,11 @@ export default [
       to: '/',
       icon: mdiNewspaper,
       label: 'Feed'
+    },
+    {
+      to: '/profile',
+      icon: mdiAccountCircle,
+      label: 'My profile'
     }
   ]
   // [

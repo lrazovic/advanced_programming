@@ -1,38 +1,50 @@
 <script setup>
-// import MainSection from '@/components/MainSection.vue'
-// import NewsCard from '@/components/NewsCard'
+import MainSection from '@/components/MainSection.vue'
+import NewsCard from '@/components/NewsCard'
 </script>
 
 <template>
   <main-section>
     <div
-      v-for="i in 10"
+      v-for="(post, i) in posts"
       :key="i"
       class="flex justify-center pt-8"
     >
       <news-card
-        :img="newsContent.img"
-        :content="newsContent.content"
-        :hashtags="newsContent.hashtags"
-        :title="newsContent.title"
-        :img-alt="newsContent.alt"
+        :img="post.img"
+        :content="post.summary"
+        :hashtags="post.tags"
+        :title="post.title"
+        :img-alt="img_alt"
+        :link="post.link"
       />
     </div>
   </main-section>
 </template>
 
 <script>
+import { get } from '../../helpers/api'
+
 export default {
   data () {
     return {
-      newsContent: {
-        img: 'https://marmotamaps.com/de/fx/wallpaper/download/faszinationen/Marmotamaps_Wallpaper_Berchtesgaden_Desktop_1920x1080.jpg',
-        alt: 'No image found',
-        title: 'Some news title',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, Nonea! Maiores et perferendis eaque, exercitationem praesentium nihil.',
-        hashtags: ['travel', 'mountain', 'sky']
-      }
+      posts: '',
+      img_alt: 'No image found'
     }
+  },
+  methods: {
+    getNews () {
+      let _this = this
+      get(_this, 'dummy/getnews', { params: '' }, function (response) {
+        let json = response.data
+        _this.posts = json.result.posts
+      }, function () {
+        //
+      })
+    }
+  },
+  created () {
+    this.getNews()
   }
 }
 </script>
