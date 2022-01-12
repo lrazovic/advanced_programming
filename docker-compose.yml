@@ -21,7 +21,7 @@ services:
       - postgres
     build:
       context: webserver/
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "5000:5000"
     #environment:
@@ -96,7 +96,7 @@ services:
     volumes:
       - auth:/mnt/easyauth
     ports:
-      - '8220:8220'
+      - '5003:8220'
     networks:
       backend:
         aliases:
