@@ -1,13 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from jsonrpcclient import Error
 from jsonrpcclient.requests import request_uuid
 
 import httpx
 import os
 
-from . import connection
-from . import user
+# from . import connection
+# from . import user
 
 # Webserver definition
 
@@ -34,7 +33,7 @@ app.add_middleware(
 async def summary():
     try:
         async with httpx.AsyncClient() as client:
-            response = client.post(
+            response = await client.post(
                 "http://analysis:5001/",
                 json=request_uuid(
                     "summarize",
@@ -58,7 +57,7 @@ async def summary():
 async def call_fetcher():
     try:
         async with httpx.AsyncClient() as client:
-            response = client.post(
+            response = await client.post(
                 "http://fetcher:5002/",
                 json=request_uuid("retrive_information"),
             )
@@ -211,6 +210,7 @@ async def read_item(item_id, q=None):
     return {"item_id": item_id, "q": q}
 
 
+"""
 # Signup endpoint with the POST method
 @app.post("/api/{email}/{username}/{password}")
 async def signup(email, username: str, password: str):
@@ -234,3 +234,4 @@ async def signup(email, username: str, password: str):
             "name": data["name"],
             "pass": data["password"],
         }
+"""

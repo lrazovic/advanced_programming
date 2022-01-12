@@ -25,4 +25,4 @@ The services are:
 * `mongodb`
 * `analysis`
 * `fether`
-* `ONLY_ONE_IS_MISSING`
+* Heavily WIP: `easyauth`
