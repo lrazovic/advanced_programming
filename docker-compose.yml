@@ -1,38 +1,33 @@
-# https://medium.com/swlh/how-to-set-up-a-react-app-with-a-flask-and-mongodb-backend-using-docker-19b356180199
-version: "3.8"
+version: "3.9"
 services:
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:14.1-alpine
     restart: unless-stopped
-    command: mongod --auth
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "admin"
-      MONGO_INITDB_ROOT_PASSWORD: "password"
-      MONGO_INITDB_DATABASE: webapp
-      MONGODB_DATA_DIR: /data/db
     volumes:
-      # - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - mongodbdata:/data/db
+      - db-data:/var/lib/postgresql/data
     networks:
       backend:
         aliases:
-          - mongodb.dev
-      
+          - database.dev
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pguser
+      POSTGRES_DB: pgdb
     ports:
-      - "27017:27017"
+      - "5432:5432"
 
   webserver:
     depends_on:
-      - mongodb
+      - postgres
     build:
       context: webserver/
     restart: on-failure
     ports:
       - "5000:5000"
-    environment:
-      MONGODB_HOST: mongodb
-      MONGODB_USERNAME: "apiuser"
-      MONGODB_PASSWORD: "apipassword"
+    #environment:
+    #  MONGODB_HOST: mongodb
+    #  MONGODB_USERNAME: "apiuser"
+    #  MONGODB_PASSWORD: "apipassword"
     volumes:
       - appdata:/var/www/
     networks:
@@ -78,6 +73,35 @@ services:
         aliases:
           - fetcher.dev
 
+  authentication:
+    depends_on:
+      - postgres
+    image: joshjamison/easyauth:1.0.19
+    environment:
+      - DB_TYPE=postgres
+      - DB_NAME=pgdb
+      - DB_HOST=database.dev
+      - DB_PORT=5432
+      - DB_USER=pguser
+      - DB_PASSWORD=pguser
+      - ISSUER=EasyAuth
+      - SUBJECT=EasyAuthAuth
+      - AUDIENCE=EasyAuthApis
+      - KEY_PATH=/mnt/easyauth
+      - KEY_NAME=test_key
+      - AUTH_SECRET=my-secret
+      - ADMIN_PREFIX=/admin
+      - ADMIN_TITLE="EasyAuth - Example'
+      - AUTH_WORKERS=1
+    volumes:
+      - auth:/mnt/easyauth
+    ports:
+      - '8220:8220'
+    networks:
+      backend:
+        aliases:
+          - authentication.dev
+
 networks:
   frontend:
     driver: bridge
@@ -85,9 +109,11 @@ networks:
     driver: bridge
 
 volumes:
-  mongodbdata:
+  db-data:
     driver: local
   appdata:
     driver: local
   nltkdata:
+    driver: local
+  auth:
     driver: local

@@ -1,9 +1,6 @@
-#!/usr/bin/env node
-//Principale
-require('dotenv').config()
 const express = require('express')
 const passport = require('passport')
-
+const axios = require('axios');
 const session = require('express-session')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 
@@ -52,12 +49,9 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 		email: req.user.emails[0].value,
 		accessToken: req.authInfo
 	}
-
-
-	//res.send("L'email dell'user è " + umail + req.isAuthenticated());
-	//res.sendFile(__dirname + "/" + "authcall.html");
-	res.send(user_info)
+	await axios.post('http://localhost:5000/auth', user_info);
 });
+
 app.get('/', function (req, res) {
 	res.sendFile(__dirname + "/" + "home.html");
 })
@@ -68,8 +62,8 @@ app.get('/isauthenticated', function (req, res) {
 	res.send("User authenticated : " + auth);
 })
 
-// Avvio del server
-var server = app.listen(PORT, function () {
+
+app.listen(PORT, function () {
 	console.log('[i] Provaapp su http://localhost:%s', PORT);
 	console.log("[+] Premere ctrl+c per terminare");
 
