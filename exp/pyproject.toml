@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "exp"
+version = "0.1.0"
+description = ""
+authors = ["ai18 <antonio.ionta.18@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.70.0"
+schematics = "^2.1.1"
+pymongo = "^4.0.1"
+jsonrpcclient = "^4.0.2"
+uvicorn = "^0.16.0"
+httpx = "^0.21.1"
+easy-auth = {extras = ["server"], version = "^1.0.19"}
+aiosqlite = "^0.17.0"
+
+[tool.poetry.dev-dependencies]
+black = "^21.12b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
