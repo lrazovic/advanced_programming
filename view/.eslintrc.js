@@ -9,7 +9,6 @@ module.exports = {
         'plugin:vue/vue3-recommended'
     ],
     "parserOptions": {
-        "ecmaVersion": 13,
         "sourceType": "module"
     },
     "plugins": [
