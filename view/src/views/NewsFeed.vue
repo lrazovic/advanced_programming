@@ -32,6 +32,9 @@ export default {
       img_alt: 'No image found'
     }
   },
+  created () {
+    this.getNews()
+  },
   methods: {
     getNews () {
       let _this = this
@@ -42,9 +45,6 @@ export default {
         //
       })
     }
-  },
-  created () {
-    this.getNews()
   }
 }
 </script>

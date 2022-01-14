@@ -1,8 +1,9 @@
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:3000/api/'
 
-export function post (_this, url, payload, successCallback, errorCallback) {
-  let headers = ''
+export function post(_this, url, payload, successCallback, errorCallback) {
+  const headers = ''
+
   return axios({
     method: 'POST',
     url: url,
@@ -17,7 +18,7 @@ export function post (_this, url, payload, successCallback, errorCallback) {
   })
 }
 
-export function get (_this, url, payload, successCallback, errorCallback) {
+export function get(_this, url, payload, successCallback, errorCallback) {
   const headers = ''
 
   return axios({
@@ -32,7 +33,7 @@ export function get (_this, url, payload, successCallback, errorCallback) {
   })
 }
 
-export function del (_this, url, payload, successCallback, errorCallback) {
+export function del(_this, url, payload, successCallback, errorCallback) {
   const headers = ''
 
   return axios({
