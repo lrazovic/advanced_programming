@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "serve": "vite preview",
+    "serve": "vite build && vite preview",
     "build": "vite build"
   },
   "dependencies": {
