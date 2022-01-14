@@ -22,7 +22,7 @@ if ((localStorageDarkModeValue === null && window.matchMedia('(prefers-color-sch
 const defaultDocumentTitle = 'Summary News Feed'
 
 /* Collapse mobile aside menu on route change */
-router.beforeEach(to => {
+router.beforeEach(() => {
   store.dispatch('asideMobileToggle', false)
   store.dispatch('asideLgToggle', false)
 })
