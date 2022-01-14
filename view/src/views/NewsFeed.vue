@@ -1,6 +1,6 @@
 <script setup>
 import MainSection from '@/components/MainSection.vue'
-import NewsCard from '@/components/NewsCard'
+import NewsCard from '@/components/NewsCard.vue'
 </script>
 
 <template>
