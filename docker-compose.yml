@@ -97,6 +97,7 @@ services:
       - auth:/mnt/easyauth
     ports:
       - '5003:8220'
+      - "5004:8092"
     networks:
       backend:
         aliases:
