@@ -1,19 +1,21 @@
+#test_client.py
 from fastapi import FastAPI
-from easyauth.server import EasyAuthServer
 
-app = FastAPI()
+from easyauth.client import EasyAuthClient
 
-@app.on_event('startup')
+server = FastAPI()
+
+@server.on_event('startup')
 async def startup():
-    app.auth = await EasyAuthServer.create(
-        app, 
-        '/auth/token',
-        auth_secret='abcd1234',
-        admin_title='Hello Secured World',
-        admin_prefix='/admin',
-        env_from_file='/home/ai/WIP/labAP/advanced_programming/exp/server_sqlite.json'
+    server.auth = await EasyAuthClient.create(
+        server,
+        token_server='0.0.0.0',
+        token_server_port=5003,
+        auth_secret='my-secret',
+        default_permissions={'groups': ['test']}
     )
 
-    @app.auth.get('/')
-    async def hello_world():
-        return "Hello World!"
+    # grants access to users matching default_permissions
+    @server.auth.get('/default')
+    async def default():
+        return f"I am default"

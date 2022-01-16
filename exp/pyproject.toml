@@ -12,8 +12,10 @@ pymongo = "^4.0.1"
 jsonrpcclient = "^4.0.2"
 uvicorn = "^0.16.0"
 httpx = "^0.21.1"
-easy-auth = {extras = ["server"], version = "^1.0.19"}
 aiosqlite = "^0.17.0"
+easy-auth = {extras = ["client"], version = "^1.0.19"}
+pydantic = {extras = ["email"], version = "^1.8.2"}
+pydbantic = "^0.0.19"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
