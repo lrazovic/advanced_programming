@@ -34,7 +34,7 @@ app.add_middleware(
 async def startup():
     app.auth = await EasyAuthClient.create(
         app,
-        token_server="authentication",
+        token_server="172.17.0.1",
         token_server_port=8220,
         auth_secret="my-secret",
         default_permissions={"groups": ["test"]},
