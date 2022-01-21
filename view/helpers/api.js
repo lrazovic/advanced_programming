@@ -2,7 +2,7 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:3000/api/'
 
 export async function post(_this, url, payload, successCallback, errorCallback) {
-  const headers = ''
+  let headers = _this.$auth.getToken() ? {'Authorization': `Bearer ${_this.$auth.getToken()}`} : '';
 
   try {
     const response = await axios({
@@ -13,14 +13,14 @@ export async function post(_this, url, payload, successCallback, errorCallback) 
     })
     successCallback(response)
   } catch (error) {
-    if (!error.status) { console.log('network error')} 
+    if (!error.status) { console.log('network error')}
     console.log(error.response)
-    if (errorCallback) { errorCallback(error)} 
+    if (errorCallback) { errorCallback(error)}
   }
 }
 
 export async function get(_this, url, payload, successCallback, errorCallback) {
-  const headers = ''
+  let headers = _this.$auth.getToken() ? {'Authorization': `Bearer ${_this.$auth.getToken()}`} : '';
 
   try {
     const response = await axios({
@@ -31,12 +31,12 @@ export async function get(_this, url, payload, successCallback, errorCallback) {
     })
     successCallback(response)
   } catch (error) {
-    if (errorCallback) { errorCallback(error)} 
+    if (errorCallback) { errorCallback(error)}
   }
 }
 
 export async function del(_this, url, payload, successCallback, errorCallback) {
-  const headers = ''
+  let headers = _this.$auth.getToken() ? {'Authorization': `Bearer ${_this.$auth.getToken()}`} : '';
 
   try {
     const response = await axios({
@@ -47,6 +47,6 @@ export async function del(_this, url, payload, successCallback, errorCallback) {
     })
     successCallback(response)
   } catch (error) {
-    if (errorCallback) { errorCallback(error)} 
+    if (errorCallback) { errorCallback(error)}
   }
 }
