@@ -16,23 +16,49 @@ services:
     ports:
       - "5432:5432"
 
-  webserver:
+  authentication:
     depends_on:
       - postgres
+    image: joshjamison/easyauth:1.0.19
+    environment:
+      - DB_TYPE=postgres
+      - DB_NAME=pgdb
+      - DB_HOST=database.dev
+      - DB_PORT=5432
+      - DB_USER=pguser
+      - DB_PASSWORD=pguser
+      - ISSUER=EasyAuth
+      - SUBJECT=EasyAuthAuth
+      - AUDIENCE=EasyAuthApis
+      - KEY_PATH=/mnt/easyauth
+      - KEY_NAME=test_key
+      - AUTH_SECRET=my-secret
+      - ADMIN_PREFIX=/admin
+      - ADMIN_TITLE="EasyAuth - Example'
+      - AUTH_WORKERS=1
+    volumes:
+      - auth:/mnt/easyauth
+    ports:
+      - '8220:8220'
+      - "8092:8092"
+    networks:
+      backend:
+        aliases:
+          - authentication.dev
+
+  webserver:
+    depends_on:
+      - authentication
     build:
       context: webserver/
     restart: unless-stopped
     ports:
       - "5000:5000"
-    #environment:
-    #  MONGODB_HOST: mongodb
-    #  MONGODB_USERNAME: "apiuser"
-    #  MONGODB_PASSWORD: "apipassword"
     volumes:
       - appdata:/var/www/
     networks:
-      - frontend
       - backend
+      - frontend
 
   view:
     depends_on:
@@ -57,9 +83,7 @@ services:
     volumes:
       - nltkdata:/root/nltk_data
     networks:
-      backend:
-        aliases:
-          - analysis.dev
+      - backend
 
   fetcher:
     depends_on:
@@ -69,39 +93,7 @@ services:
     ports:
       - "5002:5002"
     networks:
-      backend:
-        aliases:
-          - fetcher.dev
-
-  authentication:
-    depends_on:
-      - postgres
-    image: joshjamison/easyauth:1.0.19
-    environment:
-      - DB_TYPE=postgres
-      - DB_NAME=pgdb
-      - DB_HOST=database.dev
-      - DB_PORT=5432
-      - DB_USER=pguser
-      - DB_PASSWORD=pguser
-      - ISSUER=EasyAuth
-      - SUBJECT=EasyAuthAuth
-      - AUDIENCE=EasyAuthApis
-      - KEY_PATH=/mnt/easyauth
-      - KEY_NAME=test_key
-      - AUTH_SECRET=my-secret
-      - ADMIN_PREFIX=/admin
-      - ADMIN_TITLE="EasyAuth - Example'
-      - AUTH_WORKERS=1
-    volumes:
-      - auth:/mnt/easyauth
-    ports:
-      - '5003:8220'
-      - "5004:8092"
-    networks:
-      backend:
-        aliases:
-          - authentication.dev
+      - backend
 
 networks:
   frontend:

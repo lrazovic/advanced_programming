@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from jsonrpcclient.requests import request_uuid
+from easyauth.client import EasyAuthClient
 
 import httpx
 import os
@@ -14,8 +15,8 @@ if "DOCKER" in os.environ:
     enpoint_fetcher = "http://localhost:5001"
     endpoint_analysis = "http://localhost:5002"
 else:
-    enpoint_fetcher = "http://fetcher.dev:5001"
-    endpoint_analysis = "http://analysis.dev:5002"
+    enpoint_fetcher = "http://fetcher:5001"
+    endpoint_analysis = "http://analysis:5002"
 
 app = FastAPI()
 
@@ -27,6 +28,29 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def startup():
+    app.auth = await EasyAuthClient.create(
+        app,
+        token_server="authentication",
+        token_server_port=8220,
+        auth_secret="my-secret",
+        default_permissions={"groups": ["test"]},
+    )
+
+    # Analysis
+    @app.auth.get("/api/dummy/summary")
+    async def dummy_summary():
+        res = {
+            "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
+            "jsonrpc": "2.0",
+            "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
+        }
+
+        return res
+
 
 # Analysis
 @app.get("/api/summary")
@@ -74,17 +98,6 @@ async def call_fetcher():
 #
 # Dummy functions
 #
-
-# Analysis
-@app.get("/api/dummy/summary")
-async def dummy_summary():
-    res = {
-        "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
-        "jsonrpc": "2.0",
-        "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
-    }
-
-    return res
 
 
 # Fetcher
