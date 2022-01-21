@@ -7,12 +7,14 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-fastapi = "^0.70.0"
+fastapi = "^0.72.0"
 schematics = "^2.1.1"
-pymongo = "^4.0.1"
 jsonrpcclient = "^4.0.2"
-uvicorn = "^0.16.0"
-httpx = "^0.21.1"
+uvicorn = "^0.17.0"
+httpx = "^0.21.3"
+easy-auth = "^1.0.19"
+pydantic = {extras = ["email"], version = "^1.8.2"}
+pydbantic = "^0.0.19"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"
