@@ -11,12 +11,14 @@ import os
 
 # Webserver definition
 
-if "DOCKER" in os.environ:
+if "DEV" in os.environ:
     enpoint_fetcher = "http://localhost:5001"
     endpoint_analysis = "http://localhost:5002"
+    enpoint_token = "http://localhost"
 else:
     enpoint_fetcher = "http://fetcher:5001"
     endpoint_analysis = "http://analysis:5002"
+    enpoint_token = "172.17.0.1"
 
 app = FastAPI()
 
@@ -34,7 +36,7 @@ app.add_middleware(
 async def startup():
     app.auth = await EasyAuthClient.create(
         app,
-        token_server="172.17.0.1",
+        token_server=enpoint_token,
         token_server_port=8220,
         auth_secret="my-secret",
         default_permissions={"groups": ["test"]},

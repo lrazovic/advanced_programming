@@ -7,7 +7,7 @@ authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 feedparser = "^6.0.8"
-jsonrpcserver = "^5.0.5"
+jsonrpcserver = "^5.0.6"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"

@@ -1,6 +1,6 @@
 FROM python:3.8-slim AS builder
 WORKDIR /app
-ADD pyproject.toml poetry.lock /app/
+COPY  pyproject.toml poetry.lock /app/
 
 RUN pip install poetry
 RUN poetry config virtualenvs.in-project true
@@ -12,6 +12,6 @@ FROM python:3.8-slim
 EXPOSE 5001
 WORKDIR /app
 COPY --from=builder /app /app
-ADD . /app
+COPY  . /app
 RUN /app/.venv/bin/python -m nltk.downloader popular
 CMD /app/.venv/bin/python app/main.py
