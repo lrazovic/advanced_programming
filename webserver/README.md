@@ -9,7 +9,7 @@ docker build -t webserver .
 
 ### Prerequisites
 
-* An EasyAuth Server running on port 8080
+* An EasyAuth Server running on port 8220
 
 
 ### Run via Docker
