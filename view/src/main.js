@@ -6,6 +6,7 @@ import store from './store'
 import { darkModeKey } from '@/config.js'
 
 import './css/main.css'
+import Auth from "./packages/auth/auth";
 
 /* Fetch sample data */
 store.dispatch('fetch', 'clients')
@@ -39,4 +40,6 @@ router.afterEach(to => {
   store.dispatch('fullScreenToggle', !!to.meta.fullScreen)
 })
 
-createApp(App).use(store).use(router).mount('#app')
+
+const app = createApp(App).use(store).use(router).use(Auth)
+app.mount('#app')

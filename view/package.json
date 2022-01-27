@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite --host",
     "serve": "vite build && vite preview",
-    "build": "vite build"
+    "build": "vite build",
+    "s": "vue-cli-service serve"
   },
   "dependencies": {
     "@mdi/js": "^6.5.95",

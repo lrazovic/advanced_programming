@@ -23,7 +23,7 @@ import NewsCard from '@/components/NewsCard.vue'
 </template>
 
 <script>
-import { get } from '../../helpers/api'
+import { get } from '../helpers/api'
 
 export default {
   data () {

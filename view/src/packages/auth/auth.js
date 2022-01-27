@@ -1,5 +1,5 @@
-export default function (Vue) {
-    Vue.auth = {
+export default function (app) {
+    app.auth = {
 
         setToken(token) {
             localStorage.setItem('token', token);
@@ -38,12 +38,5 @@ export default function (Vue) {
 
 
     };
-
-    Object.defineProperties(Vue.prototype, {
-        $auth: {
-            get() {
-                return Vue.auth;
-            }
-        }
-    })
+    app.config.globalProperties.$auth = app.auth
 }
