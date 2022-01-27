@@ -60,7 +60,7 @@ async def summary():
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "http://analysis:5001/",
+                endpoint_analysis,
                 json=request_uuid(
                     "summarize",
                     params=[
@@ -84,7 +84,7 @@ async def call_fetcher():
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "http://fetcher:5002/",
+                endpoint_fetcher,
                 json=request_uuid("retrive_information"),
             )
         if response.is_error:
