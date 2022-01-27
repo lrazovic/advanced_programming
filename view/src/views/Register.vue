@@ -1,27 +1,13 @@
 <script setup>
-// import { reactive } from 'vue'
-// import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
-// import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
 import Divider from '@/components/DividerBar.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 
-// const form = reactive({
-//   login: '',
-//   pass: '',
-//   remember: ['remember']
-// })
-
-// const router = useRouter()
-//
-// const submit = () => {
-//
-// }
 </script>
 
 <template>
@@ -33,11 +19,11 @@ import JbButtons from '@/components/JbButtons.vue'
       :class="cardClass"
       :rounded="cardRounded"
       form
-      @submit.prevent="login"
+      @submit.prevent="register"
     >
       <field
-        label="Login"
-        help="Please enter your login"
+        label="Register"
+        help="Please enter new login"
       >
         <control
           v-model="form.login"
@@ -49,7 +35,7 @@ import JbButtons from '@/components/JbButtons.vue'
 
       <field
         label="Password"
-        help="Please enter your password"
+        help="Please enter new password"
       >
         <control
           v-model="form.pass"
@@ -60,25 +46,19 @@ import JbButtons from '@/components/JbButtons.vue'
         />
       </field>
 
-<!--      <check-radio-picker-->
-<!--        v-model="form.remember"-->
-<!--        name="remember"-->
-<!--        :options="{ remember: 'Remember' }"-->
-<!--      />-->
-
       <divider />
 
       <jb-buttons>
         <jb-button
           type="submit"
           color="info"
-          label="Login"
+          label="Register"
         />
         <jb-button
-          to="/register"
+          to="/login"
           color="info"
           outline
-          label="Register"
+          label="Login"
         />
       </jb-buttons>
     </card-component>
@@ -97,7 +77,7 @@ export default {
     }
   },
   methods: {
-    login () {
+    register() {
       let _this = this;
       post(_this, '', _this.form, () => {
         this.$router.push('/')

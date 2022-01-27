@@ -27,6 +27,15 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+  },
+  {
+    meta: {
+      title: 'Register',
+      fullScreen: true
+    },
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue')
   }
 ]
 
