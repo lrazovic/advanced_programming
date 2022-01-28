@@ -26,7 +26,7 @@ const routes = [
     },
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '@/views/LoginView.vue')
   },
   {
     meta: {
@@ -35,14 +35,14 @@ const routes = [
     },
     path: '/register',
     name: 'Register',
-    component: () => import('@/views/Register.vue')
+    component: () => import('@/views/RegisterView.vue')
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     return savedPosition || { top: 0 }
   }
 })

@@ -6,15 +6,16 @@ authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fastapi = "^0.73.0"
-schematics = "^2.1.1"
 jsonrpcclient = "^4.0.2"
-uvicorn = "^0.17.0"
+uvicorn = "^0.17.1"
 httpx = "^0.22"
-easy-auth = "^1.0.19"
-pydantic = {extras = ["email"], version = "^1.8.2"}
-pydbantic = "^0.0.21"
+pydantic = {extras = ["email"], version = "^1.9.0"}
+python-dotenv = "^0.19.2"
+Authlib = "^0.15.5"
+PyJWT = "^2.3.0"
+itsdangerous = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"

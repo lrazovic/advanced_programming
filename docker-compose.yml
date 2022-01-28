@@ -16,39 +16,9 @@ services:
     ports:
       - "5432:5432"
 
-  authentication:
-    depends_on:
-      - postgres
-    image: joshjamison/easyauth:1.0.19
-    environment:
-      - DB_TYPE=postgres
-      - DB_NAME=pgdb
-      - DB_HOST=database.dev
-      - DB_PORT=5432
-      - DB_USER=pguser
-      - DB_PASSWORD=pguser
-      - ISSUER=EasyAuth
-      - SUBJECT=EasyAuthAuth
-      - AUDIENCE=EasyAuthApis
-      - KEY_PATH=/mnt/easyauth
-      - KEY_NAME=test_key
-      - AUTH_SECRET=my-secret
-      - ADMIN_PREFIX=/admin
-      - ADMIN_TITLE="EasyAuth - Example'
-      - AUTH_WORKERS=1
-    volumes:
-      - auth:/mnt/easyauth
-    ports:
-      - '8220:8220'
-      - "8092:8092"
-    networks:
-      backend:
-        aliases:
-          - authentication.dev
-
   webserver:
     depends_on:
-      - authentication
+      - postgres
     build:
       context: webserver/
     restart: unless-stopped
@@ -107,6 +77,4 @@ volumes:
   appdata:
     driver: local
   nltkdata:
-    driver: local
-  auth:
     driver: local

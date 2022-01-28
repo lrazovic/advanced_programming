@@ -35,4 +35,3 @@ The services are:
 * `mongodb`
 * `analysis`
 * `fether`
-* Heavily WIP: `easyauth`

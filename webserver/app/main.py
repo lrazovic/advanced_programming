@@ -1,13 +1,23 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends
 from jsonrpcclient.requests import request_uuid
-from easyauth.client import EasyAuthClient
+from starlette.middleware.sessions import SessionMiddleware
+from authlib.integrations.starlette_client import OAuth, OAuthError
+from starlette.config import Config
+from starlette.requests import Request
+from starlette.responses import JSONResponse, RedirectResponse
+from datetime import datetime
 
 import httpx
 import os
 
-# from . import connection
-# from . import user
+from app.jwt import create_token
+from app.jwt import valid_email_from_db
+from app.jwt import get_current_user_email
+from app.jwt import create_refresh_token
+from app.jwt import decode_token
+from app.jwt import CREDENTIALS_EXCEPTION
 
 # Webserver definition
 
@@ -21,6 +31,7 @@ else:
     enpdoint_token = "172.17.0.1"
 
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key="!secret")
 
 # Allow CORS for all origins
 app.add_middleware(
@@ -31,32 +42,86 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+config = Config(".env")
+oauth = OAuth(config)
 
-@app.on_event("startup")
-async def startup():
-    app.auth = await EasyAuthClient.create(
-        app,
-        token_server=enpdoint_token,
-        token_server_port=8220,
-        auth_secret="my-secret",
-        default_permissions={"groups": ["test"]},
-    )
+CONF_URL = "https://accounts.google.com/.well-known/openid-configuration"
+oauth.register(
+    name="google",
+    server_metadata_url=CONF_URL,
+    client_kwargs={"scope": "openid email profile"},
+)
 
-    # Analysis
-    @app.auth.get("/api/dummy/summary")
-    async def dummy_summary():
-        res = {
-            "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
-            "jsonrpc": "2.0",
-            "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
-        }
 
-        return res
+@app.get("/api/login")
+async def login(request: Request):
+    redirect_uri = request.url_for("auth")
+    return await oauth.google.authorize_redirect(request, redirect_uri)
+
+
+@app.get("/api/auth")
+async def auth(request: Request):
+    try:
+        access_token = await oauth.google.authorize_access_token(request)
+    except OAuthError:
+        raise CREDENTIALS_EXCEPTION
+    user_data = await oauth.google.parse_id_token(request, access_token)
+    if valid_email_from_db(user_data["email"]):
+        return JSONResponse(
+            {
+                "result": True,
+                "access_token": create_token(user_data["email"]),
+                "refresh_token": create_refresh_token(user_data["email"]),
+            }
+        )
+    raise CREDENTIALS_EXCEPTION
+
+
+@app.get("/api/logout")
+async def logout(request: Request):
+    request.session.pop("user", None)
+    return RedirectResponse(url="/")
+
+
+@app.post("/api/refresh")
+async def refresh(request: Request):
+    try:
+        # Only accept post requests
+        if request.method == "POST":
+            form = await request.json()
+            if form.get("grant_type") == "refresh_token":
+                token = form.get("refresh_token")
+                payload = decode_token(token)
+                # Check if token is not expired
+                if datetime.utcfromtimestamp(payload.get("exp")) > datetime.utcnow():
+                    email = payload.get("sub")
+                    # Validate email
+                    if valid_email_from_db(email):
+                        # Create and return token
+                        return JSONResponse(
+                            {"result": True, "access_token": create_token(email)}
+                        )
+
+    except Exception:
+        raise CREDENTIALS_EXCEPTION
+    raise CREDENTIALS_EXCEPTION
+
+
+# Analysis
+@app.get("/api/dummy/summary")
+async def dummy_summary():
+    res = {
+        "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
+        "jsonrpc": "2.0",
+        "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
+    }
+
+    return res
 
 
 # Analysis
 @app.get("/api/summary")
-async def summary():
+async def summary(current_email: str = Depends(get_current_user_email)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
@@ -223,30 +288,3 @@ async def index():
 @app.get("/api/items/{item_id}")
 async def read_item(item_id, q=None):
     return {"item_id": item_id, "q": q}
-
-
-"""
-# Signup endpoint with the POST method
-@app.post("/api/{email}/{username}/{password}")
-async def signup(email, username: str, password: str):
-    user_exists = False
-    data = user.create_user(email, username, password)
-
-    # Covert data to dict so it can be easily inserted to MongoDB
-    dict(data)
-
-    # Checks if an email exists from the collection of users
-    if connection.db.users.count_documents({"email": data["email"]}) > 0:
-        user_exists = True
-        print("User Exists")
-        return {"message": "User Exists"}
-    # If the email doesn't exist, create the user
-    elif user_exists == False:
-        connection.db.users.insert_one(data)
-        return {
-            "message": "User Created",
-            "email": data["email"],
-            "name": data["name"],
-            "pass": data["password"],
-        }
-"""
