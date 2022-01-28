@@ -107,7 +107,7 @@ async def refresh(request: Request):
     raise CREDENTIALS_EXCEPTION
 
 
-# Analysis
+# Summary
 @app.get("/api/dummy/summary")
 async def dummy_summary():
     res = {
@@ -119,7 +119,7 @@ async def dummy_summary():
     return res
 
 
-# Analysis
+# Summary
 @app.get("/api/summary")
 async def summary(current_email: str = Depends(get_current_user_email)):
     try:
@@ -165,6 +165,17 @@ async def call_fetcher():
 #
 # Dummy functions
 #
+
+# Dummy Login
+@app.get("/api/dummy/login")
+async def dummy_login():
+    return JSONResponse(
+        {
+            "result": "true",
+            "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJscmF6b3ZpY0BnbWFpbC5jb20iLCJleHAiOjE2NDM0MDc5NDd9._h426jMZXWJ5zwclxtkg4A8xe7-GxJB-XgGa55EYfBQ",
+            "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJscmF6b3ZpY0BnbWFpbC5jb20iLCJleHAiOjE2NDU5OTkwNDd9.iZjQTbf004zjqTqxEkGWbDSncdmAyj3-K39uVuFfENs",
+        }
+    )
 
 
 # Fetcher
