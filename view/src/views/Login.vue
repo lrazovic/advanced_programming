@@ -33,6 +33,8 @@ import JbButtons from '@/components/JbButtons.vue'
       :class="cardClass"
       :rounded="cardRounded"
       form
+      headerIcon="."
+      title="Log In"
       @submit.prevent="login"
     >
       <field

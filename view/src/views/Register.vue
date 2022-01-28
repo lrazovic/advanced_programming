@@ -19,10 +19,12 @@ import JbButtons from '@/components/JbButtons.vue'
       :class="cardClass"
       :rounded="cardRounded"
       form
+      headerIcon="."
+      title="Register"
       @submit.prevent="register"
     >
       <field
-        label="Register"
+        label="Login"
         help="Please enter new login"
       >
         <control
