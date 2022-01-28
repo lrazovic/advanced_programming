@@ -86,7 +86,7 @@ import JbButtons from "@/components/JbButtons.vue";
           to="/api/login"
           color="info"
           outline
-          label="Login via Google"
+          label="Login via Google (Not Working, should open a popup window)"
         />
       </jb-buttons>
     </card-component>
