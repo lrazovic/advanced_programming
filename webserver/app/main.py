@@ -30,7 +30,26 @@ else:
     endpoint_analysis = "http://analysis:5001"
     enpdoint_token = "172.17.0.1"
 
-app = FastAPI()
+tags_metadata = [
+    {
+        "name": "auth",
+        "description": "Operations for securing the whole API and managing user authentication",
+    },
+    {
+        "name": "news_fetcher",
+        "description": "Operations for retrieving RSS news"
+    },
+    {
+        "name": "ml_processing",
+        "description": "Operations for obtaining news textual summary exploiting Natural Language Processing"
+    },
+    {
+        "name": "dummy",
+        "description": "Just for testing"
+    }
+]
+
+app = FastAPI(openapi_tags=tags_metadata)
 app.add_middleware(SessionMiddleware, secret_key="!secret")
 
 # Allow CORS for all origins
@@ -52,14 +71,19 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
+@app.get("/api")
+async def index():
+    return {"message": "Hello World!"}
 
-@app.get("/api/login")
+# AUTH
+
+@app.get("/api/login", tags=["auth"])
 async def login(request: Request):
     redirect_uri = request.url_for("auth")
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
-@app.get("/api/auth")
+@app.get("/api/auth", tags=["auth"])
 async def auth(request: Request):
     try:
         access_token = await oauth.google.authorize_access_token(request)
@@ -77,13 +101,13 @@ async def auth(request: Request):
     raise CREDENTIALS_EXCEPTION
 
 
-@app.get("/api/logout")
+@app.get("/api/logout", tags=["auth"])
 async def logout(request: Request):
     request.session.pop("user", None)
     return RedirectResponse(url="/")
 
 
-@app.post("/api/refresh")
+@app.post("/api/refresh", tags=["auth"])
 async def refresh(request: Request):
     try:
         # Only accept post requests
@@ -107,20 +131,28 @@ async def refresh(request: Request):
     raise CREDENTIALS_EXCEPTION
 
 
-# Summary
-@app.get("/api/dummy/summary")
-async def dummy_summary():
-    res = {
-        "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
-        "jsonrpc": "2.0",
-        "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
-    }
+# NEWS FETCHER
 
-    return res
+@app.get("/api/getnews", tags=["news_fetcher"])
+async def call_fetcher():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_fetcher,
+                json=request_uuid("retrive_information"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
 
+# ML PROCESSING
 
-# Summary
-@app.get("/api/summary")
+@app.get("/api/summary", tags=["ml_processing"])
 async def summary(current_email: str = Depends(get_current_user_email)):
     try:
         async with httpx.AsyncClient() as client:
@@ -142,32 +174,9 @@ async def summary(current_email: str = Depends(get_current_user_email)):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+# DUMMY
 
-# Fetcher
-@app.get("/api/getnews")
-async def call_fetcher():
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                endpoint_fetcher,
-                json=request_uuid("retrive_information"),
-            )
-        if response.is_error:
-            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
-        else:
-            return response.json()
-    except:
-        raise HTTPException(
-            status_code=500, detail="Impossible to connect to JSON-RPC Server"
-        )
-
-
-#
-# Dummy functions
-#
-
-# Dummy Login
-@app.get("/api/dummy/login")
+@app.get("/api/dummy/login", tags=["dummy"])
 async def dummy_login():
     return JSONResponse(
         {
@@ -177,9 +186,7 @@ async def dummy_login():
         }
     )
 
-
-# Fetcher
-@app.get("/api/dummy/getnews")
+@app.get("/api/dummy/getnews", tags=["dummy"])
 async def dummy_call_fetcher():
     res = {
         "jsonrpc": "2.0",
@@ -284,18 +291,12 @@ async def dummy_call_fetcher():
 
     return res
 
+@app.get("/api/dummy/summary", tags=["dummy"])
+async def dummy_summary():
+    res = {
+        "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
+        "jsonrpc": "2.0",
+        "result": "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. Since the release of the first novel, Harry Potter and the Philosopher's Stone, on 26 June 1997, the books have found immense popularity, positive reviews, and commercial success worldwide. They have attracted a wide adult audience as well as younger readers and are often considered cornerstones of modern young adult literature.",
+    }
 
-#
-# Test functions
-#
-
-
-@app.get("/api")
-async def index():
-    return {"message": "Hello World!"}
-
-
-# Test GET with optional parameters
-@app.get("/api/items/{item_id}")
-async def read_item(item_id, q=None):
-    return {"item_id": item_id, "q": q}
+    return res
