@@ -5,12 +5,12 @@ To build the image
 ```bash
 docker build -t webserver .
 ```
+
 ## Run
 
 ### Prerequisites
 
 * An EasyAuth Server running on port 8220
-
 
 ### Run via Docker
 
