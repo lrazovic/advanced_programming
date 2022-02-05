@@ -8,6 +8,8 @@ authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 python = "^3.8"
 feedparser = "^6.0.8"
 jsonrpcserver = "^5.0.6"
+lxml = "^4.7.1"
+beautifulsoup4 = "^4.10.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.12b0"

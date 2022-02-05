@@ -1,5 +1,7 @@
 import feedparser
 from jsonrpcserver import method, Success, serve, Error
+from bs4 import BeautifulSoup
+
 import logging
 
 logging.getLogger().setLevel(logging.INFO)
@@ -26,7 +28,7 @@ def get_posts_details(rss=None, last=10):
                 temp["time_published"] = post.published
                 temp["tags"] = [tag.term for tag in post.tags]
                 temp["authors"] = [author.name for author in post.authors]
-                temp["summary"] = post.summary
+                temp["summary"] = BeautifulSoup(post.summary, "lxml").text
             except:
                 pass
             post_list.append(temp)
@@ -38,7 +40,7 @@ def get_posts_details(rss=None, last=10):
 
 @method
 def retrive_information(
-    feed_url: str = "http://www.repubblica.it/rss/homepage/rss2.0.xml",
+    feed_url: str = "http://feeds.bbci.co.uk/news/world/rss.xml",
 ):
     logging.info(f" * RSS requests for: {feed_url}")
     data = get_posts_details(rss=feed_url)
