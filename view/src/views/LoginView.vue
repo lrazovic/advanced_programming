@@ -33,7 +33,7 @@ import JbButtons from "@/components/JbButtons.vue";
       :class="cardClass"
       :rounded="cardRounded"
       form
-      headerIcon="."
+      header-icon="."
       title="Log In"
       @submit.prevent="login"
     >
@@ -83,10 +83,10 @@ import JbButtons from "@/components/JbButtons.vue";
           label="Register"
         />
         <jb-button
-          to="/api/login"
           color="info"
           outline
-          label="Login via Google (Not Working, should open a popup window)"
+          label="Login with Google"
+          @click.prevent="popupGoogle"
         />
       </jb-buttons>
     </card-component>
@@ -105,7 +105,7 @@ export default {
     };
   },
   methods: {
-    login() {
+    login () {
       let _this = this;
       post(
         _this,
@@ -119,6 +119,9 @@ export default {
         }
       );
     },
+    popupGoogle () {
+      window.open('localhost:3000/api/login', '', 'width=650, height=650');
+    }
   },
 };
 </script>
