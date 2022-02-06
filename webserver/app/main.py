@@ -313,3 +313,43 @@ async def dummy_summary():
     }
 
     return res
+
+#FIXME
+# Schifoso codice scritto da Antonio
+############################################################################################################################################################
+# CRUD USER
+
+@app.post("/api/postUser", tags=["dummy"])
+async def postUser():
+    try:
+        data = {
+            "iss":"https://accounts.google.com",
+            "azp":"32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
+            "aud":"32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
+            "sub":"100453178713727110711",
+            "email":"lrazovic@gmail.com",
+            "email_verified":"true",
+            "at_hash":"ZAlXWOwZQ0a7NdC09HOn8g",
+            "nonce":"H8CHfv8hV6RJy40F9r4P",
+            "name":"Leonardo Razovic",
+            "picture":"https://lh3.googleusercontent.com/a/AATXAJz6ZNHbViGfyqwaRiy-A3ikxAvc3njHFiPK9LQI=s96-c",
+            "given_name":"Leonardo",
+            "family_name":"Razovic",
+            "locale":"en-GB",
+            "iat":"1644142365",
+            "exp":"1644145965"
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_fetcher,
+                json=request_uuid("crud_test", params=data),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+############################################################################################################################################################
