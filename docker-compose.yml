@@ -1,7 +1,7 @@
-version: "3.9"
+version: "3"
 services:
   postgres:
-    image: postgres:14.1-alpine
+    image: postgres:alpine
     restart: unless-stopped
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -10,15 +10,16 @@ services:
         aliases:
           - database.dev
     environment:
-      POSTGRES_USER: pguser
+      POSTGRES_DB: advanced_programming
+      POSTGRES_USER: advanced_programming
       POSTGRES_PASSWORD: pguser
-      POSTGRES_DB: pgdb
     ports:
       - "5432:5432"
 
   webserver:
     depends_on:
       - postgres
+      - authentication
     build:
       context: webserver/
     restart: unless-stopped
@@ -62,6 +63,16 @@ services:
       context: fetcher/
     ports:
       - "5002:5002"
+    networks:
+      - backend
+
+  authentication:
+    depends_on:
+      - postgres
+    build:
+      context: database/
+    ports:
+      - "5003:5003"
     networks:
       - backend
 
