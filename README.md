@@ -34,4 +34,4 @@ The services are:
 * `webserver`
 * `mongodb`
 * `analysis`
-* `fether`
+* `fetcher`
