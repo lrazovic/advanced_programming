@@ -76,6 +76,11 @@ def create_token(email):
 def valid_email_from_db(email):
     return email in FAKE_DB
 
+
+def add_email_to_db(user_data):
+    FAKE_DB[user_data["email"]] = user_data["name"]
+
+
 def decode_token(token):
     return jwt.decode(token, API_SECRET_KEY, algorithms=[API_ALGORITHM])
 

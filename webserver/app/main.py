@@ -17,6 +17,7 @@ from app.jwt import valid_email_from_db
 from app.jwt import get_current_user_email
 from app.jwt import create_refresh_token
 from app.jwt import decode_token
+from app.jwt import add_email_to_db
 from app.jwt import CREDENTIALS_EXCEPTION
 
 # Webserver definition
@@ -35,18 +36,12 @@ tags_metadata = [
         "name": "auth",
         "description": "Operations for securing the whole API and managing user authentication",
     },
-    {
-        "name": "news_fetcher",
-        "description": "Operations for retrieving RSS news"
-    },
+    {"name": "news_fetcher", "description": "Operations for retrieving RSS news"},
     {
         "name": "ml_processing",
-        "description": "Operations for obtaining news textual summary exploiting Natural Language Processing"
+        "description": "Operations for obtaining news textual summary exploiting Natural Language Processing",
     },
-    {
-        "name": "dummy",
-        "description": "Just for testing"
-    }
+    {"name": "dummy", "description": "Just for testing"},
 ]
 
 app = FastAPI(openapi_tags=tags_metadata)
@@ -71,11 +66,14 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
+
 @app.get("/api")
 async def index():
     return {"message": "Hello World!"}
 
+
 # AUTH
+
 
 @app.get("/api/login", tags=["auth"])
 async def login(request: Request):
@@ -98,7 +96,15 @@ async def auth(request: Request):
                 "refresh_token": create_refresh_token(user_data["email"]),
             }
         )
-    raise CREDENTIALS_EXCEPTION
+    else:
+        add_email_to_db(user_data)
+        return JSONResponse(
+            {
+                "result": True,
+                "access_token": create_token(user_data["email"]),
+                "refresh_token": create_refresh_token(user_data["email"]),
+            }
+        )
 
 
 @app.get("/api/logout", tags=["auth"])
@@ -133,6 +139,7 @@ async def refresh(request: Request):
 
 # NEWS FETCHER
 
+
 @app.get("/api/getnews", tags=["news_fetcher"])
 async def call_fetcher():
     try:
@@ -150,7 +157,9 @@ async def call_fetcher():
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+
 # ML PROCESSING
+
 
 @app.get("/api/summary", tags=["ml_processing"])
 async def summary(current_email: str = Depends(get_current_user_email)):
@@ -174,7 +183,9 @@ async def summary(current_email: str = Depends(get_current_user_email)):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+
 # DUMMY
+
 
 @app.get("/api/dummy/login", tags=["dummy"])
 async def dummy_login():
@@ -185,6 +196,7 @@ async def dummy_login():
             "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJscmF6b3ZpY0BnbWFpbC5jb20iLCJleHAiOjE2NDU5OTkwNDd9.iZjQTbf004zjqTqxEkGWbDSncdmAyj3-K39uVuFfENs",
         }
     )
+
 
 @app.get("/api/dummy/getnews", tags=["dummy"])
 async def dummy_call_fetcher():
@@ -290,6 +302,7 @@ async def dummy_call_fetcher():
     }
 
     return res
+
 
 @app.get("/api/dummy/summary", tags=["dummy"])
 async def dummy_summary():
