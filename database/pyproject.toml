@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "database"
+version = "0.1.0"
+description = ""
+authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+jsonrpcserver = "^5.0.6"
+SQLAlchemy = "^1.4.31"
+psycopg2-binary = "^2.9.3"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
