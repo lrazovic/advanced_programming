@@ -186,6 +186,24 @@ async def dummy_login():
     )
 
 
+@app.get("/api/dummy/readdb", tags=["dummy"])
+async def dummy_readdb():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_auth,
+                json=request_uuid("read_db"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
+
 @app.get("/api/dummy/getnews", tags=["dummy"])
 async def dummy_call_fetcher():
     res = {

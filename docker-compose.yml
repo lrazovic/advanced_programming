@@ -69,6 +69,7 @@ services:
   authentication:
     depends_on:
       - postgres
+    restart: unless-stopped
     build:
       context: database/
     ports:
