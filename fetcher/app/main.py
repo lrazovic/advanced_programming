@@ -46,7 +46,7 @@ class User(Base):
     #     return "<Book(title='{}', author='{}', pages={}, published={})>"\
     #             .format(self.title, self.author, self.pages, self.published)
 
-def createUserRelation(dto: User):
+def createUserRelation():
     engine = sqlalchemy.create_engine('postgresql+pg8000://pguser:pguser@localhost:5432/pgdb')
     print(engine)
 
