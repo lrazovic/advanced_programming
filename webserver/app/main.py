@@ -10,26 +10,17 @@ from starlette.responses import JSONResponse, RedirectResponse
 from datetime import datetime
 
 import httpx
-import os
 
 from app.jwt import create_token
 from app.jwt import valid_email_from_db
 from app.jwt import get_current_user_email
 from app.jwt import create_refresh_token
 from app.jwt import decode_token
-from app.jwt import add_email_to_db
 from app.jwt import CREDENTIALS_EXCEPTION
+from app.jwt import add_user_to_db
+from app.utils import *
 
 # Webserver definition
-
-if "DEV" in os.environ:
-    endpoint_fetcher = "http://localhost:5002"
-    endpoint_analysis = "http://localhost:5001"
-    enpdoint_token = "http://localhost"
-else:
-    endpoint_fetcher = "http://fetcher:5002"
-    endpoint_analysis = "http://analysis:5001"
-    enpdoint_token = "172.17.0.1"
 
 tags_metadata = [
     {
@@ -88,6 +79,7 @@ async def auth(request: Request):
     except OAuthError:
         raise CREDENTIALS_EXCEPTION
     user_data = await oauth.google.parse_id_token(request, access_token)
+    # TODO: Check if user is already in the REAL DB
     if valid_email_from_db(user_data["email"]):
         return JSONResponse(
             {
@@ -97,14 +89,10 @@ async def auth(request: Request):
             }
         )
     else:
-        add_email_to_db(user_data)
-        return JSONResponse(
-            {
-                "result": True,
-                "access_token": create_token(user_data["email"]),
-                "refresh_token": create_refresh_token(user_data["email"]),
-            }
-        )
+        user_data["access_token"] = create_token(user_data["email"])
+        user_data["refresh_token"] = create_refresh_token(user_data["email"])
+        await add_user_to_db(user_data)
+        return JSONResponse(user_data)
 
 
 @app.get("/api/logout", tags=["auth"])
@@ -314,42 +302,34 @@ async def dummy_summary():
 
     return res
 
-#FIXME
-# Schifoso codice scritto da Antonio
-############################################################################################################################################################
-# CRUD USER
 
 @app.post("/api/postUser", tags=["dummy"])
 async def postUser():
     try:
         data = {
-            "iss":"https://accounts.google.com",
-            "azp":"32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
-            "aud":"32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
-            "sub":"100453178713727110711",
-            "email":"lrazovic@gmail.com",
-            "email_verified":"true",
-            "at_hash":"ZAlXWOwZQ0a7NdC09HOn8g",
-            "nonce":"H8CHfv8hV6RJy40F9r4P",
-            "name":"Leonardo Razovic",
-            "picture":"https://lh3.googleusercontent.com/a/AATXAJz6ZNHbViGfyqwaRiy-A3ikxAvc3njHFiPK9LQI=s96-c",
-            "given_name":"Leonardo",
-            "family_name":"Razovic",
-            "locale":"en-GB",
-            "iat":"1644142365",
-            "exp":"1644145965"
+            "iss": "https://accounts.google.com",
+            "azp": "32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
+            "aud": "32814020986-9u0gu68a62jh6o7i7drv5ltrpuf18emv.apps.googleusercontent.com",
+            "sub": "100453178713727110711",
+            "email": "lrazovic@gmail.com",
+            "email_verified": "true",
+            "at_hash": "ZAlXWOwZQ0a7NdC09HOn8g",
+            "nonce": "H8CHfv8hV6RJy40F9r4P",
+            "name": "Leonardo Razovic",
+            "picture": "https://lh3.googleusercontent.com/a/AATXAJz6ZNHbViGfyqwaRiy-A3ikxAvc3njHFiPK9LQI=s96-c",
+            "given_name": "Leonardo",
+            "family_name": "Razovic",
+            "locale": "en-GB",
+            "iat": "1644142365",
+            "exp": "1644145965",
         }
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                endpoint_fetcher,
-                json=request_uuid("crud_test", params=data),
-            )
-        if response.is_error:
-            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
-        else:
-            return response.json()
-    except:
-        raise HTTPException(
-            status_code=500, detail="Impossible to connect to JSON-RPC Server"
-        )
+        data["access_token"] = create_token(data["email"])
+        data["refresh_token"] = create_refresh_token(data["email"])
+        await add_user_to_db(data)
+        return JSONResponse(data)
+    except Exception as e:
+        print(e)
+        return {"status": "error"}
+
+
 ############################################################################################################################################################

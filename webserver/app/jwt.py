@@ -8,6 +8,9 @@ from fastapi import HTTPException
 from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
+from jsonrpcclient.requests import request_uuid
+from app.utils import *
+import httpx
 
 
 # Create a fake db:
@@ -77,8 +80,21 @@ def valid_email_from_db(email):
     return email in FAKE_DB
 
 
-def add_email_to_db(user_data):
-    FAKE_DB[user_data["email"]] = user_data["name"]
+async def add_user_to_db(user_data):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_auth,
+                json=request_uuid("add_user_to_db", params=[user_data]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
 
 
 def decode_token(token):
