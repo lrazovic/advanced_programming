@@ -45,12 +45,6 @@ oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
-
-@app.get("/api")
-async def index():
-    return {"message": "Hello World!"}
-
-
 # AUTH
 
 
@@ -70,7 +64,7 @@ async def auth(request: Request):
     # TODO: Check if user is already in the REAL DB
     user_data["access_token"] = create_token(user_data["email"])
     user_data["refresh_token"] = create_refresh_token(user_data["email"])
-    logging.info(await add_user_to_db(user_data))
+    await add_user_to_db(user_data)
     return JSONResponse(user_data)
 
 
@@ -102,23 +96,6 @@ async def refresh(request: Request):
     except Exception:
         raise CREDENTIALS_EXCEPTION
     raise CREDENTIALS_EXCEPTION
-
-
-# USERS
-
-
-@app.post("/api/addUser", tags=["Users"])
-async def postUser(u: User):
-    try:
-        u.access_token = create_token(u.email)
-        u.refresh_token = create_refresh_token(u.email)
-        
-        await add_user_to_db(u)
-        
-        return JSONResponse(u)
-    except Exception as e:
-        print(e)
-        return {"status": "error", "exception": f"{e}"}
 
 
 # NEWS FETCHER
