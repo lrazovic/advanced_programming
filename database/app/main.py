@@ -23,39 +23,42 @@ base.metadata.create_all(db)
 
 def addUser(dto):
     try:
-        session = Session()
         user = User(
             email=dto["email"],
             name=dto["name"],
             access_token=dto["access_token"],
             refresh_token=dto["refresh_token"],
         )
-        session.add(user)
-        session.commit()
-        session.close()
-        logging.info("User added")
-        return True
+        with Session.begin() as session:
+            # Check if user already exists
+            if session.query(User).filter_by(email=dto["email"]).first():
+                # TODO: Update user access_token and refresh_token
+                return False, "User already exists"
+            session.add(user)
+        message = "User added to the DB"
+        return True, message
     except Exception as e:
         logging.error(e)
-        return False
+        message = e
+        return False, message
 
 
 @method
 def add_user_to_db(dto) -> Result:
-    if addUser(dto):
-        return Success("pong")
+    status, message = addUser(dto)
+    if status:
+        return Success(message)
     else:
-        return Error(1, "There was a problem")
+        return Error(1, message)
 
 
 @method
 def read_db() -> Result:
-    session = Session()
-    users = session.query(User)
+    with Session.begin() as session:
+        users = session.query(User)
     names = {}
     for user in users:
         names[user.email] = user.name
-    session.close()
     return Success(names)
 
 
