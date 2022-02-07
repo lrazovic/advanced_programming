@@ -1,21 +1,16 @@
 from jsonrpcserver import method, Success, serve, Error, Result
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import User
-from model import base
+from model import User, base
 import logging
 import os
 
 logging.getLogger().setLevel(logging.INFO)
 
 if "DEV" in os.environ:
-    db_string = (
-        "postgresql+pg8000://advanced_programming:pguser@localhost:5432/advanced_programming"
-    )
+    db_string = "postgresql+pg8000://advanced_programming:pguser@localhost:5432/advanced_programming"
 else:
-    db_string = (
-        "postgresql+pg8000://advanced_programming:pguser@postgres:5432/advanced_programming"
-    )
+    db_string = "postgresql+pg8000://advanced_programming:pguser@postgres:5432/advanced_programming"
 db = create_engine(db_string)
 Session = sessionmaker(db)
 base.metadata.create_all(db)
@@ -72,7 +67,7 @@ def read_db() -> Result:
         users = session.query(User)
     names = {}
     for user in users:
-        names[user.email] = user.name
+        names[user.email] = (user.id, user.name)
     return Success(names)
 
 
