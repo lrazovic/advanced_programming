@@ -10,3 +10,18 @@ else:
     endpoint_analysis = "http://analysis:5001"
     endpoint_auth = "http://authentication:5003"
     enpdoint_token = "172.17.0.1"
+
+# Webserver definition
+
+tags_metadata = [
+    {
+        "name": "auth",
+        "description": "Operations for securing the whole API and managing user authentication",
+    },
+    {"name": "news_fetcher", "description": "Operations for retrieving RSS news"},
+    {
+        "name": "ml_processing",
+        "description": "Operations for obtaining news textual summary exploiting Natural Language Processing",
+    },
+    {"name": "dummy", "description": "Just for testing"},
+]

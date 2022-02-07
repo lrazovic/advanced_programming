@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends
@@ -20,23 +21,9 @@ from app.jwt import CREDENTIALS_EXCEPTION
 from app.jwt import add_user_to_db
 from app.utils import *
 
-# Webserver definition
-
-tags_metadata = [
-    {
-        "name": "auth",
-        "description": "Operations for securing the whole API and managing user authentication",
-    },
-    {"name": "news_fetcher", "description": "Operations for retrieving RSS news"},
-    {
-        "name": "ml_processing",
-        "description": "Operations for obtaining news textual summary exploiting Natural Language Processing",
-    },
-    {"name": "dummy", "description": "Just for testing"},
-]
-
 app = FastAPI(openapi_tags=tags_metadata)
 app.add_middleware(SessionMiddleware, secret_key="!secret")
+logging.getLogger().setLevel(logging.INFO)
 
 # Allow CORS for all origins
 app.add_middleware(
@@ -80,19 +67,10 @@ async def auth(request: Request):
         raise CREDENTIALS_EXCEPTION
     user_data = await oauth.google.parse_id_token(request, access_token)
     # TODO: Check if user is already in the REAL DB
-    if valid_email_from_db(user_data["email"]):
-        return JSONResponse(
-            {
-                "result": True,
-                "access_token": create_token(user_data["email"]),
-                "refresh_token": create_refresh_token(user_data["email"]),
-            }
-        )
-    else:
-        user_data["access_token"] = create_token(user_data["email"])
-        user_data["refresh_token"] = create_refresh_token(user_data["email"])
-        await add_user_to_db(user_data)
-        return JSONResponse(user_data)
+    user_data["access_token"] = create_token(user_data["email"])
+    user_data["refresh_token"] = create_refresh_token(user_data["email"])
+    logging.info(await add_user_to_db(user_data))
+    return JSONResponse(user_data)
 
 
 @app.get("/api/logout", tags=["auth"])
@@ -184,24 +162,6 @@ async def dummy_login():
             "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJscmF6b3ZpY0BnbWFpbC5jb20iLCJleHAiOjE2NDU5OTkwNDd9.iZjQTbf004zjqTqxEkGWbDSncdmAyj3-K39uVuFfENs",
         }
     )
-
-
-@app.get("/api/dummy/readdb", tags=["dummy"])
-async def dummy_readdb():
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                endpoint_auth,
-                json=request_uuid("read_db"),
-            )
-        if response.is_error:
-            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
-        else:
-            return response.json()
-    except:
-        raise HTTPException(
-            status_code=500, detail="Impossible to connect to JSON-RPC Server"
-        )
 
 
 @app.get("/api/dummy/getnews", tags=["dummy"])
@@ -350,4 +310,19 @@ async def postUser():
         return {"status": "error"}
 
 
-############################################################################################################################################################
+@app.get("/api/dummy/readdb", tags=["dummy"])
+async def dummy_readdb():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_auth,
+                json=request_uuid("read_db"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
