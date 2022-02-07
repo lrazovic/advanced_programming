@@ -23,6 +23,10 @@ tags_metadata = [
         "name": "ml_processing",
         "description": "Operations for obtaining news textual summary exploiting Natural Language Processing",
     },
+    {
+        "name": "Users",
+        "description": "CRUD Operations for User entity",
+    },
     {"name": "dummy", "description": "Just for testing"},
 ]
 
