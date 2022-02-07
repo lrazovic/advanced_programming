@@ -33,7 +33,7 @@ def addUser(dto):
             # Check if user already exists
             if session.query(User).filter_by(email=dto["email"]).first():
                 # TODO: Update user access_token and refresh_token
-                return False, "User already exists"
+                return True, "User already exists"
             session.add(user)
         message = "User added to the DB"
         return True, message
@@ -41,6 +41,20 @@ def addUser(dto):
         logging.error(e)
         message = e
         return False, message
+
+
+@method
+def valid_email_from_db(email) -> Result:
+    try:
+        with Session.begin() as session:
+            # Check if user already exists
+            if session.query(User).filter_by(email=email).first():
+                return Success(True)
+            else:
+                return Success(False)
+    except Exception as e:
+        logging.error(e)
+        return Error(500, e)
 
 
 @method
