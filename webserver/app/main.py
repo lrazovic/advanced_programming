@@ -20,6 +20,7 @@ from app.jwt import decode_token
 from app.jwt import CREDENTIALS_EXCEPTION
 from app.jwt import add_user_to_db
 from app.utils import *
+from app.dtos import User
 
 app = FastAPI(openapi_tags=tags_metadata)
 app.add_middleware(SessionMiddleware, secret_key="!secret")
@@ -101,6 +102,23 @@ async def refresh(request: Request):
     except Exception:
         raise CREDENTIALS_EXCEPTION
     raise CREDENTIALS_EXCEPTION
+
+
+# USERS
+
+
+@app.post("/api/addUser", tags=["Users"])
+async def postUser(u: User):
+    try:
+        u.access_token = create_token(u.email)
+        u.refresh_token = create_refresh_token(u.email)
+        
+        await add_user_to_db(u)
+        
+        return JSONResponse(u)
+    except Exception as e:
+        print(e)
+        return {"status": "error", "exception": f"{e}"}
 
 
 # NEWS FETCHER
