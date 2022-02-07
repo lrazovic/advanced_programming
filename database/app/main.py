@@ -10,11 +10,11 @@ logging.getLogger().setLevel(logging.INFO)
 
 if "DEV" in os.environ:
     db_string = (
-        "postgresql://advanced_programming:pguser@localhost:5432/advanced_programming"
+        "postgresql+pg8000://advanced_programming:pguser@localhost:5432/advanced_programming"
     )
 else:
     db_string = (
-        "postgresql://advanced_programming:pguser@postgres:5432/advanced_programming"
+        "postgresql+pg8000://advanced_programming:pguser@postgres:5432/advanced_programming"
     )
 db = create_engine(db_string)
 Session = sessionmaker(db)
@@ -31,9 +31,9 @@ def addUser(dto):
         )
         with Session.begin() as session:
             # Check if user already exists
-            if session.query(User).filter_by(email=dto["email"]).first():
-                # TODO: Update user access_token and refresh_token
-                return True, "User already exists"
+            # if session.query(User).filter_by(email=dto["email"]).first():
+            #     # TODO: Update user access_token and refresh_token
+            #     return True, "User already exists"
             session.add(user)
         message = "User added to the DB"
         return True, message
