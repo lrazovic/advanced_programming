@@ -20,7 +20,6 @@ from app.jwt import decode_token
 from app.jwt import CREDENTIALS_EXCEPTION
 from app.jwt import add_user_to_db
 from app.utils import *
-from app.dtos import User
 
 app = FastAPI(openapi_tags=tags_metadata)
 app.add_middleware(SessionMiddleware, secret_key="!secret")
@@ -276,8 +275,8 @@ async def dummy_summary():
     return res
 
 
-@app.post("/api/postUser", tags=["dummy"])
-async def postUser():
+@app.get("/api/dummy/adduser", tags=["dummy"])
+async def adduser():
     try:
         data = {
             "iss": "https://accounts.google.com",
