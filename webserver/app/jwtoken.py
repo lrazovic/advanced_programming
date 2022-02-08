@@ -23,7 +23,7 @@ if API_SECRET_KEY is None:
     raise BaseException("Missing API_SECRET_KEY env var.")
 API_ALGORITHM = os.environ.get("API_ALGORITHM") or "HS256"
 API_ACCESS_TOKEN_EXPIRE_MINUTES = (
-    cast_to_number("API_ACCESS_TOKEN_EXPIRE_MINUTES") or 15
+    cast_to_number("API_ACCESS_TOKEN_EXPIRE_MINUTES") or 60
 )
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
 
@@ -121,5 +121,5 @@ def get_current_user_email(token: str = Depends(oauth2_scheme)):
 
 
 async def get_current_user_token(token: str = Depends(oauth2_scheme)):
-    _ = await get_current_user_email(token)
+    _ = get_current_user_email(token)
     return token
