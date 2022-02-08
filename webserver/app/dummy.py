@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from jsonrpcclient.requests import request_uuid
+from fastapi import Depends
+from jwtoken import get_current_user_email
 import httpx
 from utils import endpoint_analysis, endpoint_fetcher, long_post
 from models import NewsText, NewsFeed
@@ -88,8 +90,8 @@ async def dummy_call_fetcher():
     return res
 
 
-@dummy_app.get("/summary")
-async def dummy_summary():
+@dummy_app.get("/prot/summary")
+async def dummy_summary(current_email: str = Depends(get_current_user_email)):
     res = {
         "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
         "jsonrpc": "2.0",

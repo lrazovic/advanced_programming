@@ -32,74 +32,62 @@ async def root():
 async def token(request: Request):
     return HTMLResponse(
         """
-                <script>
-                function send(){
-                    var req = new XMLHttpRequest();
-                    req.onreadystatechange = function() {
-                        if (req.readyState === 4) {
-                            console.log(req.response);
-                            if (req.response["result"] === true) {
-                                window.localStorage.setItem('jwt', req.response["access_token"]);
-                                window.localStorage.setItem('refresh', req.response["refresh_token"]);
-                            }
-                        }
-                    }
-                    req.withCredentials = true;
-                    req.responseType = 'json';
-                    req.open("get", "/auth/token?"+window.location.search.substr(1), true);
-                    req.send("");
+            <!DOCTYPE html>
+            <html lang="en">
 
+            <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Document</title>
+            </head>
+
+            <body>
+            <script>
+                function send() {
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function () {
+                    if (req.readyState === 4) {
+                    console.log(req.response);
+                    if (req.response["result"] === true) {
+                        window.localStorage.setItem("jwt", req.response["access_token"]);
+                        window.localStorage.setItem(
+                        "refresh",
+                        req.response["refresh_token"]
+                        );
+                    }
+                    }
+                };
+                req.withCredentials = true;
+                req.responseType = "json";
+                req.open(
+                    "get",
+                    "/auth/token?" + window.location.search.substr(1),
+                    true
+                );
+                req.send("");
                 }
-                </script>
-                <button onClick="send()">Get FastAPI JWT Token</button>
+            </script>
+            <button onClick="send()">Get FastAPI JWT Token</button>
 
-                <button onClick='fetch("api/getnews").then(
-                    (r)=>r.json()).then((msg)=>{console.log(msg)});'>
+            <button onClick='fetch("dummy/getnews").then(
+                        (r)=>r.json()).then((msg)=>{console.log(msg)});'>
                 Call Unprotected API
-                </button>
-                <button onClick='fetch("api/summary").then(
-                    (r)=>r.json()).then((msg)=>{console.log(msg)});'>
+            </button>
+            <button onClick='fetch("dummy/prot/summary").then(
+                        (r)=>r.json()).then((msg)=>{console.log(msg)});'>
                 Call Protected API without JWT
-                </button>
-                <button onClick='fetch("api/summary",{
-                    headers:{
-                        "Authorization": "Bearer " + window.localStorage.getItem("jwt")
-                    },
-                }).then((r)=>r.json()).then((msg)=>{console.log(msg)});'>
+            </button>
+            <button onClick='fetch("dummy/prot/summary",{
+                        headers:{
+                            "Authorization": "Bearer " + window.localStorage.getItem("jwt")
+                        },
+                    }).then((r)=>r.json()).then((msg)=>{console.log(msg)});'>
                 Call Protected API wit JWT
-                </button>
+            </button>
+            </body>
 
-                <button onClick='fetch("logout",{
-                    headers:{
-                        "Authorization": "Bearer " + window.localStorage.getItem("jwt")
-                    },
-                }).then((r)=>r.json()).then((msg)=>{
-                    console.log(msg);
-                    if (msg["result"] === true) {
-                        window.localStorage.removeItem("jwt");
-                    }
-                    });'>
-                Logout
-                </button>
-
-                <button onClick='fetch("auth/refresh",{
-                    method: "POST",
-                    headers:{
-                        "Authorization": "Bearer " + window.localStorage.getItem("jwt")
-                    },
-                    body:JSON.stringify({
-                        grant_type:\"refresh_token\",
-                        refresh_token:window.localStorage.getItem(\"refresh\")
-                        })
-                }).then((r)=>r.json()).then((msg)=>{
-                    console.log(msg);
-                    if (msg["result"] === true) {
-                        window.localStorage.setItem("jwt", msg["access_token"]);
-                    }
-                    });'>
-                Refresh
-                </button>
-
+            </html>
             """
     )
 
