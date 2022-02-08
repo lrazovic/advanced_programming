@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup
 logging.getLogger().setLevel(logging.INFO)
 
 
-def get_posts_details(rss=None, last=10):
-    if rss is not None:
+def get_posts_details(rss, limit):
+    try:
         blog_feed = feedparser.parse(rss)
         # getting lists of blog entries
-        posts = blog_feed.entries[:last]
+        posts = blog_feed.entries[:limit]
         # dictionary for holding posts details
         posts_details = {
             "Blog title": blog_feed.feed.title,
@@ -19,7 +19,6 @@ def get_posts_details(rss=None, last=10):
         post_list = []
         for post in posts:
             temp = dict()
-            # if any post doesn't have information then throw error
             try:
                 temp["title"] = post.title
                 temp["link"] = post.link
@@ -32,21 +31,15 @@ def get_posts_details(rss=None, last=10):
                 pass
             post_list.append(temp)
         posts_details["posts"] = post_list
-        return posts_details  # returning the details
-    else:
-        return None
+        return Success(posts_details)
+    except Exception as e:
+        return Error(f"Error in getting posts details: {e}")
 
 
 @method
-def retrive_information(
-    feed_url: str = "http://feeds.bbci.co.uk/news/world/rss.xml",
-):
+def retrive_information(feed_url: str, limit: int):
     logging.info(f" * RSS requests for: {feed_url}")
-    data = get_posts_details(rss=feed_url)
-    if data:
-        return Success(data)
-    else:
-        return Error()
+    return get_posts_details(feed_url, limit)
 
 
 if __name__ == "__main__":

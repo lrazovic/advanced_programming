@@ -12,16 +12,21 @@ class NewsText(BaseModel):
     body: str
 
 
+class NewsFeed(BaseModel):
+    url: str = "http://feeds.bbci.co.uk/news/world/rss.xml"
+    limit: int = 10
+
+
 api_app = FastAPI()
 
 
-@api_app.get("/getnews")
-async def call_fetcher():
+@api_app.post("/getnews")
+async def call_fetcher(feed: NewsFeed):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_fetcher,
-                json=request_uuid("retrive_information"),
+                json=request_uuid("retrive_information", params=[feed.url, feed.limit]),
             )
         if response.is_error:
             raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
