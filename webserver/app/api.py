@@ -11,7 +11,9 @@ api_app = FastAPI()
 
 
 @api_app.post("/getnews")
-async def call_fetcher(feed: NewsFeed):
+async def call_fetcher(
+    feed: NewsFeed, current_email: str = Depends(get_current_user_email)
+):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
@@ -29,7 +31,9 @@ async def call_fetcher(feed: NewsFeed):
 
 
 @api_app.post("/summary")
-async def summary(text: NewsText, current_email: str = Depends(get_current_user_email)):
+async def call_summary(
+    text: NewsText, current_email: str = Depends(get_current_user_email)
+):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
