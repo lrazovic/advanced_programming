@@ -10,7 +10,7 @@ docker build -t webserver .
 
 ### Prerequisites
 
-* An EasyAuth Server running on port 8220
+* Valid `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in a `.env` file, in the same place where you find the `.env.example`
 
 ### Run via Docker
 
