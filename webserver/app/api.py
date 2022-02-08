@@ -1,11 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from fastapi import Depends
 from jsonrpcclient.requests import request_uuid
-
 import httpx
+from pydantic import BaseModel
 
 from jwtoken import get_current_user_email
 from utils import endpoint_analysis, endpoint_fetcher
+
+
+class NewsText(BaseModel):
+    body: str
+
 
 api_app = FastAPI()
 
@@ -28,17 +33,15 @@ async def call_fetcher():
         )
 
 
-@api_app.get("/summary")
-async def summary(current_email: str = Depends(get_current_user_email)):
+@api_app.post("/summary")
+async def summary(text: NewsText, current_email: str = Depends(get_current_user_email)):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_analysis,
                 json=request_uuid(
                     "summarize",
-                    params=[
-                        "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling."
-                    ],
+                    params=[text.body],
                 ),
             )
         if response.is_error:

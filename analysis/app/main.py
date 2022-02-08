@@ -8,6 +8,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 @method
 def summarize(article_text):
+    logging.info(f" Method invoked with article text: {article_text}")
     sentence_list = nltk.sent_tokenize(article_text)
     stopwords = nltk.corpus.stopwords.words("english")
     word_frequencies = {}
@@ -29,11 +30,13 @@ def summarize(article_text):
                         sentence_scores[sent] = word_frequencies[word]
                     else:
                         sentence_scores[sent] += word_frequencies[word]
-    summary_sentences = heapq.nlargest(8, sentence_scores, key=sentence_scores.get)
-    logging.info(f" * Summary lengyh: {len(summary_sentences)}")
+    summary_sentences = heapq.nlargest(3, sentence_scores, key=sentence_scores.get)
+    logging.info(" ".join(summary_sentences))
     return Success(" ".join(summary_sentences))
 
 
 if __name__ == "__main__":
+    nltk.download('punkt')
+    nltk.download('stopwords')
     PORT = 5001
     serve(port=PORT)
