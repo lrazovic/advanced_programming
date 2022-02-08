@@ -5,12 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 
-from utils import tags_metadata
 from api import api_app
 from auth import auth_app
 from dummy import dummy_app
 
-api_gateway = FastAPI(openapi_tags=tags_metadata)
+api_gateway = FastAPI()
 api_gateway.mount("/auth", auth_app)
 api_gateway.mount("/api", api_app)
 api_gateway.mount("/dummy", dummy_app)
