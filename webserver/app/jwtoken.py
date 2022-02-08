@@ -9,8 +9,10 @@ from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
 from jsonrpcclient.requests import request_uuid
-from app.utils import *
+from utils import *
 import httpx
+from fastapi.logger import logger
+
 
 load_dotenv()
 
@@ -23,9 +25,10 @@ API_ALGORITHM = os.environ.get("API_ALGORITHM") or "HS256"
 API_ACCESS_TOKEN_EXPIRE_MINUTES = (
     cast_to_number("API_ACCESS_TOKEN_EXPIRE_MINUTES") or 15
 )
+REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
 
 # Token url (We should later create a token url that accepts just a user and a password to use it with Swagger)
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 # Error
 CREDENTIALS_EXCEPTION = HTTPException(
@@ -33,13 +36,6 @@ CREDENTIALS_EXCEPTION = HTTPException(
     detail="Could not validate credentials",
     headers={"WWW-Authenticate": "Bearer"},
 )
-
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 30
-
-
-def create_refresh_token(email):
-    expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
-    return create_access_token(data={"sub": email}, expires_delta=expires)
 
 
 # Create token internal function
@@ -54,6 +50,11 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
+def create_refresh_token(email):
+    expires = timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
+    return create_access_token(data={"sub": email}, expires_delta=expires)
+
+
 # Create token for an email
 def create_token(email):
     access_token_expires = timedelta(minutes=API_ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -63,17 +64,20 @@ def create_token(email):
     return access_token
 
 
-async def valid_email_from_db(email) -> bool:
+def valid_email_from_db(email):
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+        with httpx.Client() as client:
+            response = client.post(
                 endpoint_auth,
                 json=request_uuid("valid_email_from_db", params=[email]),
             )
         if response.is_error:
             return False
         else:
-            return True
+            if response.json()["result"] == True:
+                return True
+            else:
+                return False
     except:
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
@@ -101,7 +105,7 @@ def decode_token(token):
     return jwt.decode(token, API_SECRET_KEY, algorithms=[API_ALGORITHM])
 
 
-async def get_current_user_email(token: str = Depends(oauth2_scheme)):
+def get_current_user_email(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, API_SECRET_KEY, algorithms=[API_ALGORITHM])
         email: str = payload.get("sub")

@@ -25,6 +25,6 @@ The webserver is live on: `http://0.0.0.0:5000/`, while the documentation is on 
 ### Run without Docker (currently unsupported, expect chaos)
 
 * `poetry install`
-* `env DEV=1 poetry run uvicorn app.main:app --host 0.0.0.0 --port 8080`
+* `env DEV=1 poetry run python app/main.py`
 
 The webserver is live on: `http://0.0.0.0:8080/`, while the documentation is on `http://0.0.0.0:8080/docs`
