@@ -30,6 +30,8 @@ services:
     networks:
       - backend
       - frontend
+    environment:
+      redirect_uri: http://localhost:3000/token
 
   view:
     depends_on:

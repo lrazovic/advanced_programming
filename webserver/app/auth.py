@@ -15,7 +15,7 @@ from jwtoken import decode_token
 from jwtoken import add_user_to_db
 from jwtoken import CREDENTIALS_EXCEPTION
 from oauth import oauth
-from utils import endpoint_auth
+from utils import endpoint_auth, redirect_uri
 
 
 auth_app = FastAPI()
@@ -24,7 +24,6 @@ auth_app.add_middleware(SessionMiddleware, secret_key="!secret")
 
 @auth_app.route("/login")
 async def login(request: Request):
-    redirect_uri = "http://localhost:8080/token"
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
