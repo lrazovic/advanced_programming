@@ -2,20 +2,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi import Depends
 from jsonrpcclient.requests import request_uuid
 import httpx
-from pydantic import BaseModel
 
 from jwtoken import get_current_user_email
 from utils import endpoint_analysis, endpoint_fetcher
-
-
-class NewsText(BaseModel):
-    body: str
-
-
-class NewsFeed(BaseModel):
-    url: str = "http://feeds.bbci.co.uk/news/world/rss.xml"
-    limit: int = 10
-
+from models import NewsText, NewsFeed
 
 api_app = FastAPI()
 

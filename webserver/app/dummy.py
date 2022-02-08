@@ -1,17 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from jsonrpcclient.requests import request_uuid
 import httpx
-from pydantic import BaseModel
 from utils import endpoint_analysis, endpoint_fetcher
+from models import NewsText, NewsFeed
 
-
-class NewsText(BaseModel):
-    body: str
-
-
-class NewsFeed(BaseModel):
-    url: str = "http://feeds.bbci.co.uk/news/world/rss.xml"
-    limit: int = 10
 
 
 dummy_app = FastAPI()
