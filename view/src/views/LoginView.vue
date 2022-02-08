@@ -120,7 +120,7 @@ export default {
       );
     },
     popupGoogle () {
-      window.open('localhost:3000/api/login', '', 'width=650, height=650');
+      window.open('http://localhost:3000/auth/login', '', 'width=650, height=650');
     }
   },
 };
