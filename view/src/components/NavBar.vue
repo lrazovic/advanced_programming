@@ -62,39 +62,39 @@ const menuNavBarToggle = () => {
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-        <nav-bar-menu has-divider>
-          <user-avatar class="w-6 h-6 mr-3 inline-flex" />
+        <nav-bar-menu has-divider @click="$router.push('/profile')">
+<!--          <user-avatar class="w-6 h-6 mr-3 inline-flex" />-->
           <div>
             <span>{{ userName }}</span>
           </div>
 
-          <template #dropdown>
-            <nav-bar-item to="/profile">
-              <nav-bar-item-label
-                :icon="mdiAccount"
-                label="My Profile"
-              />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiCogOutline"
-                label="Settings"
-              />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiEmail"
-                label="Messages"
-              />
-            </nav-bar-item>
-            <nav-bar-menu-divider />
-            <nav-bar-item>
-              <nav-bar-item-label
-                :icon="mdiLogout"
-                label="Log Out"
-              />
-            </nav-bar-item>
-          </template>
+<!--          <template #dropdown>-->
+<!--            <nav-bar-item to="/profile">-->
+<!--              <nav-bar-item-label-->
+<!--                :icon="mdiAccount"-->
+<!--                label="My Profile"-->
+<!--              />-->
+<!--            </nav-bar-item>-->
+<!--            <nav-bar-item>-->
+<!--              <nav-bar-item-label-->
+<!--                :icon="mdiCogOutline"-->
+<!--                label="Settings"-->
+<!--              />-->
+<!--            </nav-bar-item>-->
+<!--            <nav-bar-item>-->
+<!--              <nav-bar-item-label-->
+<!--                :icon="mdiEmail"-->
+<!--                label="Messages"-->
+<!--              />-->
+<!--            </nav-bar-item>-->
+<!--            <nav-bar-menu-divider />-->
+<!--            <nav-bar-item>-->
+<!--              <nav-bar-item-label-->
+<!--                :icon="mdiLogout"-->
+<!--                label="Log Out"-->
+<!--              />-->
+<!--            </nav-bar-item>-->
+<!--          </template>-->
         </nav-bar-menu>
         <nav-bar-item
           has-divider

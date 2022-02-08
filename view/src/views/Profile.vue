@@ -45,12 +45,12 @@ const submitPass = () => {
         form
         @submit.prevent="submitProfile"
       >
-        <field
-          label="Avatar"
-          help="Max 500kb"
-        >
-          <file-picker />
-        </field>
+<!--        <field-->
+<!--          label="Avatar"-->
+<!--          help="Max 500kb"-->
+<!--        >-->
+<!--          <file-picker />-->
+<!--        </field>-->
 
         <field
           label="Name"
@@ -86,11 +86,11 @@ const submitPass = () => {
             type="submit"
             label="Submit"
           />
-          <jb-button
-            color="info"
-            label="Options"
-            outline
-          />
+<!--          <jb-button-->
+<!--            color="info"-->
+<!--            label="Options"-->
+<!--            outline-->
+<!--          />-->
         </jb-buttons>
       </card-component>
 
@@ -152,11 +152,11 @@ const submitPass = () => {
             color="info"
             label="Submit"
           />
-          <jb-button
-            color="info"
-            label="Options"
-            outline
-          />
+<!--          <jb-button-->
+<!--            color="info"-->
+<!--            label="Options"-->
+<!--            outline-->
+<!--          />-->
         </jb-buttons>
       </card-component>
     </div>
