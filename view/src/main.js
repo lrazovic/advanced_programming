@@ -9,8 +9,7 @@ import './css/main.css'
 import Auth from "./packages/auth/auth";
 
 /* Fetch sample data */
-store.dispatch('fetch', 'clients')
-store.dispatch('fetch', 'history')
+
 
 /* Dark mode */
 const localStorageDarkModeValue = localStorage.getItem(darkModeKey)

@@ -83,7 +83,7 @@ import JbButtons from "@/components/JbButtons.vue";
           label="Register"
         />
         <jb-button
-          color="info"
+          color="warning"
           outline
           label="Login with Google"
           @click.prevent="popupGoogle"
