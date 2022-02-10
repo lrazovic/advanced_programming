@@ -23,72 +23,48 @@ api_gateway.add_middleware(
 )
 
 
-@api_gateway.get("/")
-async def root():
-    return HTMLResponse('<body><a href="/auth/login">Log In</a></body>')
-
-
 @api_gateway.get("/token")
 async def token(request: Request):
     return HTMLResponse(
         """
-            <!DOCTYPE html>
-            <html lang="en">
-
-            <head>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
             <meta charset="UTF-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Document</title>
-            </head>
+            <title>oAUth Redirect</title>
+        </head>
 
-            <body>
+        <body onload="send();">
             <script>
-                function send() {
+            function send() {
                 var req = new XMLHttpRequest();
                 req.onreadystatechange = function () {
-                    if (req.readyState === 4) {
-                    console.log(req.response);
+                if (req.readyState === 4) {
                     if (req.response["result"] === true) {
-                        window.localStorage.setItem("jwt", req.response["access_token"]);
-                        window.localStorage.setItem(
+                    window.localStorage.setItem("jwt", req.response["access_token"]);
+                    window.localStorage.setItem(
                         "refresh",
                         req.response["refresh_token"]
-                        );
+                    );
+                    window.close();
                     }
-                    }
+                }
                 };
                 req.withCredentials = true;
                 req.responseType = "json";
                 req.open(
-                    "get",
-                    "/auth/token?" + window.location.search.substr(1),
-                    true
+                "get",
+                "/auth/token?" + window.location.search.substring(1),
+                true
                 );
                 req.send("");
-                }
+            }
             </script>
-            <button onClick="send()">Get FastAPI JWT Token</button>
-
-            <button onClick='fetch("dummy/getnews").then(
-                        (r)=>r.json()).then((msg)=>{console.log(msg)});'>
-                Call Unprotected API
-            </button>
-            <button onClick='fetch("dummy/prot/summary").then(
-                        (r)=>r.json()).then((msg)=>{console.log(msg)});'>
-                Call Protected API without JWT
-            </button>
-            <button onClick='fetch("dummy/prot/summary",{
-                        headers:{
-                            "Authorization": "Bearer " + window.localStorage.getItem("jwt")
-                        },
-                    }).then((r)=>r.json()).then((msg)=>{console.log(msg)});'>
-                Call Protected API wit JWT
-            </button>
-            </body>
-
-            </html>
-            """
+        </body>
+        </html>
+        """
     )
 
 
