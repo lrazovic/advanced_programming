@@ -120,7 +120,18 @@ export default {
       );
     },
     popupGoogle () {
-      window.open('http://localhost:3000/auth/login', '', 'width=650, height=650');
+      let win = window.open('http://localhost:3000/auth/login', '', 'width=650, height=650');
+      let _this = this;
+      let timer = setInterval(function() {
+        if(win.closed) {
+          clearInterval(timer);
+          if (_this.$auth.isAuthenticated()) {
+            _this.$router.push('/')
+          }else {
+            console.log("no auth")
+          }
+        }
+      }, 1000);
     }
   },
 };

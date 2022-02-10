@@ -6,7 +6,7 @@ export default function (app) {
         },
 
         getToken() {
-            let token = localStorage.getItem('token');
+            let token = localStorage.getItem('jwt');
 
             return token;
 
