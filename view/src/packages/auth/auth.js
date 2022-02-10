@@ -13,7 +13,8 @@ export default function (app) {
         },
 
         destroyToken() {
-            localStorage.removeItem('token');
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('refresh');
             this.destroyAccountId();
         },
 

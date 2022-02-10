@@ -5,7 +5,8 @@ const routes = [
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
-      title: 'Feed'
+      title: 'Feed',
+      forAuth: true
     },
     path: '/',
     name: 'feed',
@@ -13,7 +14,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Profile'
+      title: 'Profile',
+      forAuth: true
     },
     path: '/profile',
     name: 'profile',
@@ -22,7 +24,8 @@ const routes = [
   {
     meta: {
       title: 'Login',
-      fullScreen: true
+      fullScreen: true,
+      forVisitors: true
     },
     path: '/login',
     name: 'login',
@@ -31,7 +34,8 @@ const routes = [
   {
     meta: {
       title: 'Register',
-      fullScreen: true
+      fullScreen: true,
+      forVisitors: true
     },
     path: '/register',
     name: 'Register',
