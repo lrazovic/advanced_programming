@@ -1,3 +1,7 @@
+<script setup>
+import JbButton from "@/components/JbButton.vue";
+import JbButtons from "@/components/JbButtons.vue";
+</script>
 <template>
   <div class="max-w-3xl rounded overflow-hidden shadow-lg">
     <a :href="link">
@@ -39,17 +43,37 @@
         class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
       >#{{ h }}</span>
     </div>
+    <div class="px-6 pt-4 pb-2">
+      <jb-buttons>
+        <jb-button
+            color="success"
+            label="Summarise"
+            @click="getSummary"
+        />
+      </jb-buttons>
+    </div>
+    <div class="px-6 py-4" v-if="summarisedText">
+      <p
+        class="text-base overflow-hidden cursor-pointer text-lg"
+      >
+        {{ summarisedText }}
+      </p>
+    </div>
   </div>
 <!--  <div class="max-w-3xl rounded overflow-hidden shadow-lg" v-html="content"></div>-->
 </template>
 
 <script>
+import { post } from '../helpers/api'
 export default {
+  components: {},
+
   props: ['img', 'imgAlt', 'title', 'content', 'hashtags', 'link'],
   data () {
     return {
       text_class: 'max-h-20',
-      display_expand: 'flex'
+      display_expand: 'flex',
+      summarisedText: ''
     }
   },
   computed: {
@@ -63,6 +87,12 @@ export default {
         this.link,
         '_blank'
       )
+    },
+    getSummary() {
+      let _this = this;
+      post(_this, 'dummy/summary', { body: _this.content }, response => {
+        _this.summarisedText = response.data.result
+      }, e => alert(e))
     }
   }
 }
