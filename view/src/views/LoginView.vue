@@ -127,8 +127,6 @@ export default {
           clearInterval(timer);
           if (_this.$auth.isAuthenticated()) {
             _this.$router.push('/')
-          }else {
-            console.log("no auth")
           }
         }
       }, 1000);
