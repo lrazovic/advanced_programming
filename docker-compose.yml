@@ -68,6 +68,16 @@ services:
     networks:
       - backend
 
+  newspaper:
+    depends_on:
+      - fetcher
+    build:
+      context: newspaper/
+    ports:
+      - "5004:5004"
+    networks:
+      - backend
+
   authentication:
     depends_on:
       - postgres
