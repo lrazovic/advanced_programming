@@ -1,17 +1,19 @@
 import os
 
+from models import RssFeedDto
+
 if "DEV" in os.environ:
     endpoint_fetcher = "http://localhost:5002"
     endpoint_newspaper = "http://localhost:5004"
     endpoint_analysis = "http://localhost:5001"
-    endpoint_auth = "http://localhost:5003"
+    endpoint_persistence = "http://localhost:5003"
     enpdoint_token = "http://localhost"
     redirect_uri = "http://localhost:8080/token"
 else:
     endpoint_fetcher = "http://fetcher:5002"
     endpoint_newspaper = "http://newspaper:5004"
     endpoint_analysis = "http://analysis:5001"
-    endpoint_auth = "http://authentication:5003"
+    endpoint_persistence = "http://persistence:5003"
     enpdoint_token = "172.17.0.1"
     redirect_uri = "http://webserver:3000/token"
 
@@ -118,5 +120,15 @@ long_post = [
         "tags": ["cronaca"],
         "authors": ["Redazione Repubblica.it"],
         "summary": '<p><a href="https://www.repubblica.it/cronaca/2022/01/02/news/sono_78_e_tutti_uomini_la_guerra_delle_statue_che_infiamma_padova-332468530/?rssimage"> <img align="left" hspace="10" src="https://www.repstatic.it/content/nazionale/img/2022/01/03/011833175-4645fd4b-1efd-4b67-9112-17d381640e34.jpg" width="140" /></a>La proposta in consiglio: “Onoriamo anche una donna in Prato della Valle”. Sì della Sovrintendenza. Lo storico si oppone: “Sono monumenti, non Lego”</p>',
-    },
+    }
 ]
+
+#XXX WIP
+# def rssFeedDtoToDict(dto: RssFeedDto):
+#     dct = dict()
+
+#     dct["url"] = dto.url
+#     dct["rank"] = dto.rank
+#     dct["user_id"] = dto.user_id
+
+#     return dct

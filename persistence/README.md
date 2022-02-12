@@ -1,7 +1,7 @@
 # Using Docker
 
 ```bash
-docker run -it -p 5003:5003 authentication
+docker run -it -p 5003:5003 persistence
 ```
 
 ## Using local Python

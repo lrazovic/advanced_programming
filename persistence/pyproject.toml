@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "database"
+name = "persistence"
 version = "0.1.0"
 description = ""
 authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
