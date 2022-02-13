@@ -11,6 +11,8 @@ import FilePicker from '@/components/FilePicker.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import UserCard from '@/components/UserCard.vue'
+import ModalBox from '@/components/ModalBox.vue'
+
 
 const store = useStore()
 
@@ -45,12 +47,12 @@ const submitPass = () => {
         form
         @submit.prevent="submitProfile"
       >
-<!--        <field-->
-<!--          label="Avatar"-->
-<!--          help="Max 500kb"-->
-<!--        >-->
-<!--          <file-picker />-->
-<!--        </field>-->
+        <!--        <field-->
+        <!--          label="Avatar"-->
+        <!--          help="Max 500kb"-->
+        <!--        >-->
+        <!--          <file-picker />-->
+        <!--        </field>-->
 
         <field
           label="Name"
@@ -86,11 +88,11 @@ const submitPass = () => {
             type="submit"
             label="Submit"
           />
-<!--          <jb-button-->
-<!--            color="info"-->
-<!--            label="Options"-->
-<!--            outline-->
-<!--          />-->
+          <!--          <jb-button-->
+          <!--            color="info"-->
+          <!--            label="Options"-->
+          <!--            outline-->
+          <!--          />-->
         </jb-buttons>
       </card-component>
 
@@ -152,13 +154,39 @@ const submitPass = () => {
             color="info"
             label="Submit"
           />
-<!--          <jb-button-->
-<!--            color="info"-->
-<!--            label="Options"-->
-<!--            outline-->
-<!--          />-->
         </jb-buttons>
       </card-component>
     </div>
   </main-section>
+  <main-section>
+    <div class="flex justify-end">
+      <jb-buttons>
+        <jb-button
+          type="submit"
+          color="danger"
+          label="Delete Account"
+          @click="modalOneActive = true"
+        />
+      </jb-buttons>
+    </div>
+  </main-section>
+  <modal-box
+    v-model="modalOneActive"
+    title="Please confirm action"
+    button-label="Confirm"
+    button="danger"
+    has-cancel
+  >
+    <p>Are you sure you want to delete your account?</p>
+  </modal-box>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      modalOneActive: false
+    }
+  }
+}
+</script>
