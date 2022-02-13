@@ -1,7 +1,5 @@
 import os
 
-from models import RssFeedDto
-
 if "DEV" in os.environ:
     endpoint_fetcher = "http://localhost:5002"
     endpoint_newspaper = "http://localhost:5004"
@@ -20,7 +18,7 @@ else:
 redirect_uri = os.environ.get("redirect_uri") or "http://localhost:8080/token"
 
 # Helper to read numbers using var envs
-def cast_to_number(id):
+def cast_to_number(id: str):
     temp = os.environ.get(id)
     if temp is not None:
         try:

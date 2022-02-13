@@ -9,9 +9,8 @@ from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
 from jsonrpcclient.requests import request_uuid
-from utils import *
+from utils import cast_to_number, endpoint_persistence
 import httpx
-from fastapi.logger import logger
 
 
 load_dotenv()
