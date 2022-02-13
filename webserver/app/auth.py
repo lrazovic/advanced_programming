@@ -1,21 +1,20 @@
-from fastapi import FastAPI, HTTPException
-from jsonrpcclient.requests import request_uuid
+from fastapi import FastAPI
 from authlib.integrations.starlette_client import OAuthError
 from starlette.requests import Request
 from starlette.responses import JSONResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 
-import httpx
-
-from jwtoken import create_token
-from jwtoken import valid_email_from_db
-from jwtoken import create_refresh_token
-from jwtoken import decode_token
-from jwtoken import add_user_to_db
-from jwtoken import CREDENTIALS_EXCEPTION
+from jwtoken import (
+    create_token,
+    valid_email_from_db,
+    create_refresh_token,
+    decode_token,
+    add_user_to_db,
+    CREDENTIALS_EXCEPTION,
+)
 from oauth import oauth
-from utils import endpoint_persistence, redirect_uri
+from utils import redirect_uri
 
 
 auth_app = FastAPI()
