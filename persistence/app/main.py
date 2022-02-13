@@ -1,7 +1,7 @@
 from jsonrpcserver import method, Success, serve, Error, Result
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import base, User, RssFeed, RssFeedDtoListToEntityList
+from model import base, User, RssFeedDtoListToEntityList
 import traceback
 import logging
 import os
@@ -38,18 +38,18 @@ def addUser(dto):
         message = e
         return False, message
 
+
 def updateUserRssFeeds(dto):
     try:
         session = Session()
         targetUser = session.query(User).get(dto["user_id"])
-        #XXX debugging
-        # print(f"\ndto={dto}\n")
-        # print(f"\ntargetUser.id={targetUser.id}\n")
         targetUser.rssFeeds.clear()
         targetUser.rssFeeds.extend(RssFeedDtoListToEntityList(dto["rssFeeds"]))
         session.commit()
-        
-        message = f"User with id {targetUser.id} updated: new list of associated RSS feeds"
+
+        message = (
+            f"User with id {targetUser.id} updated: new list of associated RSS feeds"
+        )
         return True, message
     except Exception as e:
         logging.error(traceback.print_exc())
@@ -70,6 +70,7 @@ def valid_email_from_db(email) -> Result:
         logging.error(e)
         return Error(500, e)
 
+
 @method
 def add_user_to_db(dto) -> Result:
     status, message = addUser(dto)
@@ -77,6 +78,7 @@ def add_user_to_db(dto) -> Result:
         return Success(message)
     else:
         return Error(1, message)
+
 
 @method
 def update_user_rss_feeds(dto) -> Result:
