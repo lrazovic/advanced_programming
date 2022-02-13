@@ -1,6 +1,7 @@
 <script setup>
 import JbButton from "@/components/JbButton.vue";
 import JbButtons from "@/components/JbButtons.vue";
+import ModalBox from '@/components/ModalBox.vue'
 </script>
 <template>
   <div class="max-w-3xl rounded overflow-hidden shadow-lg">
@@ -46,13 +47,16 @@ import JbButtons from "@/components/JbButtons.vue";
     <div class="px-6 pt-4 pb-2">
       <jb-buttons>
         <jb-button
-            color="success"
-            label="Summarise"
-            @click="getSummary"
+          color="success"
+          label="Summarise"
+          @click="getSummary"
         />
       </jb-buttons>
     </div>
-    <div class="px-6 py-4" v-if="summarisedText">
+    <div
+      v-if="summarisedText"
+      class="px-6 py-4"
+    >
       <p
         class="text-base overflow-hidden cursor-pointer text-lg"
       >
@@ -60,6 +64,14 @@ import JbButtons from "@/components/JbButtons.vue";
       </p>
     </div>
   </div>
+  <modal-box
+    v-model="modalOne.active"
+    large-title="Something went wrong"
+    button="danger"
+    shake
+  >
+    <p>{{ modalOne.error }} ????</p>
+  </modal-box>
 <!--  <div class="max-w-3xl rounded overflow-hidden shadow-lg" v-html="content"></div>-->
 </template>
 
@@ -71,6 +83,10 @@ export default {
   props: ['img', 'imgAlt', 'title', 'content', 'hashtags', 'link'],
   data () {
     return {
+      modalOne: {
+        active: false,
+        error: ""
+      },
       text_class: 'max-h-20',
       display_expand: 'flex',
       summarisedText: ''
@@ -90,9 +106,12 @@ export default {
     },
     getSummary() {
       let _this = this;
-      post(_this, 'dummy/summary', { body: _this.content }, response => {
+      post(_this, 'api/summary', { body: _this.content }, response => {
         _this.summarisedText = response.data.result
-      }, e => alert(e))
+      }, e => {
+        _this.modalOne.error = e;
+        _this.modalOne.active = true;
+      })
     }
   }
 }
