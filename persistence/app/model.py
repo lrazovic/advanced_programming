@@ -12,8 +12,9 @@ class User(base):
     id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     email = Column(String)
     name = Column(String)
-    access_token = Column(String)
-    refresh_token = Column(String)
+    # access_token = Column(String)
+    # refresh_token = Column(String)
+    password = Column(String)
     rssFeeds = relationship("RssFeed", cascade="all, delete, delete-orphan")
 
 
