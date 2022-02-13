@@ -3,8 +3,14 @@ from jsonrpcclient.requests import request_uuid
 from fastapi import Depends
 from jwtoken import get_current_user_email
 import httpx
-from utils import endpoint_analysis, endpoint_fetcher, endpoint_persistence, endpoint_newspaper, long_post
-from models import NewsText, NewsFeed, RssFeedDto, UserRssFeedsDto
+from utils import (
+    endpoint_analysis,
+    endpoint_fetcher,
+    endpoint_persistence,
+    endpoint_newspaper,
+    long_post,
+)
+from models import NewsText, NewsFeed, UserRssFeedsDto
 
 
 dummy_app = FastAPI()
@@ -91,7 +97,7 @@ async def dummy_call_fetcher():
 
 
 @dummy_app.get("/prot/summary")
-async def dummy_summary(current_email: str = Depends(get_current_user_email)):
+async def dummy_prot_summary(_: str = Depends(get_current_user_email)):
     res = {
         "id": "c8b822b3-a40c-4472-aabf-2555f0ef073a",
         "jsonrpc": "2.0",
@@ -99,6 +105,7 @@ async def dummy_summary(current_email: str = Depends(get_current_user_email)):
     }
 
     return res
+
 
 @dummy_app.post("/get-article-detail")
 async def call_newspaper(articleUrl: str):
@@ -117,18 +124,55 @@ async def call_newspaper(articleUrl: str):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+
 @dummy_app.put("/put-user-rss-feed")
 async def put_user_rss_feed(dto: UserRssFeedsDto):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_persistence,
-                json=request_uuid("update_user_rss_feeds", params=[dto.dict()])
+                json=request_uuid("update_user_rss_feeds", params=[dto.dict()]),
             )
         if response.is_error:
             raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
         else:
             return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
+
+@dummy_app.get("/readdb")
+async def dummy_readdb():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("read_db"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
+
+@dummy_app.get("/prot/readdb")
+async def dummy_prot_readdb(current_email: str = Depends(get_current_user_email)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("read_db"),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return current_email
     except:
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
