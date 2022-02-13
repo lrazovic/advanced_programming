@@ -9,39 +9,31 @@ base = declarative_base()
 class User(base):
     __tablename__ = "user"
 
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
-
+    id = Column(Integer, Sequence("user_id_seq"), primary_key=True)
     email = Column(String)
     name = Column(String)
     access_token = Column(String)
     refresh_token = Column(String)
-
     rssFeeds = relationship("RssFeed", cascade="all, delete, delete-orphan")
 
 
 class RssFeed(base):
     __tablename__ = "rss_feed"
 
-    id = Column(Integer, Sequence('rss_feed_id_seq'), primary_key=True)
-
+    id = Column(Integer, Sequence("rss_feed_id_seq"), primary_key=True)
     url = Column(String)
     rank = Column(Integer)
-
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey("user.id"))
 
 
 def RssFeedDtoToEntity(dto):
-    entity = RssFeed()
+    return RssFeed(url=dto["url"], rank=dto["rank"])
 
-    entity.url = dto["url"]
-    entity.rank = dto["rank"]
-    
-    return entity
 
 def RssFeedDtoListToEntityList(dtoList):
     entityList: List[RssFeed] = []
 
     for dto in dtoList:
         entityList.append(RssFeedDtoToEntity(dto))
-    
+
     return entityList
