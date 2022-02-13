@@ -19,7 +19,7 @@ services:
   webserver:
     depends_on:
       - postgres
-      - authentication
+      - persistence
     build:
       context: webserver/
     restart: unless-stopped
@@ -68,12 +68,22 @@ services:
     networks:
       - backend
 
-  authentication:
+  newspaper:
+    depends_on:
+      - fetcher
+    build:
+      context: newspaper/
+    ports:
+      - "5004:5004"
+    networks:
+      - backend
+
+  persistence:
     depends_on:
       - postgres
     restart: unless-stopped
     build:
-      context: database/
+      context: persistence/
     ports:
       - "5003:5003"
     networks:

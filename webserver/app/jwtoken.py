@@ -68,7 +68,7 @@ def valid_email_from_db(email):
     try:
         with httpx.Client() as client:
             response = client.post(
-                endpoint_auth,
+                endpoint_persistence,
                 json=request_uuid("valid_email_from_db", params=[email]),
             )
         if response.is_error:
@@ -88,7 +88,7 @@ async def add_user_to_db(user_data):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                endpoint_auth,
+                endpoint_persistence,
                 json=request_uuid("add_user_to_db", params=[user_data]),
             )
         if response.is_error:

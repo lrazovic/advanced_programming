@@ -1,19 +1,17 @@
 [tool.poetry]
-name = "fetcher"
+name = "persistence"
 version = "0.1.0"
-description = "The fetcher module"
+description = ""
 authors = ["Leonardo Razovic <4128940+lrazovic@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-feedparser = "^6.0.8"
 jsonrpcserver = "^5.0.6"
-lxml = "^4.7.1"
-beautifulsoup4 = "^4.10.0"
-morss = {git = "https://git.pictuga.com/pictuga/morss.git"}
+SQLAlchemy = "^1.4.31"
+pg8000 = "^1.24.0"
 
 [tool.poetry.dev-dependencies]
-black = "^21.12b0"
+black = "^22.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

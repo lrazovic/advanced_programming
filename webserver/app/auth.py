@@ -15,7 +15,7 @@ from jwtoken import decode_token
 from jwtoken import add_user_to_db
 from jwtoken import CREDENTIALS_EXCEPTION
 from oauth import oauth
-from utils import endpoint_auth, redirect_uri
+from utils import endpoint_persistence, redirect_uri
 
 
 auth_app = FastAPI()
@@ -124,7 +124,7 @@ async def dummy_readdb():
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                endpoint_auth,
+                endpoint_persistence,
                 json=request_uuid("read_db"),
             )
         if response.is_error:
