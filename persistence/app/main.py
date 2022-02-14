@@ -1,7 +1,8 @@
 from jsonrpcserver import method, Success, serve, Error, Result
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, subqueryload
 from model import base, User, RssFeedDtoListToEntityList
+from fastapi.encoders import jsonable_encoder
 import traceback
 import logging
 import os
@@ -56,6 +57,20 @@ def updateUserRssFeeds(dto):
         message = e
         return False, message
 
+def getUser(email):
+    try:
+        session = Session()
+        user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
+        session.commit()
+
+        logging.info(f"\nRetrived User with id: {user.id}\n")
+        
+        return True, jsonable_encoder(user)
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
 
 @method
 def valid_email_from_db(email) -> Result:
@@ -79,6 +94,13 @@ def add_user_to_db(dto) -> Result:
     else:
         return Error(1, message)
 
+@method
+def getLoggedUser(email) -> Result:
+    ok, result = getUser(email)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
 
 @method
 def update_user_rss_feeds(dto) -> Result:
