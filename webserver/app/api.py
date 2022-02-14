@@ -90,3 +90,20 @@ async def put_user_rss_feed(
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
+
+@api_app.get("/get-logged-user")
+async def get_logged_user(email: str = Depends(get_current_user_email)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("getLoggedUser", params=[email]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
