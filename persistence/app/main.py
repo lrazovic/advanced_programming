@@ -71,6 +71,23 @@ def getUser(email):
         message = e
         return False, message
 
+def deleteUser(email):
+    try:
+        session = Session()
+        user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
+        userId = user.id
+        session.delete(user)
+        session.commit()
+
+        msg = f"\nDeleted User with id: {userId}\n"
+        logging.info(msg)
+        
+        return True, msg
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
 
 @method
 def valid_email_from_db(email) -> Result:
@@ -97,6 +114,14 @@ def add_user_to_db(dto) -> Result:
 @method
 def getLoggedUser(email) -> Result:
     ok, result = getUser(email)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+@method
+def deleteLoggedUser(email) -> Result:
+    ok, result = deleteUser(email)
     if ok:
         return Success(result)
     else:
