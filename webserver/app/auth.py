@@ -30,10 +30,11 @@ async def token(request: Request):
     refresh_token = create_refresh_token(user_data["email"])
     user_data["access_token"] = access_token
     user_data["refresh_token"] = refresh_token
-    await add_user_to_db(user_data)
+    response = await add_user_to_db(user_data)
     return JSONResponse(
         {
             "result": True,
+            "user_id": response["result"],
             "access_token": access_token,
             "refresh_token": refresh_token,
         }

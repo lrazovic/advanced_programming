@@ -43,6 +43,7 @@ async def token(request: Request):
                 req.onreadystatechange = function () {
                 if (req.readyState === 4) {
                     if (req.response["result"] === true) {
+                    window.localStorage.setItem("user_id", req.response["user_id"]);
                     window.localStorage.setItem("jwt", req.response["access_token"]);
                     window.localStorage.setItem(
                         "refresh",
