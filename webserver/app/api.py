@@ -45,13 +45,13 @@ async def get_users_user_id(user_id: int):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
-@usersRouter.put("/rss-feeds", summary="Overwrite the whole rss-feed data associated to a specific user")
-async def put_users_rss_feed(dto: UserRssFeedsDto):
+@usersRouter.put("/{user_id}/rss-feeds", summary="Overwrite the whole rss-feed data associated to a specific user")
+async def put_users_rss_feed(user_id: int, feedsDto: UserRssFeedsDto):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_persistence,
-                json=request_uuid("update_user_rss_feeds", params=[dto.dict()]),
+                json=request_uuid("update_user_rss_feeds", params=[user_id, feedsDto.dict()]),
             )
         if response.is_error:
             raise HTTPException(status_code=404, detail="Error in JSON-RPC response")

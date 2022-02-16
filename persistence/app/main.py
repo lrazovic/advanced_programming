@@ -39,12 +39,12 @@ def addUser(dto):
         return False, message
 
 
-def updateUserRssFeeds(dto):
+def updateUserRssFeeds(userId, feedsDto):
     try:
         session = Session()
-        targetUser = session.query(User).get(dto["user_id"])
+        targetUser = session.query(User).get(userId)
         targetUser.rssFeeds.clear()
-        targetUser.rssFeeds.extend(RssFeedDtoListToEntityList(dto["rssFeeds"]))
+        targetUser.rssFeeds.extend(RssFeedDtoListToEntityList(feedsDto["rssFeeds"]))
         session.commit()
 
         message = (
@@ -174,8 +174,8 @@ def deleteUserUserId(userId) -> Result:
         return Error(1, result)
 
 @method
-def update_user_rss_feeds(dto) -> Result:
-    status, message = updateUserRssFeeds(dto)
+def update_user_rss_feeds(userId, feedsDto) -> Result:
+    status, message = updateUserRssFeeds(userId, feedsDto)
     if status:
         return Success(message)
     else:
