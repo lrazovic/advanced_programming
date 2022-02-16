@@ -75,9 +75,6 @@ async def token(request: Request):
 
 
 if __name__ == "__main__":
-    # DONT PUSH ME!!! DISCARD ME!!!
-    os.environ["DEV"] = "1"
-
     if "DEV" in os.environ:
         PORT = 8080
     else:
