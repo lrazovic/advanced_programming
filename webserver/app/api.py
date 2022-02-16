@@ -28,7 +28,7 @@ newsRouter = APIRouter(
 
 # -----------------------------------------------USERS
 
-@usersRouter.get("/{user_id}")
+@usersRouter.get("/{user_id}", summary="Retrive the whole data of a specific user")
 async def get_users_user_id(user_id: int):
     try:
         async with httpx.AsyncClient() as client:
@@ -45,7 +45,7 @@ async def get_users_user_id(user_id: int):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
-@usersRouter.put("/rss-feeds")
+@usersRouter.put("/rss-feeds", summary="Overwrite the whole rss-feed data associated to a specific user")
 async def put_users_rss_feed(dto: UserRssFeedsDto):
     try:
         async with httpx.AsyncClient() as client:
@@ -62,7 +62,7 @@ async def put_users_rss_feed(dto: UserRssFeedsDto):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
-@usersRouter.delete("/{user_id}")
+@usersRouter.delete("/{user_id}", summary="Delete the whole data of a specific user")
 async def delete_users_user_id(user_id: int):
     try:
         async with httpx.AsyncClient() as client:
@@ -81,7 +81,7 @@ async def delete_users_user_id(user_id: int):
 
 # -----------------------------------------------NEWS
 
-@newsRouter.get("", tags=["news"])
+@newsRouter.get("", tags=["news"], summary="Retrive content of the specified RSS feed, exploiting fetcher module")
 async def call_fetcher(feed_url: str, limit: int):
     try:
         async with httpx.AsyncClient() as client:
@@ -98,7 +98,7 @@ async def call_fetcher(feed_url: str, limit: int):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
-@newsRouter.get("/articles", tags=["news"])
+@newsRouter.get("/articles", tags=["news"], summary="Retrive the full text of the specific article, exploiting the newspaper module")
 async def call_newspaper(article_url: str):
     try:
         async with httpx.AsyncClient() as client:
@@ -115,7 +115,7 @@ async def call_newspaper(article_url: str):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
-@newsRouter.post("/articles/summary", tags=["news"])
+@newsRouter.post("/articles/summary", tags=["news"], summary="Retrive the summary of the specific article, exploiting the analysis module")
 async def call_summary(text: NewsText):
     try:
         async with httpx.AsyncClient() as client:
