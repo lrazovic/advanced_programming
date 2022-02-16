@@ -4,13 +4,18 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 
-from api import api_app
+from utils import tags_metadata
+
+from api import usersRouter, newsRouter
 from auth import auth_app
 from dummy import dummy_app
 
-api_gateway = FastAPI()
+api_gateway = FastAPI(openapi_tags=tags_metadata)
+api_gateway.include_router(usersRouter)
+api_gateway.include_router(newsRouter)
+
+# Sub-applications
 api_gateway.mount("/auth", auth_app)
-api_gateway.mount("/api", api_app)
 api_gateway.mount("/dummy", dummy_app)
 
 # Allow CORS for all origins
@@ -70,6 +75,9 @@ async def token(request: Request):
 
 
 if __name__ == "__main__":
+    # DONT PUSH ME!!! DISCARD ME!!!
+    os.environ["DEV"] = "1"
+
     if "DEV" in os.environ:
         PORT = 8080
     else:

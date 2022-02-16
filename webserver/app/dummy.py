@@ -10,7 +10,7 @@ from utils import (
     endpoint_newspaper,
     long_post,
 )
-from models import NewsText, NewsFeed, UserRssFeedsDto
+from models import NewsText, UserRssFeedsDto
 
 
 dummy_app = FastAPI()
@@ -77,12 +77,12 @@ async def dummy_summary_response():
 
 
 @dummy_app.post("/getnews")
-async def call_fetcher(feed: NewsFeed):
+async def call_fetcher(feed_url: str, limit: int,):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_fetcher,
-                json=request_uuid("retrive_information", params=[feed.url, feed.limit]),
+                json=request_uuid("retrive_information", params=[feed_url, limit]),
             )
         if response.is_error:
             raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
