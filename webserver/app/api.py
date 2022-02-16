@@ -108,6 +108,23 @@ async def get_logged_user(email: str = Depends(get_current_user_email)):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+@api_app.get("/get-user/{user_id}")
+async def get_user_user_id(user_id: int, _: str = Depends(get_current_user_email)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("getUserUserId", params=[user_id]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
 @api_app.delete("/delete-logged-user")
 async def get_logged_user(email: str = Depends(get_current_user_email)):
     try:
@@ -124,3 +141,19 @@ async def get_logged_user(email: str = Depends(get_current_user_email)):
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
+
+@api_app.delete("/delete-user/{user_id}")
+async def delete_user_user_id(user_id: int, _: str = Depends(get_current_user_email)):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("deleteUserUserId", params=[user_id]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"

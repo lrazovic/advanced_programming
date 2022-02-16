@@ -16,6 +16,40 @@ from models import NewsText, NewsFeed, UserRssFeedsDto
 dummy_app = FastAPI()
 
 
+@dummy_app.get("/get-user/{user_id}")
+async def get_user_user_id(user_id: int):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("getUserUserId", params=[user_id]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
+@dummy_app.delete("/delete-user/{user_id}")
+async def delete_user_user_id(user_id: int):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                endpoint_persistence,
+                json=request_uuid("deleteUserUserId", params=[user_id]),
+            )
+        if response.is_error:
+            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+        else:
+            return response.json()
+    except:
+        raise HTTPException(
+            status_code=500, detail="Impossible to connect to JSON-RPC Server"
+        )
+
 @dummy_app.get("/getnews")
 async def dummy_fetcher_response():
     res = {

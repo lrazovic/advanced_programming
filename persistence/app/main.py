@@ -70,10 +70,41 @@ def getUser(email):
         message = e
         return False, message
 
+def getUserById(id):
+    try:
+        session = Session()
+        user = session.query(User).get(id)
+        session.commit()
+
+        logging.info(f"\nRetrived User with id: {user.id}\n")
+        
+        return True, jsonable_encoder(user)
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
 def deleteUser(email):
     try:
         session = Session()
         user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
+        userId = user.id
+        session.delete(user)
+        session.commit()
+
+        msg = f"\nDeleted User with id: {userId}\n"
+        logging.info(msg)
+        
+        return True, msg
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
+def deleteUserById(id):
+    try:
+        session = Session()
+        user = session.query(User).options(subqueryload(User.rssFeeds)).get(id)
         userId = user.id
         session.delete(user)
         session.commit()
@@ -119,8 +150,24 @@ def getLoggedUser(email) -> Result:
         return Error(1, result)
 
 @method
+def getUserUserId(userId) -> Result:
+    ok, result = getUserById(userId)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+@method
 def deleteLoggedUser(email) -> Result:
     ok, result = deleteUser(email)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+@method
+def deleteUserUserId(userId) -> Result:
+    ok, result = deleteUserById(userId)
     if ok:
         return Success(result)
     else:
