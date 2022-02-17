@@ -10,7 +10,7 @@ const routes = [
     },
     path: '/',
     name: 'feed',
-    component: () => import(/* webpackChunkName: "tables" */ '@/views/NewsFeed.vue')
+    component: () => import('@/views/NewsFeed.vue')
   },
   {
     meta: {
@@ -19,7 +19,16 @@ const routes = [
     },
     path: '/profile',
     name: 'profile',
-    component: () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue')
+    component: () => import('@/views/Profile.vue')
+  },
+  {
+    meta: {
+      title: 'Profile',
+      forAuth: true
+    },
+    path: '/source-list',
+    name: 'sources',
+    component: () => import('@/views/SourceList.vue')
   },
   {
     meta: {
@@ -29,7 +38,7 @@ const routes = [
     },
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/LoginView.vue')
+    component: () => import('@/views/LoginView.vue')
   },
   {
     meta: {
