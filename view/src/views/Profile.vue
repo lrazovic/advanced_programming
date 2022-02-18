@@ -190,6 +190,9 @@ export default {
       modalOneActive: false
     }
   },
+  created() {
+    this.getUser()
+  },
   methods: {
     getUser(){
       let _this = this;
@@ -211,9 +214,6 @@ export default {
         _this.$router.push('/login')
       }, e => {console.log(e)})
     }
-  },
-  created() {
-    this.getUser()
   }
 }
 </script>
