@@ -34,7 +34,7 @@ const routes = [
     meta: {
       title: 'Login',
       fullScreen: true,
-      // forVisitors: true
+      forVisitors: true
     },
     path: '/login',
     name: 'login',
