@@ -7,9 +7,9 @@ import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 <template>
   <div
     v-if="content"
-    class="xl:w-1/2 rounded overflow-hidden shadow-lg"
+    class="xl:w-1/2 rounded overflow-hidden shadow-lg bg-white"
   >
-    <div class="px-6 py-4">
+    <div class="px-6 py-2">
       <div class="flex items-center justify-end mt-6">
         <check-radio-picker
           v-model="summarise"

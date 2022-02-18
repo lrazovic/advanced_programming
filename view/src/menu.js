@@ -18,7 +18,7 @@ export default [
     {
       to: '/source-list',
       icon: mdiFormatListBulleted,
-      label: 'My news sources'
+      label: 'Manage news sources'
     }
   ]
 ]
