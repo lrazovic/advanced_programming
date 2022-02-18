@@ -73,9 +73,9 @@ const menuOpenLg = () => {
           size="24"
         />
       </nav-bar-item>
-<!--      <nav-bar-item>-->
-<!--        <nav-bar-search />-->
-<!--      </nav-bar-item>-->
+      <!--      <nav-bar-item>-->
+      <!--        <nav-bar-search />-->
+      <!--      </nav-bar-item>-->
     </div>
     <div class="flex-none items-stretch flex h-14 lg:hidden">
       <nav-bar-item @click.prevent="menuNavBarToggle">
@@ -93,7 +93,10 @@ const menuOpenLg = () => {
       <div
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
-        <nav-bar-menu @click="$router.push('/profile')" has-divider>
+        <nav-bar-menu
+          has-divider
+          @click="$router.push('/profile')"
+        >
           {{ userName }}
         </nav-bar-menu>
         <nav-bar-item
@@ -107,12 +110,14 @@ const menuOpenLg = () => {
             is-desktop-icon-only
           />
         </nav-bar-item>
-        <nav-bar-item is-desktop-icon-only>
+        <nav-bar-item
+          is-desktop-icon-only
+          @click="logOut"
+        >
           <nav-bar-item-label
             :icon="mdiLogout"
             label="Log out"
             is-desktop-icon-only
-            @click="logOut"
           />
         </nav-bar-item>
       </div>
