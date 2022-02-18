@@ -113,6 +113,13 @@ export default defineComponent({
       get(_this, 'api/users/' + id, {}, response => {
         if (response.data.result.rssFeeds)
           _this.list = response.data.result.rssFeeds
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rssFeeds
+        })
       }, e => console.log(e))
     },
     deleteItem(i) {

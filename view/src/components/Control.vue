@@ -127,7 +127,7 @@ if (props.ctrlKFocus) {
         :key="option.id ?? option"
         :value="option"
       >
-        {{ option.label ?? option }}
+        {{ option.url ?? option }}
       </option>
     </select>
     <textarea

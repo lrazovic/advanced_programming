@@ -181,11 +181,31 @@ const submitPass = () => {
 </template>
 
 <script>
+import {get} from "../helpers/api";
+
 export default {
   data () {
     return {
       modalOneActive: false
     }
+  },
+  methods: {
+    getUser(){
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rssFeeds
+        })
+      }, e => console.log(e))
+    },
+  },
+  created() {
+    this.getUser()
   }
 }
 </script>

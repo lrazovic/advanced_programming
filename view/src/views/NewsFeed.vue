@@ -27,6 +27,7 @@ import JbButtons from "@/components/JbButtons.vue";
         type="submit"
         color="info"
         label="Get News"
+        @click="getNews"
       />
     </jb-buttons>
   </section>
@@ -86,28 +87,31 @@ export default {
       main_title: "",
       sources: [
         {
-          label: "Title 1",
-          link: "Link 1"
+          rank: 1,
+          id: 1,
+          url: "https://www.buzzfeed.com/world.xml",
+          user_id: 1
         },
         {
-          label: "Title 2",
-          link: "Link 2"
+          rank: 2,
+          id: 2,
+          url: "http://feeds.bbci.co.uk/news/world/rss.xml",
+          user_id: 1
         },
         {
-          label: "Title 3",
-          link: "Link 3"
+          rank: 3,
+          id: 3,
+          url: "http://www.aljazeera.com/xml/rss/all.xml",
+          user_id: 1
         }
       ],
-      selectedSource: {
-        label: "Title 1",
-        link: "Link 1"
-      },
+      selectedSource: "",
       limits: [5, 10, 25, 50],
       limit: 10
     }
   },
   created () {
-    this.getNews()
+    this.getUser()
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
@@ -116,7 +120,7 @@ export default {
     getNews () {
       let _this = this
       get(_this, 'api/news', { params: {
-        feed_url: 'http://feeds.bbci.co.uk/news/world/rss.xml', limit: _this.limit
+        feed_url: _this.selectedSource.url, limit: _this.limit
         } }, function (response) {
         let json = response.data
         _this.posts = json.result.posts
@@ -124,6 +128,23 @@ export default {
       }, function () {
         //
       })
+    },
+    getUser() {
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        if (response.data.result.rssFeeds)
+          _this.sources = response.data.result.rssFeeds
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rssFeeds
+        })
+        _this.selectedSource = _this.sources[0]
+        _this.getNews()
+      }, e => console.log(e))
     },
     handleScroll: function () {
       if (this.scTimer) return;
@@ -139,6 +160,6 @@ export default {
         behavior: "smooth"
       });
     },
-  }
+  },
 }
 </script>

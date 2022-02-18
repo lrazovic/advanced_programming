@@ -101,8 +101,7 @@ export default {
         _this.content = response.data.result
         _this.id = response.data.id
       }, e => {
-        _this.modalOne.error = e;
-        _this.modalOne.active = true;
+        console.log(e)
       })
     },
   }
