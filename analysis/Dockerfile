@@ -1,4 +1,4 @@
-FROM python:3.8-slim AS builder
+FROM python:3.9-slim AS builder
 WORKDIR /app
 COPY  pyproject.toml poetry.lock /app/
 
@@ -8,7 +8,7 @@ RUN poetry install --no-ansi --no-dev
 
 # ---
 
-FROM python:3.8-slim
+FROM python:3.9-slim
 EXPOSE 5001
 WORKDIR /app
 COPY --from=builder /app /app
