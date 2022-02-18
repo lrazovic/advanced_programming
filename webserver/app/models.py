@@ -6,14 +6,10 @@ class NewsText(BaseModel):
     body: str = "A very long text, mainly written in English"
 
 
-class NewsFeed(BaseModel):
-    url: str = "http://feeds.bbci.co.uk/news/world/rss.xml"
-    limit: int = 10
-
-
 class RssFeedDto(BaseModel):
     url: str = "http://feeds.bbci.co.uk/news/world/rss.xml"
     rank: int = 1
+
 
 class UserRssFeedsDto(BaseModel):
     user_id: int = 1

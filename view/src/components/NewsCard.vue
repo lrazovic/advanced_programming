@@ -1,18 +1,24 @@
 <script setup>
-import JbButton from "@/components/JbButton.vue";
-import JbButtons from "@/components/JbButtons.vue";
+// import JbButton from "@/components/JbButton.vue";
+// import JbButtons from "@/components/JbButtons.vue";
 import ModalBox from '@/components/ModalBox.vue'
+import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 </script>
 <template>
-  <div class="max-w-3xl rounded overflow-hidden shadow-lg">
-    <a :href="link">
-      <img
-        class="w-full"
-        :src="img"
-        :alt="imgAlt"
-      >
-    </a>
-    <div class="px-6 py-4">
+  <div
+    v-if="content"
+    class="xl:w-1/2 rounded overflow-hidden shadow-lg bg-white"
+  >
+    <div class="px-6 py-2">
+      <div class="flex items-center justify-end mt-6">
+        <check-radio-picker
+          v-model="summarise"
+          type="switch"
+          name="notifications-switch"
+          :options="{ outline: 'Summarise' }"
+          @change="getSummary"
+        />
+      </div>
       <div
         class="font-bold text-xl mb-2 cursor-pointer"
         @click="goTo"
@@ -24,7 +30,7 @@ import ModalBox from '@/components/ModalBox.vue'
         :class="text_class"
         @click="goTo"
       >
-        {{ content }}
+        {{ summarise && summarisedText ? summarisedText : content }}
       </p>
       <div>
         <p
@@ -37,32 +43,6 @@ import ModalBox from '@/components/ModalBox.vue'
         </p>
       </div>
     </div>
-    <div class="px-6 pt-4 pb-2">
-      <span
-        v-for="(h, index) in tags"
-        :key="index"
-        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-      >#{{ h }}</span>
-    </div>
-    <div class="px-6 pt-4 pb-2">
-      <jb-buttons>
-        <jb-button
-          color="success"
-          label="Summarise"
-          @click="getSummary"
-        />
-      </jb-buttons>
-    </div>
-    <div
-      v-if="summarisedText"
-      class="px-6 py-4"
-    >
-      <p
-        class="text-base overflow-hidden cursor-pointer text-lg"
-      >
-        {{ summarisedText }}
-      </p>
-    </div>
   </div>
   <modal-box
     v-model="modalOne.active"
@@ -72,30 +52,30 @@ import ModalBox from '@/components/ModalBox.vue'
   >
     <p>{{ modalOne.error }} ????</p>
   </modal-box>
-<!--  <div class="max-w-3xl rounded overflow-hidden shadow-lg" v-html="content"></div>-->
 </template>
 
 <script>
-import { post } from '../helpers/api'
+import { get, post } from '../helpers/api'
 export default {
   components: {},
 
-  props: ['img', 'imgAlt', 'title', 'content', 'hashtags', 'link'],
+  props: ['title', 'link'],
   data () {
     return {
       modalOne: {
         active: false,
         error: ""
       },
+      summarise: false,
+      content: "",
+      id: "",
       text_class: 'max-h-20',
       display_expand: 'flex',
       summarisedText: ''
     }
   },
-  computed: {
-    tags: function () {
-      return this.hashtags[0] == 'null' ? [] : this.hashtags
-    }
+  created() {
+    this.getText();
   },
   methods: {
     goTo () {
@@ -105,14 +85,25 @@ export default {
       )
     },
     getSummary() {
+      if (!this.summarisedText){
+        let _this = this;
+        post(_this, 'api/news/articles/summary', { body: _this.content }, response => {
+          _this.summarisedText = response.data.result
+        }, e => {
+          _this.modalOne.error = e;
+          _this.modalOne.active = true;
+        })
+      }
+    },
+    getText() {
       let _this = this;
-      post(_this, 'api/summary', { body: _this.content }, response => {
-        _this.summarisedText = response.data.result
+      get(_this, 'api/news/articles', { params: { article_url: _this.link } }, response => {
+        _this.content = response.data.result
+        _this.id = response.data.id
       }, e => {
-        _this.modalOne.error = e;
-        _this.modalOne.active = true;
+        console.log(e)
       })
-    }
+    },
   }
 }
 </script>

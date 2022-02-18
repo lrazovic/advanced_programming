@@ -7,7 +7,6 @@ import CardComponent from '@/components/CardComponent.vue'
 import Divider from '@/components/DividerBar.vue'
 import Field from '@/components/Field.vue'
 import Control from '@/components/Control.vue'
-import FilePicker from '@/components/FilePicker.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import UserCard from '@/components/UserCard.vue'
@@ -176,17 +175,45 @@ const submitPass = () => {
     button-label="Confirm"
     button="danger"
     has-cancel
+    @confirm="confirmDelete"
   >
     <p>Are you sure you want to delete your account?</p>
   </modal-box>
 </template>
 
 <script>
+import {get, del} from "../helpers/api";
+
 export default {
   data () {
     return {
       modalOneActive: false
     }
+  },
+  methods: {
+    getUser(){
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rssFeeds
+        })
+      }, e => console.log(e))
+    },
+    confirmDelete(){
+      let _this = this;
+      del(_this, "api/users/" + _this.store.state.userID, {}, () => {
+        _this.$auth.destroyToken()
+        _this.$router.push('/login')
+      }, e => {console.log(e)})
+    }
+  },
+  created() {
+    this.getUser()
   }
 }
 </script>

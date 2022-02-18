@@ -4,6 +4,10 @@ import { useStore } from 'vuex'
 import ControlIcon from '@/components/ControlIcon.vue'
 
 const props = defineProps({
+  help: {
+    type: String,
+    default: null
+  },
   name: {
     type: String,
     default: null
@@ -123,7 +127,7 @@ if (props.ctrlKFocus) {
         :key="option.id ?? option"
         :value="option"
       >
-        {{ option.label ?? option }}
+        {{ option.url ?? option }}
       </option>
     </select>
     <textarea
@@ -152,5 +156,11 @@ if (props.ctrlKFocus) {
       :icon="icon"
       :h="controlIconH"
     />
+    <div
+      v-if="help"
+      class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+    >
+      {{ help }}
+    </div>
   </div>
 </template>

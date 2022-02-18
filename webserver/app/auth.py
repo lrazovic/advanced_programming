@@ -5,7 +5,14 @@ from starlette.responses import JSONResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 
-from jwtoken import create_token, valid_email_from_db, create_refresh_token, decode_token, add_user_to_db, CREDENTIALS_EXCEPTION
+from jwtoken import (
+    create_token,
+    valid_email_from_db,
+    create_refresh_token,
+    decode_token,
+    add_user_to_db,
+    CREDENTIALS_EXCEPTION,
+)
 from oauth import oauth
 from utils import redirect_uri
 

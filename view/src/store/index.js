@@ -7,7 +7,9 @@ export default createStore({
     /* User */
     userName: null,
     userEmail: null,
-    userAvatar: null,
+    rss: null,
+    password: null,
+    userID: null,
 
     /* fullScreen - fullscreen form layout (e.g. login page) */
     isFullScreen: false,
@@ -38,8 +40,14 @@ export default createStore({
       if (payload.email) {
         state.userEmail = payload.email
       }
-      if (payload.avatar) {
-        state.userAvatar = payload.avatar
+      if (payload.id) {
+        state.userID = payload.id
+      }
+      if (payload.password) {
+        state.password = payload.password
+      }
+      if (payload.rss) {
+        state.rss = payload.rss
       }
     }
   },

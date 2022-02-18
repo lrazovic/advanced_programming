@@ -62,12 +62,6 @@ import JbButtons from "@/components/JbButtons.vue";
         />
       </field>
 
-      <!--      <check-radio-picker-->
-      <!--        v-model="form.remember"-->
-      <!--        name="remember"-->
-      <!--        :options="{ remember: 'Remember' }"-->
-      <!--      />-->
-
       <divider />
 
       <jb-buttons>
@@ -94,7 +88,7 @@ import JbButtons from "@/components/JbButtons.vue";
 </template>
 
 <script>
-import { post } from "../helpers/api";
+import { post, get } from "../helpers/api";
 export default {
   data() {
     return {
@@ -119,6 +113,19 @@ export default {
         }
       );
     },
+    getUser(){
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rssFeeds
+        })
+      }, e => console.log(e))
+    },
     popupGoogle () {
       let win = window.open('http://localhost:3000/auth/login', '', 'width=650, height=650');
       let _this = this;
@@ -126,6 +133,7 @@ export default {
         if(win.closed) {
           clearInterval(timer);
           if (_this.$auth.isAuthenticated()) {
+            _this.getUser()
             _this.$router.push('/')
           }
         }
