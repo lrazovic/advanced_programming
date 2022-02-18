@@ -175,13 +175,14 @@ const submitPass = () => {
     button-label="Confirm"
     button="danger"
     has-cancel
+    @confirm="confirmDelete"
   >
     <p>Are you sure you want to delete your account?</p>
   </modal-box>
 </template>
 
 <script>
-import {get} from "../helpers/api";
+import {get, del} from "../helpers/api";
 
 export default {
   data () {
@@ -203,6 +204,13 @@ export default {
         })
       }, e => console.log(e))
     },
+    confirmDelete(){
+      let _this = this;
+      del(_this, "api/users/" + _this.store.state.userID, {}, () => {
+        _this.$auth.destroyToken()
+        _this.$router.push('/login')
+      }, e => {console.log(e)})
+    }
   },
   created() {
     this.getUser()
