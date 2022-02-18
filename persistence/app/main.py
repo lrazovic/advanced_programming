@@ -18,6 +18,20 @@ Session = sessionmaker(db)
 base.metadata.create_all(db)
 
 
+def getUserById(id):
+    try:
+        session = Session()
+        user = session.query(User).options(subqueryload(User.rssFeeds)).get(id)
+        session.commit()
+
+        logging.info(f"\nRetrived User with id: {user.id}\n")
+        
+        return True, jsonable_encoder(user)
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
 def addUser(dto):
     try:
         session = Session()
@@ -38,7 +52,6 @@ def addUser(dto):
         message = e
         return False, message
 
-
 def updateUserRssFeeds(userId, feedsDto):
     try:
         session = Session()
@@ -51,51 +64,6 @@ def updateUserRssFeeds(userId, feedsDto):
             f"User with id {targetUser.id} updated: new list of associated RSS feeds"
         )
         return True, message
-    except Exception as e:
-        logging.error(traceback.print_exc())
-        message = e
-        return False, message
-
-def getUser(email):
-    try:
-        session = Session()
-        user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
-        session.commit()
-
-        logging.info(f"\nRetrived User with id: {user.id}\n")
-        
-        return True, jsonable_encoder(user)
-    except Exception as e:
-        logging.error(traceback.print_exc())
-        message = e
-        return False, message
-
-def getUserById(id):
-    try:
-        session = Session()
-        user = session.query(User).options(subqueryload(User.rssFeeds)).get(id)
-        session.commit()
-
-        logging.info(f"\nRetrived User with id: {user.id}\n")
-        
-        return True, jsonable_encoder(user)
-    except Exception as e:
-        logging.error(traceback.print_exc())
-        message = e
-        return False, message
-
-def deleteUser(email):
-    try:
-        session = Session()
-        user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
-        userId = user.id
-        session.delete(user)
-        session.commit()
-
-        msg = f"\nDeleted User with id: {userId}\n"
-        logging.info(msg)
-        
-        return True, msg
     except Exception as e:
         logging.error(traceback.print_exc())
         message = e
@@ -118,7 +86,41 @@ def deleteUserById(id):
         message = e
         return False, message
 
+# CRUD Operations on User entity
 
+@method
+def getUserUserId(userId) -> Result:
+    ok, result = getUserById(userId)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+@method
+def add_user_to_db(dto) -> Result:
+    status, message = addUser(dto)
+    if status:
+        return Success(message)
+    else:
+        return Error(1, message)
+
+@method
+def update_user_rss_feeds(userId, feedsDto) -> Result:
+    status, message = updateUserRssFeeds(userId, feedsDto)
+    if status:
+        return Success(message)
+    else:
+        return Error(1, message)
+
+@method
+def deleteUserUserId(userId) -> Result:
+    ok, result = deleteUserById(userId)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+# Security check involved in the oAuth2 flow
 @method
 def valid_email_from_db(email) -> Result:
     try:
@@ -132,56 +134,7 @@ def valid_email_from_db(email) -> Result:
         logging.error(e)
         return Error(500, e)
 
-
-@method
-def add_user_to_db(dto) -> Result:
-    status, message = addUser(dto)
-    if status:
-        return Success(message)
-    else:
-        return Error(1, message)
-
-@method
-def getLoggedUser(email) -> Result:
-    ok, result = getUser(email)
-    if ok:
-        return Success(result)
-    else:
-        return Error(1, result)
-
-@method
-def getUserUserId(userId) -> Result:
-    ok, result = getUserById(userId)
-    if ok:
-        return Success(result)
-    else:
-        return Error(1, result)
-
-@method
-def deleteLoggedUser(email) -> Result:
-    ok, result = deleteUser(email)
-    if ok:
-        return Success(result)
-    else:
-        return Error(1, result)
-
-@method
-def deleteUserUserId(userId) -> Result:
-    ok, result = deleteUserById(userId)
-    if ok:
-        return Success(result)
-    else:
-        return Error(1, result)
-
-@method
-def update_user_rss_feeds(userId, feedsDto) -> Result:
-    status, message = updateUserRssFeeds(userId, feedsDto)
-    if status:
-        return Success(message)
-    else:
-        return Error(1, message)
-
-
+# Just for checking if the db is alive
 @method
 def read_db() -> Result:
     with Session.begin() as session:
