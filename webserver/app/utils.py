@@ -18,18 +18,9 @@ else:
 redirect_uri = os.environ.get("redirect_uri") or "http://localhost:8080/token"
 
 tags_metadata = [
-    {
-        "name": "news",
-        "description": "Operations for managing news from RSS feeds"
-    },
-    {
-        "name": "users",
-        "description": "Operations for managing users of the system"
-    },
-    {
-        "name": "tbd",
-        "description": "Redundant operations, probably to be deleted"
-    }
+    {"name": "news", "description": "Operations for managing news from RSS feeds"},
+    {"name": "users", "description": "Operations for managing users of the system"},
+    {"name": "tbd", "description": "Redundant operations, probably to be deleted"},
 ]
 
 # Helper to read numbers using var envs
@@ -133,10 +124,10 @@ long_post = [
         "tags": ["cronaca"],
         "authors": ["Redazione Repubblica.it"],
         "summary": '<p><a href="https://www.repubblica.it/cronaca/2022/01/02/news/sono_78_e_tutti_uomini_la_guerra_delle_statue_che_infiamma_padova-332468530/?rssimage"> <img align="left" hspace="10" src="https://www.repstatic.it/content/nazionale/img/2022/01/03/011833175-4645fd4b-1efd-4b67-9112-17d381640e34.jpg" width="140" /></a>La proposta in consiglio: “Onoriamo anche una donna in Prato della Valle”. Sì della Sovrintendenza. Lo storico si oppone: “Sono monumenti, non Lego”</p>',
-    }
+    },
 ]
 
-#XXX WIP
+# XXX WIP
 # def rssFeedDtoToDict(dto: RssFeedDto):
 #     dct = dict()
 

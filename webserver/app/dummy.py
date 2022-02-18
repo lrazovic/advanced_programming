@@ -33,6 +33,7 @@ async def get_user_user_id(user_id: int):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+
 @dummy_app.delete("/delete-user/{user_id}")
 async def delete_user_user_id(user_id: int):
     try:
@@ -49,6 +50,7 @@ async def delete_user_user_id(user_id: int):
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
+
 
 @dummy_app.get("/getnews")
 async def dummy_fetcher_response():
@@ -77,7 +79,10 @@ async def dummy_summary_response():
 
 
 @dummy_app.post("/getnews")
-async def call_fetcher(feed_url: str, limit: int,):
+async def call_fetcher(
+    feed_url: str,
+    limit: int,
+):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
