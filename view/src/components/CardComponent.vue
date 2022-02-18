@@ -75,15 +75,15 @@ const submit = e => {
         />
         {{ title }}
       </p>
-      <a
-        v-if="computedHeaderIcon"
-        href="#"
-        class="flex items-center py-3 px-4 justify-center ring-blue-700 focus:ring"
-        aria-label="more options"
-        @click.prevent="headerIconClick"
-      >
-        <icon :path="computedHeaderIcon" />
-      </a>
+<!--      <a-->
+<!--        v-if="computedHeaderIcon"-->
+<!--        href="#"-->
+<!--        class="flex items-center py-3 px-4 justify-center ring-blue-700 focus:ring"-->
+<!--        aria-label="more options"-->
+<!--        @click.prevent="headerIconClick"-->
+<!--      >-->
+<!--        <icon :path="computedHeaderIcon" />-->
+<!--      </a>-->
     </header>
     <div
       v-if="empty"

@@ -122,7 +122,7 @@ export default {
           email: response.data.result.email,
           id: response.data.result.id,
           password: response.data.result.password,
-          rss: response.data.result.rss
+          rss: response.data.result.rssFeeds
         })
       }, e => console.log(e))
     },

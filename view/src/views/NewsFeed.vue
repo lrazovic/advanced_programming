@@ -12,21 +12,21 @@ import JbButtons from "@/components/JbButtons.vue";
   <section class="bg-white mt-3 border-t border-b border-gray-100 p-6 dark:bg-gray-900 dark:border-gray-900 dark:text-white ">
     <field label="Choose news source">
       <control
-          v-model="selectedSource"
-          :options="sources"
-          help="Select url"
+        v-model="selectedSource"
+        :options="sources"
+        help="Select url"
       />
       <control
-          v-model="limit"
-          :options="limits"
-          help="Choose how many posts"
+        v-model="limit"
+        :options="limits"
+        help="Choose how many posts"
       />
     </field>
     <jb-buttons>
       <jb-button
-          type="submit"
-          color="info"
-          label="Get News"
+        type="submit"
+        color="info"
+        label="Get News"
       />
     </jb-buttons>
   </section>
@@ -50,12 +50,25 @@ import JbButtons from "@/components/JbButtons.vue";
     </div>
   </main-section>
   <transition name="fade">
-    <div id="pagetop" class="fixed right-0 bottom-0" v-show="scY > 300" @click="toTop">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-           style="cursor: pointer"
-           stroke="#4a5568"
-           stroke-width="1" stroke-linecap="square" stroke-linejoin="arcs">
-        <path d="M18 15l-6-6-6 6"/>
+    <div
+      v-show="scY > 300"
+      id="pagetop"
+      class="fixed right-0 bottom-0"
+      @click="toTop"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="48"
+        height="48"
+        viewBox="0 0 24 24"
+        fill="none"
+        style="cursor: pointer"
+        stroke="#4a5568"
+        stroke-width="1"
+        stroke-linecap="square"
+        stroke-linejoin="arcs"
+      >
+        <path d="M18 15l-6-6-6 6" />
       </svg>
     </div>
   </transition>

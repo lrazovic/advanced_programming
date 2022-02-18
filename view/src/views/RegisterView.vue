@@ -19,7 +19,7 @@ import JbButtons from '@/components/JbButtons.vue'
       :class="cardClass"
       :rounded="cardRounded"
       form
-      headerIcon="."
+      header-icon="."
       title="Register"
       @submit.prevent="register"
     >
@@ -62,13 +62,19 @@ import JbButtons from '@/components/JbButtons.vue'
           outline
           label="Login"
         />
+        <jb-button
+          color="warning"
+          outline
+          label="Sign up with Google"
+          @click.prevent="popupGoogle"
+        />
       </jb-buttons>
     </card-component>
   </full-screen-section>
 </template>
 
 <script>
-import { post } from '../helpers/api'
+import { get, post } from '../helpers/api'
 export default {
   data () {
     return {
@@ -86,6 +92,32 @@ export default {
       }, (e) => {
         alert(e)
       })
+    },
+    getUser(){
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        _this.$store.commit('user', {
+          name: response.data.result.name,
+          email: response.data.result.email,
+          id: response.data.result.id,
+          password: response.data.result.password,
+          rss: response.data.result.rss
+        })
+      }, e => console.log(e))
+    },
+    popupGoogle () {
+      let win = window.open('http://localhost:3000/auth/login', '', 'width=650, height=650');
+      let _this = this;
+      let timer = setInterval(function() {
+        if(win.closed) {
+          clearInterval(timer);
+          if (_this.$auth.isAuthenticated()) {
+            _this.getUser()
+            _this.$router.push('/')
+          }
+        }
+      }, 1000);
     }
   }
 }

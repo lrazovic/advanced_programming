@@ -1,23 +1,77 @@
+<script setup>
+import { mdiTrashCan } from '@mdi/js'
+
+import Field from '@/components/Field.vue'
+import Control from '@/components/Control.vue'
+import JbButton from "@/components/JbButton.vue";
+import JbButtons from "@/components/JbButtons.vue";
+import CardComponent from '@/components/CardComponent.vue'
+import MainSection from '@/components/MainSection.vue'
+</script>
 <template>
+  <section class="bg-white mt-3 border-t border-b border-gray-100 p-6 dark:bg-gray-900 dark:border-gray-900 dark:text-white ">
+    <field
+      label="Add RSS link"
+      help="Place your desired news rss link"
+    >
+      <control
+        v-model="rssLink"
+        placeholder="Place rss link here"
+        @keyup.enter="addToList"
+      />
+    </field>
+    <jb-buttons>
+      <jb-button
+        type="submit"
+        color="info"
+        label="Add"
+        @click="addToList"
+      />
+    </jb-buttons>
+  </section>
   <main-section>
-    <div class="flex justify-center py-8">
-      <draggable
-        class="bg-white rounded-lg border border-gray-200 w-96 text-gray-900"
-        :list="list"
-        @change="log"
-      >
-        <div
-          v-for="element in list"
-          :key="element.name"
-          class="px-6 py-2 border-b border-gray-200 w-full"
+    <card-component
+      class="mb-6"
+      title="Manage RSS links list"
+      has-table
+    >
+      <div class="flex justify-center py-8">
+        <draggable
+          class="bg-white rounded-lg border border-gray-200 xl:w-1/2 text-gray-900"
+          :list="list"
+          @change="addLink"
         >
-          {{ element.name }}
-        </div>
-      </draggable>
-    </div>
+          <div
+            v-for="(element, index) in list"
+            :key="index"
+            class="px-6 py-2 border-b border-gray-200 w-full flex justify-between"
+          >
+            <div class="overflow-x-auto">
+              <p>
+                {{ element }}
+              </p>
+            </div>
+            <div>
+              <jb-buttons
+                type="justify-start lg:justify-end"
+                no-wrap
+              >
+                <jb-button
+                  color="danger"
+                  :icon="mdiTrashCan"
+                  small
+                  @click="deleteItem(index)"
+                />
+              </jb-buttons>
+            </div>
+          </div>
+        </draggable>
+      </div>
+    </card-component>
   </main-section>
 </template>
 <script>
+import {get, put} from '../helpers/api'
 import { defineComponent } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 export default defineComponent({
@@ -26,20 +80,48 @@ export default defineComponent({
   },
   data() {
     return {
+      rssLink:"",
       enabled: true,
-      list: [
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 },
-      ],
+      list: [],
       dragging: false,
     }
   },
   methods: {
-    log(event) {
-      console.log(event)
+    addLink() {
+      let id = localStorage.getItem('user_id')
+      let payloadList = this.list.map( (v,i) => {
+        return {
+          url: v,
+          rank: i+1
+        }
+      })
+      let _this = this
+      put(_this, 'api/users/' + id + '/rss-feeds', {
+        rssFeeds: payloadList
+      })
     },
+    addToList() {
+      if (this.rssLink){
+        this.list.push(this.rssLink)
+        this.rssLink = ""
+        this.addLink()
+      }
+    },
+    getUser() {
+      let _this = this;
+      let id = localStorage.getItem('user_id')
+      get(_this, 'api/users/' + id, {}, response => {
+        if (response.data.result.rssFeeds)
+          _this.list = response.data.result.rssFeeds
+      }, e => console.log(e))
+    },
+    deleteItem(i) {
+      this.list.splice(i, 1);
+      this.addLink()
+    }
   },
+  created() {
+    this.getUser()
+  }
 })
 </script>

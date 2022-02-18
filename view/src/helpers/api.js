@@ -19,6 +19,24 @@ export async function post(_this, url, payload, successCallback, errorCallback) 
   }
 }
 
+export async function put(_this, url, payload, successCallback, errorCallback) {
+  let headers = _this.$auth.getToken() ? { 'Authorization': `Bearer ${_this.$auth.getToken()}` } : '';
+
+  try {
+    const response = await axios({
+      method: 'PUT',
+      url: url,
+      data: payload,
+      headers: headers
+    })
+    successCallback(response)
+  } catch (error) {
+    if (!error.status) { console.log('network error') }
+    console.log(error.response)
+    if (errorCallback) { errorCallback(error) }
+  }
+}
+
 export async function get(_this, url, payload, successCallback, errorCallback) {
   let headers = _this.$auth.getToken() ? { 'Authorization': `Bearer ${_this.$auth.getToken()}` } : '';
 
