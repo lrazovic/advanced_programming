@@ -15,6 +15,7 @@ export default function (app) {
         destroyToken() {
             localStorage.removeItem('jwt');
             localStorage.removeItem('refresh');
+            localStorage.removeItem('user_id');
             // this.destroyAccountId();
         },
 

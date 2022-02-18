@@ -112,9 +112,26 @@ const menuOpenLg = () => {
             :icon="mdiLogout"
             label="Log out"
             is-desktop-icon-only
+            @click="logOut"
           />
         </nav-bar-item>
       </div>
     </div>
   </nav>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+
+    }
+  },
+  methods: {
+    logOut() {
+      this.$auth.destroyToken()
+      this.$router.push('/login')
+    }
+  }
+}
+</script>
