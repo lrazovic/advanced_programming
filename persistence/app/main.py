@@ -73,7 +73,7 @@ def getUser(email):
 def getUserById(id):
     try:
         session = Session()
-        user = session.query(User).get(id)
+        user = session.query(User).options(subqueryload(User.rssFeeds)).get(id)
         session.commit()
 
         logging.info(f"\nRetrived User with id: {user.id}\n")
