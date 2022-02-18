@@ -11,11 +11,7 @@ import NewsCard from '@/components/NewsCard.vue'
       class="flex justify-center pt-8"
     >
       <news-card
-        :img="post.img"
-        :content="post.summary"
-        :hashtags="post.tags"
         :title="post.title"
-        :img-alt="img_alt"
         :link="post.link"
       />
     </div>
@@ -38,7 +34,9 @@ export default {
   methods: {
     getNews () {
       let _this = this
-      get(_this, 'dummy/getnews', { params: '' }, function (response) {
+      get(_this, 'api/news', { params: {
+        feed_url: 'http://feeds.bbci.co.uk/news/world/rss.xml', limit: 10
+        } }, function (response) {
         let json = response.data
         _this.posts = json.result.posts
       }, function () {

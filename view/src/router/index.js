@@ -23,7 +23,7 @@ const routes = [
   },
   {
     meta: {
-      title: 'Profile',
+      title: 'News Sources',
       forAuth: true
     },
     path: '/source-list',

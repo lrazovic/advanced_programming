@@ -1,14 +1,5 @@
 import {
-  mdiAccountCircle,
-  // mdiAccountCircle,
-  // mdiLock,
-  // mdiAlertCircle,
-  // mdiSquareEditOutline,
-  // mdiTable,
-  // mdiViewList,
-  // mdiTelevisionGuide,
-  // mdiResponsive,
-  mdiNewspaper
+  mdiAccountCircle, mdiFormatListBulleted, mdiNewspaper
 } from '@mdi/js'
 
 export default [
@@ -23,57 +14,11 @@ export default [
       to: '/profile',
       icon: mdiAccountCircle,
       label: 'My profile'
+    },
+    {
+      to: '/source-list',
+      icon: mdiFormatListBulleted,
+      label: 'My news sources'
     }
   ]
-  // [
-  //   {
-  //     to: '/tables',
-  //     label: 'Tables',
-  //     icon: mdiTable,
-  //     updateMark: true
-  //   },
-  //   {
-  //     to: '/forms',
-  //     label: 'Forms',
-  //     icon: mdiSquareEditOutline
-  //   },
-  //   {
-  //     to: '/ui',
-  //     label: 'UI',
-  //     icon: mdiTelevisionGuide
-  //   },
-  //   {
-  //     to: '/responsive',
-  //     label: 'Responsive',
-  //     icon: mdiResponsive
-  //   },
-  //   {
-  //     to: '/profile',
-  //     label: 'Profile',
-  //     icon: mdiAccountCircle
-  //   },
-  //   {
-  //     to: '/login',
-  //     label: 'Login',
-  //     icon: mdiLock
-  //   },
-  //   {
-  //     to: '/error',
-  //     label: 'Error',
-  //     icon: mdiAlertCircle
-  //   },
-  //   {
-  //     label: 'Submenus',
-  //     subLabel: 'Submenus Example',
-  //     icon: mdiViewList,
-  //     menu: [
-  //       {
-  //         label: 'Sub-item One'
-  //       },
-  //       {
-  //         label: 'Sub-item Two'
-  //       }
-  //     ]
-  //   }
-  // ]
 ]
