@@ -14,3 +14,22 @@ class RssFeedDto(BaseModel):
 class UserRssFeedsDto(BaseModel):
     user_id: int = 1
     rssFeeds: List[RssFeedDto]
+
+###########################################
+
+class User(BaseModel):
+    name: str = "User name"
+    email: str = "User email"
+    password: str = "User password"
+
+
+class Login_form(BaseModel):
+    email: str = "User email"
+    password: str = "User password"
+
+
+class Pass_change_form(BaseModel):
+    email: str = "User email"
+    old_password: str = "Old user password"
+    new_password: str = "New user password"
+

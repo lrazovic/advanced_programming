@@ -86,6 +86,30 @@ def deleteUserById(id):
         message = e
         return False, message
 
+
+#########
+
+def updateUserPass(email, oldPass, newpassword):
+    try:
+        with Session.begin() as session:
+            # Check if tuple (email,password) is in the database
+            user=session.query(User).filter_by(email=email,password=oldPass).first()
+            if user:
+                user.password=newpassword
+                session.commit()         
+                message = ("True") 
+                return True, message
+            else:
+                message = ("False") 
+                return True, message
+    except Exception as e:
+        logging.error(e)
+        message=e
+        return False, message
+    
+
+
+########
 # CRUD Operations on User entity
 
 @method
@@ -144,6 +168,84 @@ def read_db() -> Result:
         names[user.email] = (user.id, user.name)
     return Success(names)
 
+################################
+def addUser_local(dto):
+    try:
+        session = Session()
+        user = session.query(User).filter(User.email == dto["email"]).first()
+        if(user != None):
+            session.commit()
+            return True, user.id
+        newUser = User(
+            email=dto["email"],
+            name=dto["name"],
+            password=dto["password"]
+        )
+        session.add(newUser)
+        session.commit()
+
+        return True, newUser.id
+    except Exception as e:
+        logging.error(e)
+        message = e
+        return False, message
+
+
+@method
+def valid_user_from_db(email,password) -> Result:
+    try:
+        with Session.begin() as session:
+            # Check if tuple (email,password) is in the database
+            if session.query(User).filter_by(email=email,password=password).first():
+                logging.info('email_password presentiiiii')
+                return Success(True)
+            else:
+                logging.info('email_password non presenti')
+                return Success(False)
+    except Exception as e:
+        logging.error(e)
+        return Error(500, e)
+
+
+@method
+def add_user_local_to_db(dto) -> Result:
+    status, message = addUser_local(dto)
+    if status:
+        return Success(message)
+    else:
+        return Error(1, message)
+
+def getUser(email):
+    try:
+        session = Session()
+        user = session.query(User).options(subqueryload(User.rssFeeds)).filter(User.email == email).first()
+        session.commit()
+
+        logging.info(f"\nRetrived User with id: {user.id}\n")
+        
+        return True, jsonable_encoder(user)
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
+
+@method
+def getLoggedUser(email) -> Result:
+    ok, result = getUser(email)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+@method
+def update_user_pass(email, oldPass, newpassword) -> Result:
+    status, message = updateUserPass(email, oldPass, newpassword)
+    return Success(message)
+
+
+
+################################
 
 if __name__ == "__main__":
     PORT = 5003
