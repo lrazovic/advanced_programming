@@ -147,24 +147,25 @@ def make_html_response(user_id, access_token, refresh_token):
 
     html_string = """
                 <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8" />
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>oAUth Redirect</title>
-            </head>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>oAUth Redirect</title>
+        </head>
 
-            <body>
-                <script>
-                        window.localStorage.setItem("user_id", {user_id});
-                        window.localStorage.setItem("jwt", {access_token}]);
-                        window.localStorage.setItem("refresh, {refresh_token})
-                        window.location.replace("window.location.origin")
-
-                </script>
-            </body>
-            </html>
-                """
+        <body onload="send();">
+            <script>
+            function send() {
+                    window.localStorage.setItem("user_id", {user_id});
+                    window.localStorage.setItem("jwt", {access_token});
+                    window.localStorage.setItem("refresh", {refresh_token});
+                    window.location.replace("window.location.origin")
+                    }
+            </script>
+        </body>
+        </html>
+        """
 
     return html_string.format(**template_values)
