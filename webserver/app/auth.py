@@ -20,7 +20,7 @@ from jwtoken import (
 )
 from passlib.hash import pbkdf2_sha256
 from oauth import oauth
-from utils import redirect_uri
+from utils import redirect_uri, make_html_response
 
 auth_app = FastAPI()
 auth_app.add_middleware(SessionMiddleware, secret_key="!secret")
@@ -103,7 +103,7 @@ async def register(user: User):
     )
 
 @auth_app.post("/loginlocal")
-async def loginlocal(request: Request, form: Login_form ):
+async def loginlocal(form: Login_form ):
     response_json = await check_user_db(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password))
     if("error" in response_json):
         return JSONResponse(
@@ -114,22 +114,13 @@ async def loginlocal(request: Request, form: Login_form ):
         user_id = response_json["result"]["id"]
         access_token = create_token(form.email)
         refresh_token = create_refresh_token(form.email)
-        
-        return JSONResponse(
-        {
-            "authenticationsuccess?": True,
-            "user_id": user_id,
-            "access_token" : access_token,
-            "refresh_token" : refresh_token,
-        })
-        #responseurl= 'http://localhost:3000/postlogin?user_id='+ user_id + '&jwt='+access_token+'&refresh=' + refresh_token
+        return HTMLResponse(make_html_response(user_id, access_token, refresh_token)           
+        )
 
-        #print(responseurl)
-        #return RedirectResponse(responseurl)
     
 @auth_app.post("/changepassword")
-async def changepassword(request: Request, form: Pass_change_form ):
-    response= await change_password(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password), pbkdf2_sha256.using(salt_size=0).hash(form.password))
+async def changepassword(form: Pass_change_form ):
+    response= await change_password(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.old_password), pbkdf2_sha256.using(salt_size=0).hash(form.new_password))
     return JSONResponse(
     {
         "result": response["result"] #true if change success, Error if pass didn't match
