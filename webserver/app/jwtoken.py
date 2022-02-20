@@ -124,33 +124,15 @@ async def get_current_user_token(token: str = Depends(oauth2_scheme)):
     return token
 
 #################################################
-async def add_user_local_to_db(user_data):
-    try:
-        async with httpx.AsyncClient() as client:
-            print(endpoint_persistence)
-            response = await client.post(
-                endpoint_persistence,
-                json=request_uuid("add_user_local_to_db", params=[user_data]),
-            )
-        if response.is_error:
-            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
-        else:
-            return response.json()
-    except:
-        raise HTTPException(
-            status_code=500, detail="Impossible to connect to JSON-RPC Server"
-        )
-
 async def check_user_db(email, password):
     try:
         async with httpx.AsyncClient() as client:
-            print(endpoint_persistence)
             response = await client.post(
                 endpoint_persistence,
                 json=request_uuid("valid_user_from_db", params=[email, password]),
             )
         if response.is_error:
-            raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
+            return {"error": response.json}
         else:
             return response.json()
     except:

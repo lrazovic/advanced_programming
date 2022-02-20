@@ -7,19 +7,18 @@ from starlette.responses import JSONResponse, RedirectResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 from models import User, Login_form, Pass_change_form
-from hashlib import sha256
 from jwtoken import (
     create_token,
     valid_email_from_db,
     create_refresh_token,
     decode_token,
     add_user_to_db,
-    add_user_local_to_db,
     check_user_db,
     get_user_data,
     change_password,
     CREDENTIALS_EXCEPTION,
 )
+from passlib.hash import pbkdf2_sha256
 from oauth import oauth
 from utils import redirect_uri
 
@@ -85,13 +84,15 @@ async def refresh(request: Request):
 ##############################################################
 
 @auth_app.post("/register")
-async def register(request: Request, user: User):   
+async def register(user: User):   
+    # Pydantic model to dictionary explicit conversion
     user_data = {}
     user_data["name"]=user.name
     user_data["email"]=user.email
-    user_data["password"]=str(sha256(user.password.encode('utf-8')).hexdigest())
+    user_data["password"] = pbkdf2_sha256.using(salt_size=0).hash(user.password)
     print(user_data["password"])
-    response = await add_user_local_to_db(user_data)
+
+    response = await add_user_to_db(user_data)
     return JSONResponse(
         {
             "result": True,
@@ -101,40 +102,34 @@ async def register(request: Request, user: User):
         }
     )
 
-
-
 @auth_app.post("/loginlocal")
 async def loginlocal(request: Request, form: Login_form ):
-    response= await check_user_db(form.email, str(sha256(form.password.encode('utf-8')).hexdigest()))
-    if response["result"]==True:
-        user= await get_user_data(form.email)
-        user_id=str(user["result"]["id"])
+    response_json = await check_user_db(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password))
+    if("error" in response_json):
+        return JSONResponse(
+        {
+            "authenticationSuccess?": False
+        })
+    else:
+        user_id = response_json["result"]["id"]
         access_token = create_token(form.email)
         refresh_token = create_refresh_token(form.email)
         
         return JSONResponse(
         {
-            "authenticationsuccess?": response["result"],
+            "authenticationsuccess?": True,
             "user_id": user_id,
             "access_token" : access_token,
             "refresh_token" : refresh_token,
-        }
-    )
+        })
         #responseurl= 'http://localhost:3000/postlogin?user_id='+ user_id + '&jwt='+access_token+'&refresh=' + refresh_token
 
         #print(responseurl)
-        #return RedirectResponse(responseurl)       
-
-    else:
-        print("Utente non nel database")
-        return JSONResponse(
-        {
-            "authenticationsuccess?": response["result"]
-        })
+        #return RedirectResponse(responseurl)
     
 @auth_app.post("/changepassword")
 async def changepassword(request: Request, form: Pass_change_form ):
-    response= await change_password(form.email, str(sha256(form.old_password.encode('utf-8')).hexdigest()), str(sha256(form.new_password.encode('utf-8')).hexdigest()))
+    response= await change_password(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password), pbkdf2_sha256.using(salt_size=0).hash(form.password))
     return JSONResponse(
     {
         "result": response["result"] #true if change success, Error if pass didn't match
