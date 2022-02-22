@@ -15,7 +15,7 @@ import MainSection from '@/components/MainSection.vue'
       help="Place your desired news rss link"
     >
       <control
-        v-model="rssLink"
+        v-model="rssLink.url"
         placeholder="Place rss link here"
         @keyup.enter="addToList"
       />
@@ -48,7 +48,7 @@ import MainSection from '@/components/MainSection.vue'
           >
             <div class="overflow-x-auto">
               <p>
-                {{ element }}
+                {{ element.url }}
               </p>
             </div>
             <div>
@@ -80,7 +80,9 @@ export default defineComponent({
   },
   data() {
     return {
-      rssLink:"",
+      rssLink: {
+        url: ""
+      },
       enabled: true,
       list: [],
       dragging: false,
@@ -91,19 +93,20 @@ export default defineComponent({
       let id = localStorage.getItem('user_id')
       let payloadList = this.list.map( (v,i) => {
         return {
-          url: v,
+          url: v.url,
           rank: i+1
         }
       })
       let _this = this
       put(_this, 'api/users/' + id + '/rss-feeds', {
         rssFeeds: payloadList
-      })
+      }, () => {}, () => {})
     },
     addToList() {
       if (this.rssLink){
-        this.list.push(this.rssLink)
-        this.rssLink = ""
+        let t = this.rssLink
+        this.list.push(t)
+        this.rssLink = { url: ""}
         this.addLink()
       }
     },
