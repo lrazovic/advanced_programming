@@ -53,7 +53,7 @@ async def token(request: Request):
 
 @auth_app.get("/logout")
 async def logout(request: Request):
-    request.session.pop("user", None)
+    # request.session.pop("user", None)
     return RedirectResponse(url="/")
 
 
@@ -89,8 +89,6 @@ async def register(user: User):
     user_data["name"] = user.name
     user_data["email"] = user.email
     user_data["password"] = pbkdf2_sha256.using(salt_size=0).hash(user.password)
-    print(user_data["password"])
-
     response = await add_user_to_db(user_data)
     return JSONResponse(
         {
@@ -104,6 +102,7 @@ async def register(user: User):
 
 @auth_app.post("/loginlocal")
 async def loginlocal(form: Login_form):
+    print(form)
     response_json = await check_user_db(
         form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password)
     )
