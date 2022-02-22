@@ -32,7 +32,7 @@ export async function put(_this, url, payload, successCallback, errorCallback) {
     successCallback(response)
   } catch (error) {
     if (!error.status) { console.log('network error') }
-    console.log(error.response)
+    console.log(error)
     if (errorCallback) { errorCallback(error) }
   }
 }
