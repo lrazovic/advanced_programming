@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, subqueryload
 from model import base, User, RssFeedDtoListToEntityList
 from fastapi.encoders import jsonable_encoder
+from passlib.hash import bcrypt
 import traceback
 import logging
 import os
@@ -25,24 +26,50 @@ def getUserById(id):
         session.commit()
 
         logging.info(f"\nRetrived User with id: {user.id}\n")
-        
+
         return True, jsonable_encoder(user)
     except Exception as e:
         logging.error(traceback.print_exc())
         message = e
         return False, message
 
+
+def checkUserByEmailAndPassword(email, password):
+    try:
+        session = Session()
+        user = (
+            session.query(User)
+            .options(subqueryload(User.rssFeeds))
+            .filter(User.email == email)
+            .first()
+        )
+        session.commit()
+        if user != None and bcrypt.verify(password, user.password):
+            logging.info(f"\nRetrived User with id: {user.id}\n")
+            return True, jsonable_encoder(user)
+        else:
+            return False, "Check not passed."
+
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
+
 def addUser(dto):
     try:
         session = Session()
         user = session.query(User).filter(User.email == dto["email"]).first()
-        if(user != None):
+        if user != None:
             session.commit()
             return True, user.id
-        newUser = User(
-            email=dto["email"],
-            name=dto["name"]
-        )
+
+        if "password" in dto:
+            newUser = User(
+                email=dto["email"], name=dto["name"], password=bcrypt.hash(dto["password"])
+            )
+        else:
+            newUser = User(email=dto["email"], name=dto["name"])
         session.add(newUser)
         session.commit()
 
@@ -51,6 +78,7 @@ def addUser(dto):
         logging.error(e)
         message = e
         return False, message
+
 
 def updateUserRssFeeds(userId, feedsDto):
     try:
@@ -69,6 +97,7 @@ def updateUserRssFeeds(userId, feedsDto):
         message = e
         return False, message
 
+
 def deleteUserById(id):
     try:
         session = Session()
@@ -79,14 +108,39 @@ def deleteUserById(id):
 
         msg = f"\nDeleted User with id: {userId}\n"
         logging.info(msg)
-        
+
         return True, msg
     except Exception as e:
         logging.error(traceback.print_exc())
         message = e
         return False, message
 
+
+#########
+
+
+def updateUserPass(email, oldPass, newpassword):
+    try:
+        with Session.begin() as session:
+            # Check if tuple (email,password) is in the database
+            user = session.query(User).filter_by(email=email).first()
+            if user and bcrypt.verify(oldPass, user.password):
+                user.password = bcrypt.hash(newpassword)
+                session.commit()
+                message = "True"
+                return True, message
+            else:
+                message = "False"
+                return True, message
+    except Exception as e:
+        logging.error(e)
+        message = e
+        return False, message
+
+
+########
 # CRUD Operations on User entity
+
 
 @method
 def getUserUserId(userId) -> Result:
@@ -96,6 +150,7 @@ def getUserUserId(userId) -> Result:
     else:
         return Error(1, result)
 
+
 @method
 def add_user_to_db(dto) -> Result:
     status, message = addUser(dto)
@@ -103,6 +158,7 @@ def add_user_to_db(dto) -> Result:
         return Success(message)
     else:
         return Error(1, message)
+
 
 @method
 def update_user_rss_feeds(userId, feedsDto) -> Result:
@@ -112,6 +168,7 @@ def update_user_rss_feeds(userId, feedsDto) -> Result:
     else:
         return Error(1, message)
 
+
 @method
 def deleteUserUserId(userId) -> Result:
     ok, result = deleteUserById(userId)
@@ -119,6 +176,7 @@ def deleteUserUserId(userId) -> Result:
         return Success(result)
     else:
         return Error(1, result)
+
 
 # Security check involved in the oAuth2 flow
 @method
@@ -134,6 +192,7 @@ def valid_email_from_db(email) -> Result:
         logging.error(e)
         return Error(500, e)
 
+
 # Just for checking if the db is alive
 @method
 def read_db() -> Result:
@@ -144,6 +203,55 @@ def read_db() -> Result:
         names[user.email] = (user.id, user.name)
     return Success(names)
 
+
+################################
+
+
+@method
+def valid_user_from_db(email, password) -> Result:
+    ok, result = checkUserByEmailAndPassword(email, password)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+
+def getUser(email):
+    try:
+        session = Session()
+        user = (
+            session.query(User)
+            .options(subqueryload(User.rssFeeds))
+            .filter(User.email == email)
+            .first()
+        )
+        session.commit()
+
+        logging.info(f"\nRetrived User with id: {user.id}\n")
+
+        return True, jsonable_encoder(user)
+    except Exception as e:
+        logging.error(traceback.print_exc())
+        message = e
+        return False, message
+
+
+@method
+def getLoggedUser(email) -> Result:
+    ok, result = getUser(email)
+    if ok:
+        return Success(result)
+    else:
+        return Error(1, result)
+
+
+@method
+def update_user_pass(email, oldPass, newpassword) -> Result:
+    status, message = updateUserPass(email, oldPass, newpassword)
+    return Success(message)
+
+
+################################
 
 if __name__ == "__main__":
     PORT = 5003

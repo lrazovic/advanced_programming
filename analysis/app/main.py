@@ -36,7 +36,7 @@ def summarize(article_text):
 
 
 if __name__ == "__main__":
-    nltk.download('punkt')
-    nltk.download('stopwords')
+    nltk.download("punkt")
+    nltk.download("stopwords")
     PORT = 5001
     serve(port=PORT)

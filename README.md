@@ -1,8 +1,14 @@
-# advanced_programming
+# Laboratory of Advanced Programming
 
 Project for the "Laboratory of Advanced Programming" course 2021/2022
 
 ## Run using `docker compose`
+
+### Prerequisites
+
+1. Docker
+2. Docker Compose v2
+3. A Google Client Secret/ID for oAuth (obtainable from [here](https://console.developers.google.com/apis)) as environments variables. You should put your secrets in a `.env` file in `webserver\app\.env` where the `.env.example` is located.
 
 ```bash
 docker compose up --build -d
@@ -36,3 +42,4 @@ The services are:
 * `analysis`
 * `fetcher`
 * `authentication`
+  
