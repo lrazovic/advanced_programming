@@ -88,6 +88,8 @@ async def register(user: User):
     user_data = {}
     user_data["name"] = user.name
     user_data["email"] = user.email
+    # TODO: Use BCrypt instead of SHA256
+    # Reference: https://passlib.readthedocs.io/en/stable/lib/passlib.hash.bcrypt.html
     user_data["password"] = pbkdf2_sha256.using(salt_size=0).hash(user.password)
     response = await add_user_to_db(user_data)
     return JSONResponse(
@@ -102,7 +104,6 @@ async def register(user: User):
 
 @auth_app.post("/loginlocal")
 async def loginlocal(form: Login_form):
-    print(form)
     response_json = await check_user_db(
         form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password)
     )
@@ -117,6 +118,7 @@ async def loginlocal(form: Login_form):
 
 @auth_app.post("/changepassword")
 async def changepassword(form: Pass_change_form):
+    # TODO: Check if `old_password` is correct
     response = await change_password(
         form.email,
         pbkdf2_sha256.using(salt_size=0).hash(form.old_password),
