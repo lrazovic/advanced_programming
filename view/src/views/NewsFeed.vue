@@ -1,13 +1,3 @@
-<script setup>
-import MainSection from '@/components/MainSection.vue'
-import NewsCard from '@/components/NewsCard.vue'
-import Level from '@/components/LevelDiv.vue'
-import Control from '@/components/Control.vue'
-import Field from '@/components/Field.vue'
-import JbButton from "@/components/JbButton.vue";
-import JbButtons from "@/components/JbButtons.vue";
-</script>
-
 <template>
   <section class="bg-white mt-3 border-t border-b border-gray-100 p-6 dark:bg-gray-900 dark:border-gray-900 dark:text-white ">
     <field label="Choose news source">
@@ -77,8 +67,18 @@ import JbButtons from "@/components/JbButtons.vue";
 
 <script>
 import { get } from '../helpers/api'
+import MainSection from '@/components/MainSection.vue'
+import NewsCard from '@/components/NewsCard.vue'
+import Level from '@/components/LevelDiv.vue'
+import Control from '@/components/Control.vue'
+import Field from '@/components/Field.vue'
+import JbButton from "@/components/JbButton.vue";
+import JbButtons from "@/components/JbButtons.vue";
 
 export default {
+  components: {
+    MainSection, NewsCard, Level, Control, Field, JbButton, JbButtons
+  },
   data () {
     return {
       scTimer: 0,
