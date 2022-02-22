@@ -118,16 +118,16 @@ async def loginlocal(form: Login_form):
 
 @auth_app.post("/changepassword")
 async def changepassword(form: Pass_change_form):
-    # TODO: Check if `old_password` is correct
     response = await change_password(
         form.email,
         pbkdf2_sha256.using(salt_size=0).hash(form.old_password),
         pbkdf2_sha256.using(salt_size=0).hash(form.new_password),
     )
+    # Returns `true` if change success, `Error` if `old_password` didn't match
     return JSONResponse(
         {
             "result": response[
                 "result"
-            ]  # true if change success, Error if pass didn't match
+            ]
         }
     )
