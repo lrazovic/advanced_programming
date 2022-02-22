@@ -1,5 +1,3 @@
-import string
-from unittest import result
 from fastapi import FastAPI
 from authlib.integrations.starlette_client import OAuthError
 from starlette.requests import Request
@@ -83,12 +81,13 @@ async def refresh(request: Request):
 
 ##############################################################
 
+
 @auth_app.post("/register")
-async def register(user: User):   
+async def register(user: User):
     # Pydantic model to dictionary explicit conversion
     user_data = {}
-    user_data["name"]=user.name
-    user_data["email"]=user.email
+    user_data["name"] = user.name
+    user_data["email"] = user.email
     user_data["password"] = pbkdf2_sha256.using(salt_size=0).hash(user.password)
     print(user_data["password"])
 
@@ -102,27 +101,32 @@ async def register(user: User):
         }
     )
 
+
 @auth_app.post("/loginlocal")
-async def loginlocal(form: Login_form ):
-    response_json = await check_user_db(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password))
-    if("error" in response_json):
-        return JSONResponse(
-        {
-            "authenticationSuccess?": False
-        })
+async def loginlocal(form: Login_form):
+    response_json = await check_user_db(
+        form.email, pbkdf2_sha256.using(salt_size=0).hash(form.password)
+    )
+    if "error" in response_json:
+        return JSONResponse({"authenticationSuccess?": False})
     else:
         user_id = response_json["result"]["id"]
         access_token = create_token(form.email)
         refresh_token = create_refresh_token(form.email)
-        return HTMLResponse(make_html_response(user_id, access_token, refresh_token)           
-        )
+        return HTMLResponse(make_html_response(user_id, access_token, refresh_token))
 
-    
+
 @auth_app.post("/changepassword")
-async def changepassword(form: Pass_change_form ):
-    response= await change_password(form.email, pbkdf2_sha256.using(salt_size=0).hash(form.old_password), pbkdf2_sha256.using(salt_size=0).hash(form.new_password))
+async def changepassword(form: Pass_change_form):
+    response = await change_password(
+        form.email,
+        pbkdf2_sha256.using(salt_size=0).hash(form.old_password),
+        pbkdf2_sha256.using(salt_size=0).hash(form.new_password),
+    )
     return JSONResponse(
-    {
-        "result": response["result"] #true if change success, Error if pass didn't match
-    }
+        {
+            "result": response[
+                "result"
+            ]  # true if change success, Error if pass didn't match
+        }
     )

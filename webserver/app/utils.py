@@ -140,10 +140,10 @@ long_post = [
 
 def make_html_response(user_id, access_token, refresh_token):
     template_values = {
-    'access_token': access_token,
-    'refresh_token': refresh_token,
-    'user_id': user_id
-}
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "user_id": user_id,
+    }
 
     html_string = """
                 <!DOCTYPE html>

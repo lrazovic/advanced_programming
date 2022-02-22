@@ -123,6 +123,7 @@ async def get_current_user_token(token: str = Depends(oauth2_scheme)):
     _ = get_current_user_email(token)
     return token
 
+
 #################################################
 async def check_user_db(email, password):
     try:
@@ -139,6 +140,7 @@ async def check_user_db(email, password):
         raise HTTPException(
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
+
 
 async def get_user_data(email):
     try:
@@ -157,12 +159,15 @@ async def get_user_data(email):
             status_code=500, detail="Impossible to connect to JSON-RPC Server"
         )
 
+
 async def change_password(email, oldPass, newpassword):
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 endpoint_persistence,
-                json=request_uuid("update_user_pass", params=[email, oldPass, newpassword]),
+                json=request_uuid(
+                    "update_user_pass", params=[email, oldPass, newpassword]
+                ),
             )
         if response.is_error:
             raise HTTPException(status_code=404, detail="Error in JSON-RPC response")
