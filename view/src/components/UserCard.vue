@@ -21,7 +21,7 @@ const userSwitchVal = ref([])
     <level type="justify-around lg:justify-center">
       <div class="space-y-3 text-center md:text-left lg:mx-12">
         <h1 class="text-2xl">
-          Howdy, <b>{{ userName }}</b>!
+          <b>{{ userName }}</b>
         </h1>
       </div>
     </level>
