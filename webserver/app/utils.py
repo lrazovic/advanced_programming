@@ -139,13 +139,7 @@ long_post = [
 
 
 def make_html_response(user_id, access_token, refresh_token):
-    template_values = {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "user_id": user_id,
-    }
-
-    html_string = """
+    html_string = f"""
                 <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -157,15 +151,14 @@ def make_html_response(user_id, access_token, refresh_token):
 
         <body onload="send();">
             <script>
-            function send() {
+            function send() {{
                     window.localStorage.setItem("user_id", {user_id});
                     window.localStorage.setItem("jwt", {access_token});
                     window.localStorage.setItem("refresh", {refresh_token});
-                    window.location.replace("window.location.origin")
-                    }
+                    window.location.replace(window.location.origin)
+                    }}
             </script>
         </body>
         </html>
         """
-
-    return html_string.format(**template_values)
+    return html_string
