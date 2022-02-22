@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, subqueryload
 from model import base, User, RssFeedDtoListToEntityList
 from fastapi.encoders import jsonable_encoder
+from passlib.hash import bcrypt
 import traceback
 import logging
 import os
@@ -39,12 +40,11 @@ def checkUserByEmailAndPassword(email, password):
         user = (
             session.query(User)
             .options(subqueryload(User.rssFeeds))
-            .filter(User.email == email, User.password == password)
+            .filter(User.email == email)
             .first()
         )
         session.commit()
-
-        if user != None:
+        if user != None and bcrypt.verify(password, user.password):
             logging.info(f"\nRetrived User with id: {user.id}\n")
             return True, jsonable_encoder(user)
         else:
@@ -66,7 +66,7 @@ def addUser(dto):
 
         if "password" in dto:
             newUser = User(
-                email=dto["email"], name=dto["name"], password=dto["password"]
+                email=dto["email"], name=dto["name"], password=bcrypt.hash(dto["password"])
             )
         else:
             newUser = User(email=dto["email"], name=dto["name"])
@@ -123,9 +123,9 @@ def updateUserPass(email, oldPass, newpassword):
     try:
         with Session.begin() as session:
             # Check if tuple (email,password) is in the database
-            user = session.query(User).filter_by(email=email, password=oldPass).first()
-            if user:
-                user.password = newpassword
+            user = session.query(User).filter_by(email=email).first()
+            if user and bcrypt.verify(oldPass, user.password):
+                user.password = bcrypt.hash(newpassword)
                 session.commit()
                 message = "True"
                 return True, message
