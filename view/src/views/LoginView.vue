@@ -38,14 +38,14 @@ import JbButtons from "@/components/JbButtons.vue";
       @submit.prevent="login"
     >
       <field
-        label="Login"
-        help="Please enter your login"
+        label="Email"
+        help="Please enter your Email"
       >
         <control
           v-model="form.login"
           :icon="mdiAccount"
           name="login"
-          autocomplete="username"
+          autocomplete="email"
         />
       </field>
 
