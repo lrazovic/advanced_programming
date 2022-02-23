@@ -1,5 +1,5 @@
 <script setup>
-import { mdiAccount, mdiAsterisk } from '@mdi/js'
+import { mdiAccount, mdiAsterisk, mdiEmailOutline, mdiCheckCircleOutline } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import Field from '@/components/Field.vue'
@@ -7,7 +7,7 @@ import Control from '@/components/Control.vue'
 import Divider from '@/components/DividerBar.vue'
 import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
-
+import Notification from '@/components/Notification.vue'
 </script>
 
 <template>
@@ -23,15 +23,42 @@ import JbButtons from '@/components/JbButtons.vue'
       title="Register"
       @submit.prevent="register"
     >
+      <notification
+        v-if="registerSuccess"
+        color="success"
+        :icon="mdiCheckCircleOutline"
+      >
+        <b>Registration successful.</b> Click to login
+        <template #right>
+          <jb-button
+            label="Login"
+            color="success"
+            small
+          />
+        </template>
+      </notification>
       <field
         label="Login"
-        help="Please enter new login"
+        help="Please enter your name"
       >
         <control
-          v-model="form.login"
+          v-model="form.name"
           :icon="mdiAccount"
           name="login"
           autocomplete="username"
+        />
+      </field>
+
+      <field
+        label="Email"
+        help="Please enter your email"
+      >
+        <control
+          v-model="form.email"
+          :icon="mdiEmailOutline"
+          name="email"
+          type="email"
+          autocomplete="email"
         />
       </field>
 
@@ -40,7 +67,7 @@ import JbButtons from '@/components/JbButtons.vue'
         help="Please enter new password"
       >
         <control
-          v-model="form.pass"
+          v-model="form.password"
           :icon="mdiAsterisk"
           type="password"
           name="password"
@@ -79,18 +106,25 @@ export default {
   data () {
     return {
       form: {
-        login: '',
-        pass: '',
-      }
+        name: '',
+        password: '',
+        email: ''
+      },
+      registerSuccess: false
     }
   },
   methods: {
     register() {
       let _this = this;
-      post(_this, '', _this.form, () => {
-        this.$router.push('/')
+      post(_this, 'auth/register', _this.form, (response) => {
+        _this.registerSuccess = response.data.result
+        _this.form = {
+          name: '',
+          password: '',
+          email: ''
+        }
       }, (e) => {
-        alert(e)
+        console.log(e)
       })
     },
     getUser(){
