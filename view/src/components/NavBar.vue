@@ -126,6 +126,8 @@ const menuOpenLg = () => {
 </template>
 
 <script>
+import {get} from "../helpers/api";
+
 export default {
   data () {
     return {
@@ -134,7 +136,9 @@ export default {
   },
   methods: {
     logOut() {
+      let _this = this
       this.$auth.destroyToken()
+      get(_this, 'auth/logout', {}, ()=>{}, ()=>{})
       this.$router.push('/login')
     }
   }
