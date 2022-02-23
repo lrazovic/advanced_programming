@@ -85,26 +85,7 @@ export default {
       scY: 0,
       posts: '',
       main_title: "",
-      sources: [
-        {
-          rank: 1,
-          id: 1,
-          url: "https://www.buzzfeed.com/world.xml",
-          user_id: 1
-        },
-        {
-          rank: 2,
-          id: 2,
-          url: "http://feeds.bbci.co.uk/news/world/rss.xml",
-          user_id: 1
-        },
-        {
-          rank: 3,
-          id: 3,
-          url: "http://www.aljazeera.com/xml/rss/all.xml",
-          user_id: 1
-        }
-      ],
+      sources: [],
       selectedSource: "",
       limits: [5, 10, 25, 50],
       limit: 10

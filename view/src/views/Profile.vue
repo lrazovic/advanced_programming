@@ -184,7 +184,7 @@ export default {
     changePass(){
       let _this = this;
       let form = {
-        email: this.$store.state.email,
+        email: this.profileForm.email,
         old_password: this.passwordForm.password_current,
         new_password: this.passwordForm.password_confirmation
       }
