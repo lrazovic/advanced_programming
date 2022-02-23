@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
 import { mdiAccount, mdiAccountCircle, mdiLock, mdiMail, mdiAsterisk, mdiFormTextboxPassword } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -13,12 +13,12 @@ import UserCard from '@/components/UserCard.vue'
 import ModalBox from '@/components/ModalBox.vue'
 
 
-const store = useStore()
+// const store = useStore()
 
-const profileForm = reactive({
-  name: store.state.userName,
-  email: store.state.userEmail
-})
+// const profileForm = reactive({
+//   name: store.state.userName,
+//   email: store.state.userEmail
+// })
 
 const passwordForm = reactive({
   password_current: '',
@@ -26,9 +26,9 @@ const passwordForm = reactive({
   password_confirmation: ''
 })
 
-const submitProfile = () => {
-  store.commit('user', profileForm)
-}
+// const submitProfile = () => {
+//   store.commit('user', profileForm)
+// }
 
 const submitPass = () => {
   //
@@ -46,28 +46,20 @@ const submitPass = () => {
         form
         @submit.prevent="submitProfile"
       >
-        <!--        <field-->
-        <!--          label="Avatar"-->
-        <!--          help="Max 500kb"-->
-        <!--        >-->
-        <!--          <file-picker />-->
-        <!--        </field>-->
-
         <field
           label="Name"
-          help="Required. Your name"
         >
           <control
             v-model="profileForm.name"
             :icon="mdiAccount"
             name="username"
             required
+            disabled
             autocomplete="username"
           />
         </field>
         <field
           label="E-mail"
-          help="Required. Your e-mail"
         >
           <control
             v-model="profileForm.email"
@@ -75,24 +67,11 @@ const submitPass = () => {
             type="email"
             name="email"
             required
+            disabled
             autocomplete="email"
           />
         </field>
 
-        <divider />
-
-        <jb-buttons>
-          <jb-button
-            color="info"
-            type="submit"
-            label="Submit"
-          />
-          <!--          <jb-button-->
-          <!--            color="info"-->
-          <!--            label="Options"-->
-          <!--            outline-->
-          <!--          />-->
-        </jb-buttons>
       </card-component>
 
       <card-component
@@ -187,7 +166,11 @@ import {get, del} from "../helpers/api";
 export default {
   data () {
     return {
-      modalOneActive: false
+      modalOneActive: false,
+      profileForm: {
+        name: '',
+        email: ''
+      }
     }
   },
   created() {
@@ -205,6 +188,8 @@ export default {
           password: response.data.result.password,
           rss: response.data.result.rssFeeds
         })
+        _this.profileForm.name = response.data.result.name
+        _this.profileForm.email = response.data.result.email
       }, e => console.log(e))
     },
     confirmDelete(){

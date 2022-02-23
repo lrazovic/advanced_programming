@@ -43,7 +43,8 @@ const props = defineProps({
   required: Boolean,
   borderless: Boolean,
   transparent: Boolean,
-  ctrlKFocus: Boolean
+  ctrlKFocus: Boolean,
+  disabled: Boolean
 })
 
 const emit = defineEmits(['update:modelValue', 'right-icon-click'])
@@ -150,6 +151,7 @@ if (props.ctrlKFocus) {
       :placeholder="placeholder"
       :type="computedType"
       :class="inputElClass"
+      :disabled="disabled"
     >
     <control-icon
       v-if="icon"

@@ -125,6 +125,8 @@ export default {
   methods: {
     register() {
       let _this = this;
+      _this.registerSuccess = false
+      _this.registerFailure = false
       post(_this, 'auth/register', _this.form, (response) => {
         _this.registerSuccess = response.data.result
         if (!_this.registerSuccess)
