@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { darkModeKey } from '@/config.js'
+import { SnackbarService, Vue3Snackbar } from "vue3-snackbar";
+import "vue3-snackbar/dist/style.css";
 
 import './css/main.css'
 import Auth from "./packages/auth/auth";
@@ -50,5 +52,6 @@ router.afterEach(to => {
 })
 
 
-const app = createApp(App).use(store).use(router).use(Auth)
+const app = createApp(App).use(store).use(router).use(Auth).use(SnackbarService)
+app.component("vue3-snackbar", Vue3Snackbar);
 app.mount('#app')

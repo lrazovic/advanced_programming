@@ -32,4 +32,7 @@ const overlayClick = () => {
     z-index="z-30"
     @overlay-click="overlayClick"
   />
+  <teleport to="body">
+    <vue3-snackbar bottom right :duration="4000"></vue3-snackbar>
+  </teleport>
 </template>

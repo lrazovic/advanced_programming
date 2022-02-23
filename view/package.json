@@ -16,6 +16,7 @@
     "vue": "^3.2.31",
     "vue-draggable-next": "^2.1.1",
     "vue-router": "^4.0.12",
+    "vue3-snackbar": "^1.1.2",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

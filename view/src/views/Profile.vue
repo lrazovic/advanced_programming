@@ -108,6 +108,7 @@ import ModalBox from '@/components/ModalBox.vue'
             color="info"
             label="Submit"
             :disabled="!(passwordForm.password_current && passwordForm.password && passwordForm.password_confirmation)"
+            @click="successMessage"
           />
         </jb-buttons>
       </card-component>
@@ -193,6 +194,12 @@ export default {
           console.log(response)
         }, () => {})
       }
+    },
+    successMessage() {
+      this.$snackbar.add({
+        type: 'success',
+        text: 'This is a snackbar message'
+      })
     }
   }
 }
