@@ -98,6 +98,12 @@ export default {
     };
   },
   methods: {
+    toastMessage(type, message) {
+      this.$snackbar.add({
+        type: type,
+        text: message
+      })
+    },
     login () {
       let _this = this;
       post(
@@ -105,17 +111,10 @@ export default {
         "auth/loginlocal",
         _this.form,
         (response) => {
-          if (typeof response.data["authenticationSuccess?"] !== 'undefined')
-            _this.registerFailure = !response.data["authenticationSuccess?"]
-          else {
-            let w = window.open();
-            w.document.open();
-            w.document.write(response.data);
-            w.document.close();
-          }
+          _this.$auth.setToken(response.data.jwt, response.data.refresh,response.data.user_id)
         },
-        (e) => {
-          console.log(e);
+        () => {
+          _this.toastMessage('error', 'Failed to log in')
         }
       );
     },

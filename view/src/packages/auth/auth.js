@@ -1,8 +1,10 @@
 export default function (app) {
     app.auth = {
 
-        setToken(token) {
-            localStorage.setItem('token', token);
+        setToken(token, refresh, user_id) {
+            localStorage.setItem('jwt', token);
+            localStorage.setItem('refresh', refresh);
+            localStorage.setItem('user_id', user_id);
         },
 
         getToken() {
