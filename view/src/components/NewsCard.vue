@@ -44,14 +44,6 @@ import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
       </div>
     </div>
   </div>
-  <modal-box
-    v-model="modalOne.active"
-    large-title="Something went wrong"
-    button="danger"
-    shake
-  >
-    <p>{{ modalOne.error }} ????</p>
-  </modal-box>
 </template>
 
 <script>
@@ -62,10 +54,6 @@ export default {
   props: ['title', 'link'],
   data () {
     return {
-      modalOne: {
-        active: false,
-        error: ""
-      },
       summarise: false,
       content: "",
       id: "",
@@ -76,6 +64,9 @@ export default {
   },
   created() {
     this.getText();
+  },
+  watch: {
+    link: 'getText'
   },
   methods: {
     goTo () {
@@ -89,21 +80,31 @@ export default {
         let _this = this;
         post(_this, 'api/news/articles/summary', { body: _this.content }, response => {
           _this.summarisedText = response.data.result
-        }, e => {
-          _this.modalOne.error = e;
-          _this.modalOne.active = true;
+        }, () => {
+          _this.toastMessage('error', 'Could not get Summary')
         })
       }
     },
     getText() {
+      this.text_class = 'max-h-20'
+      this.display_expand = 'flex'
+      this.content = ""
+      this.summarisedText = ""
+      this.summarise = false
       let _this = this;
       get(_this, 'api/news/articles', { params: { article_url: _this.link } }, response => {
         _this.content = response.data.result
         _this.id = response.data.id
-      }, e => {
-        console.log(e)
+      }, () => {
+
       })
-    },
+    }
+  },
+  toastMessage(type, message) {
+    this.$snackbar.add({
+      type: type,
+      text: message
+    })
   }
 }
 </script>
