@@ -14,7 +14,6 @@ export async function post(_this, url, payload, successCallback, errorCallback) 
     successCallback(response)
   } catch (error) {
     if (!error.status) { console.log('network error') }
-    console.log(error.response)
     if (errorCallback) { errorCallback(error) }
   }
 }
@@ -32,7 +31,6 @@ export async function put(_this, url, payload, successCallback, errorCallback) {
     successCallback(response)
   } catch (error) {
     if (!error.status) { console.log('network error') }
-    console.log(error.response)
     if (errorCallback) { errorCallback(error) }
   }
 }
