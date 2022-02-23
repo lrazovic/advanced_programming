@@ -17,7 +17,7 @@ import ModalBox from '@/components/ModalBox.vue'
   <main-section>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <card-component
-        title="Edit Profile"
+        title="Profile"
         :icon="mdiAccountCircle"
         form
         @submit.prevent="submitProfile"
@@ -108,7 +108,7 @@ import ModalBox from '@/components/ModalBox.vue'
             color="info"
             label="Submit"
             :disabled="!(passwordForm.password_current && passwordForm.password && passwordForm.password_confirmation)"
-            @click="successMessage"
+            @click="changePass"
           />
         </jb-buttons>
       </card-component>
@@ -190,15 +190,17 @@ export default {
         new_password: this.passwordForm.password_confirmation
       }
       if (this.passwordForm.password === this.passwordForm.password_confirmation) {
-        post(_this, 'auth/changepassword', form, response => {
-          console.log(response)
-        }, () => {})
+        post(_this, 'auth/changepassword', form, () => {
+          _this.toastMessage("Password changed successfully", "success")
+        }, () => {
+          _this.toastMessage("Failed tp change password", "danger")
+        })
       }
     },
-    successMessage() {
+    toastMessage(type, message) {
       this.$snackbar.add({
-        type: 'success',
-        text: 'This is a snackbar message'
+        type: type,
+        text: message
       })
     }
   }
