@@ -1,6 +1,4 @@
 <script setup>
-import { reactive } from 'vue'
-// import { useStore } from 'vuex'
 import { mdiAccount, mdiAccountCircle, mdiLock, mdiMail, mdiAsterisk, mdiFormTextboxPassword } from '@mdi/js'
 import MainSection from '@/components/MainSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
@@ -11,28 +9,6 @@ import JbButton from '@/components/JbButton.vue'
 import JbButtons from '@/components/JbButtons.vue'
 import UserCard from '@/components/UserCard.vue'
 import ModalBox from '@/components/ModalBox.vue'
-
-
-// const store = useStore()
-
-// const profileForm = reactive({
-//   name: store.state.userName,
-//   email: store.state.userEmail
-// })
-
-const passwordForm = reactive({
-  password_current: '',
-  password: '',
-  password_confirmation: ''
-})
-
-// const submitProfile = () => {
-//   store.commit('user', profileForm)
-// }
-
-const submitPass = () => {
-  //
-}
 </script>
 
 <template>
@@ -131,6 +107,7 @@ const submitPass = () => {
             type="submit"
             color="info"
             label="Submit"
+            :disabled="!(passwordForm.password_current && passwordForm.password && passwordForm.password_confirmation)"
           />
         </jb-buttons>
       </card-component>
@@ -161,7 +138,7 @@ const submitPass = () => {
 </template>
 
 <script>
-import {get, del} from "../helpers/api";
+import {get, del, post} from "../helpers/api";
 
 export default {
   data () {
@@ -170,6 +147,11 @@ export default {
       profileForm: {
         name: '',
         email: ''
+      },
+      passwordForm: {
+        password_current: '',
+        password: '',
+        password_confirmation: ''
       }
     }
   },
@@ -198,6 +180,19 @@ export default {
         _this.$auth.destroyToken()
         _this.$router.push('/login')
       }, e => {console.log(e)})
+    },
+    changePass(){
+      let _this = this;
+      let form = {
+        email: this.$store.state.email,
+        old_password: this.passwordForm.password_current,
+        new_password: this.passwordForm.password_confirmation
+      }
+      if (this.passwordForm.password === this.passwordForm.password_confirmation) {
+        post(_this, 'auth/changepassword', form, response => {
+          console.log(response)
+        }, () => {})
+      }
     }
   }
 }
