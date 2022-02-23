@@ -20,7 +20,7 @@ import ModalBox from '@/components/ModalBox.vue'
         title="Profile"
         :icon="mdiAccountCircle"
         form
-        @submit.prevent="submitProfile"
+        @submit.prevent=""
       >
         <field
           label="Name"
@@ -54,7 +54,7 @@ import ModalBox from '@/components/ModalBox.vue'
         title="Change Password"
         :icon="mdiLock"
         form
-        @submit.prevent="submitPass"
+        @submit.prevent=""
       >
         <field
           label="Current password"
@@ -107,7 +107,6 @@ import ModalBox from '@/components/ModalBox.vue'
             type="submit"
             color="info"
             label="Submit"
-            :disabled="!(passwordForm.password_current && passwordForm.password && passwordForm.password_confirmation)"
             @click="changePass"
           />
         </jb-buttons>
@@ -190,11 +189,16 @@ export default {
         new_password: this.passwordForm.password_confirmation
       }
       if (this.passwordForm.password === this.passwordForm.password_confirmation) {
-        post(_this, 'auth/changepassword', form, () => {
-          _this.toastMessage("Password changed successfully", "success")
+        post(_this, 'auth/changepassword', form, (response) => {
+          if (response.data.result === "False")
+            _this.toastMessage("error", "Failed to change password")
+          else
+            _this.toastMessage("success", "Password changed successfully")
         }, () => {
-          _this.toastMessage("Failed tp change password", "danger")
+          _this.toastMessage("error", "Failed to change password")
         })
+      }else {
+       this.toastMessage("warning", "Passwords do not match")
       }
     },
     toastMessage(type, message) {
