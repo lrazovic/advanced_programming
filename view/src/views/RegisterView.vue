@@ -1,5 +1,5 @@
 <script setup>
-import { mdiAccount, mdiAsterisk, mdiEmailOutline, mdiCheckCircleOutline } from '@mdi/js'
+import { mdiAccount, mdiAsterisk, mdiEmailOutline, mdiCheckCircleOutline, mdiAlertCircle } from '@mdi/js'
 import FullScreenSection from '@/components/FullScreenSection.vue'
 import CardComponent from '@/components/CardComponent.vue'
 import Field from '@/components/Field.vue'
@@ -34,8 +34,16 @@ import Notification from '@/components/Notification.vue'
             label="Login"
             color="success"
             small
+            @click="$router.push('/login')"
           />
         </template>
+      </notification>
+      <notification
+        v-if="registerFailure"
+        color="error"
+        :icon="mdiAlertCircle"
+      >
+        <b>Registration unsuccessful.</b>
       </notification>
       <field
         label="Login"
@@ -87,7 +95,7 @@ import Notification from '@/components/Notification.vue'
           to="/login"
           color="info"
           outline
-          label="Login"
+          label="Go to log in"
         />
         <jb-button
           color="warning"
@@ -110,7 +118,8 @@ export default {
         password: '',
         email: ''
       },
-      registerSuccess: false
+      registerSuccess: false,
+      registerFailure: false
     }
   },
   methods: {
@@ -118,6 +127,8 @@ export default {
       let _this = this;
       post(_this, 'auth/register', _this.form, (response) => {
         _this.registerSuccess = response.data.result
+        if (!_this.registerSuccess)
+          _this.registerFailure = true
         _this.form = {
           name: '',
           password: '',

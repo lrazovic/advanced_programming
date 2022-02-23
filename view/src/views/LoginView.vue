@@ -1,27 +1,15 @@
 <script setup>
 // import { reactive } from 'vue'
 // import { useRouter } from 'vue-router'
-import { mdiAccount, mdiAsterisk } from "@mdi/js";
+import { mdiAsterisk, mdiEmailOutline, mdiAlertCircle } from "@mdi/js";
 import FullScreenSection from "@/components/FullScreenSection.vue";
 import CardComponent from "@/components/CardComponent.vue";
-// import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 import Field from "@/components/Field.vue";
 import Control from "@/components/Control.vue";
 import Divider from "@/components/DividerBar.vue";
 import JbButton from "@/components/JbButton.vue";
 import JbButtons from "@/components/JbButtons.vue";
-
-// const form = reactive({
-//   login: '',
-//   pass: '',
-//   remember: ['remember']
-// })
-
-// const router = useRouter()
-//
-// const submit = () => {
-//
-// }
+import Notification from '@/components/Notification.vue'
 </script>
 
 <template>
@@ -37,14 +25,24 @@ import JbButtons from "@/components/JbButtons.vue";
       title="Log In"
       @submit.prevent="login"
     >
+      <notification
+        v-if="registerFailure"
+        color="danger"
+        :icon="mdiAlertCircle"
+      >
+        <b>Login unsuccessful.</b>
+        <template #right>
+        </template>
+      </notification>
       <field
         label="Email"
         help="Please enter your Email"
       >
         <control
-          v-model="form.login"
-          :icon="mdiAccount"
-          name="login"
+          v-model="form.email"
+          :icon="mdiEmailOutline"
+          name="email"
+          type="email"
           autocomplete="email"
         />
       </field>
@@ -54,7 +52,7 @@ import JbButtons from "@/components/JbButtons.vue";
         help="Please enter your password"
       >
         <control
-          v-model="form.pass"
+          v-model="form.password"
           :icon="mdiAsterisk"
           type="password"
           name="password"
@@ -68,13 +66,13 @@ import JbButtons from "@/components/JbButtons.vue";
         <jb-button
           type="submit"
           color="info"
-          label="Login"
+          label="Log in"
         />
         <jb-button
           to="/register"
           color="info"
           outline
-          label="Register"
+          label="Go to register"
         />
         <jb-button
           color="warning"
@@ -93,9 +91,10 @@ export default {
   data() {
     return {
       form: {
-        login: "",
-        pass: "",
+        email: "",
+        password: "",
       },
+      registerFailure: false
     };
   },
   methods: {
@@ -103,13 +102,20 @@ export default {
       let _this = this;
       post(
         _this,
-        "",
+        "auth/loginlocal",
         _this.form,
-        () => {
-          this.$router.push("/");
+        (response) => {
+          if (typeof response.data["authenticationSuccess?"] !== 'undefined')
+            _this.registerFailure = !response.data["authenticationSuccess?"]
+          else {
+            let w = window.open();
+            w.document.open();
+            w.document.write(response.data);
+            w.document.close();
+          }
         },
         (e) => {
-          alert(e);
+          console.log(e);
         }
       );
     },
