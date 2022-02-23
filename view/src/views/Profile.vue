@@ -192,8 +192,14 @@ export default {
         post(_this, 'auth/changepassword', form, (response) => {
           if (response.data.result === "False")
             _this.toastMessage("error", "Failed to change password")
-          else
+          else{
             _this.toastMessage("success", "Password changed successfully")
+            _this.passwordForm = {
+              password_current: '',
+              password: '',
+              password_confirmation: ''
+            }
+          }
         }, () => {
           _this.toastMessage("error", "Failed to change password")
         })
