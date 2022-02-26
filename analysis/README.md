@@ -1,10 +1,22 @@
+# Run
+
+## Native
+
+```bash
+poetry install
+poetry run python app/main.py
+```
+
+## Docker
+
 To build the image
 
-```
-docker build -t analysis .
+```bash
+docker build -t ap-analysis .
 ```
 
 To run it
-```
-docker run analysis:latest
+
+```bash
+docker run -it -p 5001:5001 ap-analysis:latest
 ```

@@ -1,0 +1,104 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      backend:
+        aliases:
+          - database.dev
+    environment:
+      POSTGRES_DB: advanced_programming
+      POSTGRES_USER: advanced_programming
+      POSTGRES_PASSWORD: pguser
+    ports:
+      - "5432:5432"
+
+  webserver:
+    depends_on:
+      - postgres
+      - persistence
+    build:
+      context: webserver/
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - appdata:/var/www/
+    networks:
+      - backend
+      - frontend
+    environment:
+      redirect_uri: http://localhost:3000/token
+
+  view:
+    depends_on:
+      - webserver
+    build:
+      context: view/
+    ports:
+      - "3000:80"
+    volumes:
+      - ./view:/app
+      - /app/node_modules
+    networks:
+      - frontend
+
+  analysis:
+    depends_on:
+      - webserver
+    build:
+      context: analysis/
+    ports:
+      - "5001:5001"
+    volumes:
+      - nltkdata:/root/nltk_data
+    networks:
+      - backend
+
+  fetcher:
+    depends_on:
+      - webserver
+    build:
+      context: fetcher/
+    ports:
+      - "5002:5002"
+    networks:
+      - backend
+
+  newspaper:
+    depends_on:
+      - fetcher
+    build:
+      context: newspaper/
+    ports:
+      - "5004:5004"
+    networks:
+      - backend
+
+  persistence:
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    build:
+      context: persistence/
+    ports:
+      - "5003:5003"
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+  appdata:
+    driver: local
+  nltkdata:
+    driver: local

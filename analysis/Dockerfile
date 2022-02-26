@@ -1,30 +1,17 @@
-# From https://stackoverflow.com/a/64642121
+FROM python:3.9-slim AS builder
+WORKDIR /app
+COPY  pyproject.toml poetry.lock /app/
 
-FROM python:3.9-slim as base
+RUN pip install poetry
+RUN poetry config virtualenvs.in-project true
+RUN poetry install --no-ansi --no-dev
 
-ENV PYTHONFAULTHANDLER=1 \
-    PYTHONHASHSEED=random \
-    PYTHONUNBUFFERED=1
+# ---
 
-WORKDIR /code
-
-FROM base as builder
-
-COPY . .
-
-ENV PIP_DEFAULT_TIMEOUT=100 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1 \
-    POETRY_VERSION=1.1.11
-
-RUN pip install "poetry==$POETRY_VERSION"
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev
-
-# RUN poetry build
-
-COPY ./app /code/app
-
-WORKDIR /code/app
-
-CMD ["python", "main.py"]
+FROM python:3.9-slim
+EXPOSE 5001
+WORKDIR /app
+COPY --from=builder /app /app
+COPY  . /app
+RUN /app/.venv/bin/python -m nltk.downloader popular
+CMD /app/.venv/bin/python app/main.py

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "newspaper"
+version = "0.1.0"
+description = ""
+authors = ["ai18 <antonio.ionta.18@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+newspaper3k = "^0.2.8"
+jsonrpcserver = "^5.0.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
