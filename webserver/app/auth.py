@@ -16,9 +16,8 @@ from jwtoken import (
     change_password,
     CREDENTIALS_EXCEPTION,
 )
-from passlib.hash import pbkdf2_sha256
 from oauth import oauth
-from utils import redirect_uri, make_html_response
+from utils import redirect_uri
 
 auth_app = FastAPI()
 auth_app.add_middleware(SessionMiddleware, secret_key="!secret")
@@ -97,7 +96,6 @@ async def register(user: User):
             "result": True,
             "user_id": response["result"],
             "email": user_data["email"],
-            "password": user_data["password"],
         }
     )
 
@@ -113,8 +111,13 @@ async def loginlocal(form: Login_form):
         user_id = response_json["result"]["id"]
         access_token = create_token(form.email)
         refresh_token = create_refresh_token(form.email)
-        return HTMLResponse(make_html_response(user_id, access_token, refresh_token))
-
+        return JSONResponse(
+            {
+            "user_id": user_id,
+            "jwt": access_token,
+            "refresh": refresh_token,
+            }
+        )
 
 @auth_app.post("/changepassword")
 async def changepassword(form: Pass_change_form):
