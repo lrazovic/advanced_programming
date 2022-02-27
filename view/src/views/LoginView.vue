@@ -112,6 +112,9 @@ export default {
         _this.form,
         (response) => {
           _this.$auth.setToken(response.data.jwt, response.data.refresh,response.data.user_id)
+          if(localStorage.getItem('user_id')>-1){
+            window.location.replace(window.location.origin)}
+          else(alert("Login Failed"))
         },
         () => {
           _this.toastMessage('error', 'Failed to log in')
