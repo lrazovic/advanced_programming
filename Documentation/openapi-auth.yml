@@ -1,0 +1,167 @@
+openapi: 3.0.2
+info:
+  title: FastAPI
+  version: 0.1.0
+servers:
+  - url: /auth
+paths:
+  /logout:
+    get:
+      summary: Pop the user session
+      operationId: logout_logout_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /refresh:
+    post:
+      summary: Use the refresh token to create a new access token
+      operationId: refresh_refresh_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /register:
+    post:
+      summary: Add to the db a new user registered with traditional credentials
+      operationId: register_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /loginlocal:
+    post:
+      summary: Manage the authentication process with the traditional credentials
+      operationId: loginlocal_loginlocal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login_form'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /changepassword:
+    post:
+      summary: Change the currently authenticthed user's password in the db
+      operationId: changepassword_changepassword_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pass_change_form'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    Login_form:
+      title: Login_form
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          default: User email
+        password:
+          title: Password
+          type: string
+          default: User password
+    Pass_change_form:
+      title: Pass_change_form
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          default: User email
+        old_password:
+          title: Old Password
+          type: string
+          default: Old user password
+        new_password:
+          title: New Password
+          type: string
+          default: New user password
+    User:
+      title: User
+      type: object
+      properties:
+        name:
+          title: Name
+          type: string
+          default: User name
+        email:
+          title: Email
+          type: string
+          default: User email
+        password:
+          title: Password
+          type: string
+          default: User password
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
