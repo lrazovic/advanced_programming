@@ -8,7 +8,6 @@ from utils import tags_metadata
 
 from api import usersRouter, newsRouter
 from auth import auth_app
-from dummy import dummy_app
 
 api_gateway = FastAPI(openapi_tags=tags_metadata)
 api_gateway.include_router(usersRouter)
@@ -16,7 +15,6 @@ api_gateway.include_router(newsRouter)
 
 # Sub-applications
 api_gateway.mount("/auth", auth_app)
-api_gateway.mount("/dummy", dummy_app)
 
 # Allow CORS for all origins
 api_gateway.add_middleware(
