@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "c49787c5-6c3e-4296-9034-669c453e49d2",
+		"name": "LabAP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "news",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/news?feed_url=http://www.aljazeera.com/xml/rss/all.xml&limit=3",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"news"
+					],
+					"query": [
+						{
+							"key": "feed_url",
+							"value": "http://www.aljazeera.com/xml/rss/all.xml"
+						},
+						{
+							"key": "limit",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "news/articles",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/news/articles?article_url=https://www.aljazeera.com/news/2022/2/16/canada-police-to-anti-vaccine-truckers-leave-now-or-face-arrest",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"news",
+						"articles"
+					],
+					"query": [
+						{
+							"key": "article_url",
+							"value": "https://www.aljazeera.com/news/2022/2/16/canada-police-to-anti-vaccine-truckers-leave-now-or-face-arrest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "news/articles/summary",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"body\": \"The warning comes days after Prime Minister Justin Trudeau invoked emergency powers to disperse anti-government protesters.\\n\\nPolice in the Canadian capital have warned truck drivers blockading Ottawa’s downtown core that they must leave or face arrest, as authorities strengthen efforts to disperse an anti-government protest that has paralysed the city for nearly three weeks.\\n\\n“You must leave the area now. Anyone blocking streets, or assisting others in the blocking [of] streets, are [sic] committing a criminal offence and you may be arrested,” a leaflet handed out by police on Wednesday morning reads.\\n\\n“You must immediately cease further unlawful activity or you will face charges.”\\n\\nPolice also began ticketing some of the hundreds of vehicles blocking the downtown core.\\n\\nThe warnings come after Canadian Prime Minister Justin Trudeau invoked a never-before-used emergency measure on Monday to give his federal government more power to assist law enforcement agencies in dispersing the protesters.\\n\\nA large group of Canadian truckers and their supporters descended on Ottawa late last month to protest against a mandatory coronavirus vaccination requirement for travel across the US-Canada land border.\\n\\nSince then, participants in the so-called “Freedom Convoy” – organised by far-right activists – have maintained what residents describe as an “occupation” of Ottawa’s downtown core, pledging to continue their protest until all COVID-19 curbs are lifted in Canada.\\n\\nOttawa residents have decried the demonstrators for parking their vehicles on residential streets, harassing and threatening people, honking their horns and setting off fireworks at all hours of the night.\\n\\nOn Tuesday, Ottawa Police Service Chief Peter Sloly – who was widely criticised for the force’s handling of the protest – announced his resignation.\\n\\nThe leaflet handed out on Wednesday references the Emergencies Act that Trudeau invoked this week, saying it allows police to seize vehicles that are part of the demonstration. Anyone who travels to Ottawa to join the protest is breaking the law, it also states.\\n\\n“Politicians don’t decide when and how the police should act but we have given them a lot more tools and we hope they will be able to use them … to ensure this barricade ends,” Trudeau told reporters on Wednesday.\\n\\nA day earlier, the commissioner of Canada’s federal Royal Canadian Mounted Police (RCMP), Brenda Lucki, said she had spoken with leaders of the Ottawa and Ontario provincial police services to discuss the way forward.\\n\\n“Our teams are committed and look forward to working together,” Lucki tweeted late on Tuesday.\\n\\nOttawa police hand out notices to protesters ordering them to leave immediately or face arrest. Say those who refuse face fines and/or jail time. pic.twitter.com/O2VT1f16Y8 — CBC News Alerts (@CBCAlerts) February 16, 2022\\n\\nSeparately, the RCMP announced earlier this week that a total of 13 people had been arrested after a search uncovered multiple firearms, body armour, a machete, ammunition and high-capacity magazines at a border blockade in the western province of Alberta.\\n\\n“Information was received that this group had access to a cache of firearms with a large quantity of ammunition. The group was said to have a willingness to use force against the police if any attempts were made to disrupt the blockade,” the RCMP said on Monday.\\n\\nA day later, the RCMP also said four people involved in the blockade at Coutts – a crossing that links Alberta to the US state of Montana – had been charged with conspiracy to commit murder.\\n\\nThe Coutts blockade ended on Tuesday, but a similar one in the Manitoba town of Emerson was still in place on Wednesday morning.\\n\\nMeanwhile, back in Ottawa, hundreds of protesters remain camped out on Parliament Hill.\\n\\n“Truckers are not going anywhere,” Tyler, who gave only his first name, told the AFP news agency on Tuesday while sitting at the wheel of a massive truck parked outside Parliament.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/news/articles/summary",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"news",
+						"articles",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users/{user_id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/:user_id",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						":user_id"
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users/{user_id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/:user_id",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						":user_id"
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users/{user_id}/rss-feeds",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user_id\": 1,\n  \"rssFeeds\": [\n    {\n      \"url\": \"url1\",\n      \"rank\": 1\n    },\n    {\n      \"url\": \"url2\",\n      \"rank\": 2\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users/:user_id/rss-feeds",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						":user_id",
+						"rss-feeds"
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbnRvbmlvLmlvbnRhLjE4QGdtYWlsLmNvbSIsImV4cCI6MTY0NTAzOTEyNX0.ISE4g1-Fx__w4gVfg_AezYQFbcOvzwvZJlLfheqxs7Y",
+			"type": "default"
+		}
+	]
+}
