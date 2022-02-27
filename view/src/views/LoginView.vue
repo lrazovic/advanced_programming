@@ -114,7 +114,7 @@ export default {
           if(response.data.user_id>-1){
           _this.$auth.setToken(response.data.jwt, response.data.refresh,response.data.user_id)
             window.location.replace(window.location.origin)}
-          //else(alert("Login Failed"))
+          _this.toastMessage('error', 'Wrong username or password')
         },
         () => {
           _this.toastMessage('error', 'Failed to log in')
