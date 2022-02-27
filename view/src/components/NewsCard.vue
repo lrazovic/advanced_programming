@@ -1,9 +1,3 @@
-<script setup>
-// import JbButton from "@/components/JbButton.vue";
-// import JbButtons from "@/components/JbButtons.vue";
-import ModalBox from '@/components/ModalBox.vue'
-import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
-</script>
 <template>
   <div
     v-if="content"
@@ -48,8 +42,10 @@ import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 
 <script>
 import { get, post } from '../helpers/api'
+
+import CheckRadioPicker from '@/components/CheckRadioPicker.vue'
 export default {
-  components: {},
+  components: { CheckRadioPicker },
 
   props: ['title', 'link'],
   data () {
