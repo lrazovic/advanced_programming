@@ -25,6 +25,11 @@
     <level>
       <h1 class="text-3xl font-semibold leading-tight">
         {{ main_title ? main_title : "News source not selected" }}
+        <p>
+          <a href="source-list">
+            {{ main_title ? main_title : "Add a news source" }}
+          </a>
+        </p>
       </h1>
     </level>
   </section>
