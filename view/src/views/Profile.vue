@@ -1,15 +1,6 @@
-<script setup>
-import { mdiAccount, mdiAccountCircle, mdiLock, mdiMail, mdiAsterisk, mdiFormTextboxPassword } from '@mdi/js'
-import MainSection from '@/components/MainSection.vue'
-import CardComponent from '@/components/CardComponent.vue'
-import Divider from '@/components/DividerBar.vue'
-import Field from '@/components/Field.vue'
-import Control from '@/components/Control.vue'
-import JbButton from '@/components/JbButton.vue'
-import JbButtons from '@/components/JbButtons.vue'
-import UserCard from '@/components/UserCard.vue'
-import ModalBox from '@/components/ModalBox.vue'
-</script>
+<!--<script setup>-->
+<!--import { mdiAccount, mdiAccountCircle, mdiLock, mdiMail, mdiAsterisk, mdiFormTextboxPassword } from '@mdi/js'-->
+<!--</script>-->
 
 <template>
   <user-card />
@@ -140,7 +131,18 @@ import ModalBox from '@/components/ModalBox.vue'
 <script>
 import {get, del, post} from "../helpers/api";
 
+import MainSection from '@/components/MainSection.vue'
+import CardComponent from '@/components/CardComponent.vue'
+import Divider from '@/components/DividerBar.vue'
+import Field from '@/components/Field.vue'
+import Control from '@/components/Control.vue'
+import JbButton from '@/components/JbButton.vue'
+import JbButtons from '@/components/JbButtons.vue'
+import UserCard from '@/components/UserCard.vue'
+import ModalBox from '@/components/ModalBox.vue'
+
 export default {
+  components: { MainSection, CardComponent, Divider, Field, Control, JbButtons, JbButton, UserCard, ModalBox },
   data () {
     return {
       modalOneActive: false,
@@ -176,7 +178,8 @@ export default {
     },
     confirmDelete(){
       let _this = this;
-      del(_this, "api/users/" + _this.store.state.userID, {}, () => {
+      let id = localStorage.getItem('user_id')
+      del(_this, "api/users/" + id, {}, () => {
         _this.$auth.destroyToken()
         _this.$router.push('/login')
       }, e => {console.log(e)})
