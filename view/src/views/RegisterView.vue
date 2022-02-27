@@ -46,7 +46,7 @@ import Notification from '@/components/Notification.vue'
         <b>Registration unsuccessful.</b>
       </notification>
       <field
-        label="Login"
+        label="Name"
         help="Please enter your name"
       >
         <control
@@ -54,6 +54,7 @@ import Notification from '@/components/Notification.vue'
           :icon="mdiAccount"
           name="login"
           autocomplete="username"
+          required=True
         />
       </field>
 
@@ -67,6 +68,7 @@ import Notification from '@/components/Notification.vue'
           name="email"
           type="email"
           autocomplete="email"
+          required=True
         />
       </field>
 
@@ -80,6 +82,7 @@ import Notification from '@/components/Notification.vue'
           type="password"
           name="password"
           autocomplete="current-password"
+          required=True
         />
       </field>
 
