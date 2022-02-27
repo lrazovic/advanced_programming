@@ -23,13 +23,8 @@
   </section>
   <section class="bg-white border-t border-b border-gray-100 p-6 mt-3 dark:bg-gray-900 dark:border-gray-900 dark:text-white">
     <level>
-      <h1 class="text-3xl font-semibold leading-tight">
-        {{ main_title ? main_title : "News source not selected" }}
-        <p>
-          <a href="source-list">
-            {{ main_title ? main_title : "Add a news source" }}
-          </a>
-        </p>
+      <h1 @click=$router.push('source-list') class="text-3xl font-semibold leading-tight">
+        {{ main_title ? main_title : "News sources are empty. Click to add new sources" }}
       </h1>
     </level>
   </section>
