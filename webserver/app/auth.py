@@ -50,13 +50,13 @@ async def token(request: Request):
     )
 
 
-@auth_app.get("/logout")
+@auth_app.get("/logout", summary="Pop the user session")
 async def logout(request: Request):
     # request.session.pop("user", None)
     return RedirectResponse(url="/")
 
 
-@auth_app.post("/refresh")
+@auth_app.post("/refresh", summary="Use the refresh token to create a new access token")
 async def refresh(request: Request):
     try:
         form = await request.json()
@@ -81,7 +81,7 @@ async def refresh(request: Request):
 ##############################################################
 
 
-@auth_app.post("/register")
+@auth_app.post("/register", summary="Add to the db a new user registered with traditional credentials")
 async def register(user: User):
     # Pydantic model to dictionary explicit conversion
     user_data = {}
@@ -100,7 +100,7 @@ async def register(user: User):
     )
 
 
-@auth_app.post("/loginlocal")
+@auth_app.post("/loginlocal", summary="Manage the authentication process with the traditional credentials")
 async def loginlocal(form: Login_form):
     response_json = await check_user_db(
         form.email,form.password
@@ -119,7 +119,7 @@ async def loginlocal(form: Login_form):
             }
         )
 
-@auth_app.post("/changepassword")
+@auth_app.post("/changepassword", summary="Change the currently authenticthed user's password in the db")
 async def changepassword(form: Pass_change_form):
     response = await change_password(
         form.email,

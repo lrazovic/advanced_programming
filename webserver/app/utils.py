@@ -19,8 +19,7 @@ redirect_uri = os.environ.get("redirect_uri") or "http://localhost:8080/token"
 
 tags_metadata = [
     {"name": "news", "description": "Operations for managing news from RSS feeds"},
-    {"name": "users", "description": "Operations for managing users of the system"},
-    {"name": "tbd", "description": "Redundant operations, probably to be deleted"},
+    {"name": "users", "description": "Operations for managing users of the system"}
 ]
 
 # Helper to read numbers using var envs
