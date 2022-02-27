@@ -1,12 +1,12 @@
-name: Build Docker Image for WebServer
+name: Build Docker Image for Persistence
 
 on:
   push:
     branches:
       - "main"
     paths:
-      - "webserver/**"
-      - ".github/workflows/webserver-docker-image.yml"
+      - "persistence/**"
+      - ".github/workflows/persistence-docker-image.yml"
 
 jobs:
   build:
@@ -24,10 +24,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./webserver
-          file: ./webserver/Dockerfile
+          context: ./persistence
+          file: ./persistence/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ap-webserver:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-webserver:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-webserver:buildcache,mode=max
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ap-persistence:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-persistence:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/ap-persistence:buildcache,mode=max
