@@ -10,26 +10,27 @@ import MainSection from '@/components/MainSection.vue'
 </script>
 <template>
   <section class="bg-white mt-3 border-t border-b border-gray-100 p-6 dark:bg-gray-900 dark:border-gray-900 dark:text-white ">
-    <field
-      label="Add RSS link"
-      help="Place your desired news rss link"
-    >
-      <control
-        v-model="rssLink.url"
-        placeholder="Place rss link here"
-        type=“url”  
-        @keyup.enter="addToList"
-        required
-      />
-    </field>
-    <jb-buttons>
-      <jb-button
-        type="submit"
-        color="info"
-        label="Add"
-        @click="addToList"
-      />
-    </jb-buttons>
+    <form @submit="addToList">
+      <field
+        label="Add RSS link"
+        help="Place your desired news rss link"
+      >
+        <control
+          v-model="rssLink.url"
+          placeholder="Place rss link here"
+          type=“url”  
+          @keyup.enter="addToList"
+          required
+        />
+      </field>
+      <jb-buttons>
+        <jb-button
+          type="submit"
+          color="info"
+          label="Add"
+        />
+      </jb-buttons>
+    </form>
   </section>
   <main-section>
     <card-component
