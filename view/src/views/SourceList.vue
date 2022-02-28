@@ -18,7 +18,7 @@ import MainSection from '@/components/MainSection.vue'
         <control
           v-model="rssLink.url"
           placeholder="Place rss link here"
-          type=“url”  
+          type=“url”
           @keyup.enter="addToList"
           required
         />
@@ -40,17 +40,17 @@ import MainSection from '@/components/MainSection.vue'
     >
       <div class="flex justify-center py-8">
         <draggable
-          class="bg-white rounded-lg border border-gray-200 xl:w-1/2 text-gray-900"
+          class="bg-white rounded-lg border border-gray-200 xl:w-1/2 text-gray-900 dark:bg-gray-900 dark:border-gray-900"
           :list="list"
           @change="addLink"
         >
           <div
             v-for="(element, index) in list"
             :key="index"
-            class="px-6 py-2 border-b border-gray-200 w-full flex justify-between"
+            class="px-6 py-2 border-b border-gray-200 w-full flex justify-between "
           >
-            <div class="overflow-x-auto">
-              <p>
+            <div class="overflow-x-auto ">
+              <p class="dark:bg-gray-800 dark:text-gray-100">
                 {{ element.url }}
               </p>
             </div>

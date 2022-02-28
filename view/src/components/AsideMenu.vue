@@ -51,7 +51,7 @@ const menuClick = (event, item) => {
         />
       </nav-bar-item>
       <div class="flex-1 px-3">
-        <span>Summary News</span>
+        <span>News Feed</span>
       </div>
     </div>
     <div>
