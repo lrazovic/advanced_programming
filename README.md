@@ -1,6 +1,6 @@
 # Laboratory of Advanced Programming
 
-Project for the "Laboratory of Advanced Programming" course 2021/2022
+Final Project for the "Laboratory of Advanced Programming" course, master degree in "Engineering in Computer Science", "Sapienza, Università di Roma", A.Y. 2021/2022.
 
 ## Run using `docker compose`
 
@@ -33,13 +33,5 @@ If we want to update the `view` service:
 ```bash
 docker compose up -d --no-deps --build view
 ```
-
-The services are:
-
-* `view`
-* `webserver`
-* `postgres`
-* `analysis`
-* `fetcher`
-* `authentication`
-  
+## Documentation
+[here](https://github.com/lrazovic/advanced_programming/tree/main/Documentation)
