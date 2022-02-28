@@ -81,7 +81,10 @@ async def refresh(request: Request):
 ##############################################################
 
 
-@auth_app.post("/register", summary="Add to the db a new user registered with traditional credentials")
+@auth_app.post(
+    "/register",
+    summary="Add to the db a new user registered with traditional credentials",
+)
 async def register(user: User):
     # Pydantic model to dictionary explicit conversion
     user_data = {}
@@ -100,11 +103,12 @@ async def register(user: User):
     )
 
 
-@auth_app.post("/loginlocal", summary="Manage the authentication process with the traditional credentials")
+@auth_app.post(
+    "/loginlocal",
+    summary="Manage the authentication process with the traditional credentials",
+)
 async def loginlocal(form: Login_form):
-    response_json = await check_user_db(
-        form.email,form.password
-        )
+    response_json = await check_user_db(form.email, form.password)
     if "error" in response_json:
         return JSONResponse({"authenticationSuccess?": False})
     else:
@@ -113,13 +117,17 @@ async def loginlocal(form: Login_form):
         refresh_token = create_refresh_token(form.email)
         return JSONResponse(
             {
-            "user_id": user_id,
-            "jwt": access_token,
-            "refresh": refresh_token,
+                "user_id": user_id,
+                "jwt": access_token,
+                "refresh": refresh_token,
             }
         )
 
-@auth_app.post("/changepassword", summary="Change the currently authenticthed user's password in the db")
+
+@auth_app.post(
+    "/changepassword",
+    summary="Change the currently authenticthed user's password in the db",
+)
 async def changepassword(form: Pass_change_form):
     response = await change_password(
         form.email,
@@ -127,10 +135,4 @@ async def changepassword(form: Pass_change_form):
         form.new_password,
     )
     # Returns `true` if change success, `Error` if `old_password` didn't match
-    return JSONResponse(
-        {
-            "result": response[
-                "result"
-            ]
-        }
-    )
+    return JSONResponse({"result": response["result"]})
