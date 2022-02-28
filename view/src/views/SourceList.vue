@@ -17,7 +17,9 @@ import MainSection from '@/components/MainSection.vue'
       <control
         v-model="rssLink.url"
         placeholder="Place rss link here"
+        type=“url”  
         @keyup.enter="addToList"
+        required
       />
     </field>
     <jb-buttons>

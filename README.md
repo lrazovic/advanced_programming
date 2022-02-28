@@ -31,7 +31,7 @@ docker compose up -d --no-deps --build {service_name}
 If we want to update the `view` service:
 
 ```bash
-docker compose up -d --no-deps --build postgres
+docker compose up -d --no-deps --build view
 ```
 
 The services are:
