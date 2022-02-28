@@ -14,4 +14,4 @@ WORKDIR /app
 COPY --from=builder /app /app
 COPY  . /app
 RUN /app/.venv/bin/python -m nltk.downloader popular
-CMD ["/app/.venv/bin/python" "app/main.py"]
+CMD ["/app/.venv/bin/python", "app/main.py"]
