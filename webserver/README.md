@@ -22,7 +22,7 @@ docker run -it -p 5000:5000 webserver
 
 The webserver is live on: `http://0.0.0.0:5000/`, while the documentation is on `http://0.0.0.0:5000/docs`
 
-### Run without Docker (currently unsupported, expect chaos)
+### Run without Docker (FOR DEBUG ONLY)
 
 * `poetry install`
 * `env DEV=1 poetry run python app/main.py`
